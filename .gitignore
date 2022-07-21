@@ -1,7 +1,6 @@
 # Compiler files
 cache/
 out/
-/lib
 .env
 # Ignores development broadcast logs
 !/broadcast

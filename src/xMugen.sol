@@ -10,7 +10,7 @@ contract xMugen is IERC4626, ERC20 {
     uint256 public immutable precision; // Precision of rates, equals max deposit amounts before rounding errors occur
     uint256 public rewardsPerAssetStored;
 
-    address public asset; // Underlying ERC-20 asset used by ERC-4626 functionality.
+    address public override asset; // Underlying ERC-20 asset used by ERC-4626 functionality.
     address public rewardAsset;
     address public owner; // Current owner of the contract, able to update the vesting schedule.
 
@@ -137,6 +137,7 @@ contract xMugen is IERC4626, ERC20 {
     function deposit(uint256 assets_, address receiver_)
         external
         virtual
+        override
         updateReward(msg.sender)
         nonReentrant
         returns (uint256 shares_)
@@ -147,6 +148,7 @@ contract xMugen is IERC4626, ERC20 {
     function mint(uint256 shares_, address receiver_)
         external
         virtual
+        override
         updateReward(msg.sender)
         nonReentrant
         returns (uint256 assets_)
@@ -161,6 +163,7 @@ contract xMugen is IERC4626, ERC20 {
     )
         external
         virtual
+        override
         updateReward(msg.sender)
         nonReentrant
         returns (uint256 assets_)
@@ -175,6 +178,7 @@ contract xMugen is IERC4626, ERC20 {
     )
         external
         virtual
+        override
         updateReward(msg.sender)
         nonReentrant
         returns (uint256 shares_)
@@ -261,6 +265,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 assets_)
     {
         assets_ = shares_;
@@ -270,6 +275,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 shares_)
     {
         shares_ = assets_;
@@ -279,6 +285,7 @@ contract xMugen is IERC4626, ERC20 {
         external
         pure
         virtual
+        override
         returns (uint256 maxAssets_)
     {
         receiver_; // Silence warning
@@ -289,6 +296,7 @@ contract xMugen is IERC4626, ERC20 {
         external
         pure
         virtual
+        override
         returns (uint256 maxShares_)
     {
         receiver_; // Silence warning
@@ -299,6 +307,7 @@ contract xMugen is IERC4626, ERC20 {
         external
         view
         virtual
+        override
         returns (uint256 maxShares_)
     {
         maxShares_ = balanceOf(owner_);
@@ -308,6 +317,7 @@ contract xMugen is IERC4626, ERC20 {
         external
         view
         virtual
+        override
         returns (uint256 maxAssets_)
     {
         maxAssets_ = balanceOfAssets(owner_);
@@ -317,6 +327,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 shares_)
     {
         // As per https://eips.ethereum.org/EIPS/eip-4626#security-considerations,
@@ -328,6 +339,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 assets_)
     {
         // As per https://eips.ethereum.org/EIPS/eip-4626#security-considerations,
@@ -339,6 +351,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 assets_)
     {
         // As per https://eips.ethereum.org/EIPS/eip-4626#security-considerations,
@@ -350,6 +363,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 shares_)
     {
         // As per https://eips.ethereum.org/EIPS/eip-4626#security-considerations,
@@ -361,6 +375,7 @@ contract xMugen is IERC4626, ERC20 {
         public
         view
         virtual
+        override
         returns (uint256 totalManagedAssets_)
     {
         uint256 issuanceRate_ = issuanceRate;
