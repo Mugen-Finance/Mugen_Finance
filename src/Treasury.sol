@@ -24,6 +24,12 @@ contract Treasury is Ownable {
 
     error NotDepositable();
 
+    event Deposit(
+        address indexed depositor,
+        IERC20 indexed token,
+        uint256 valueOfDeposit
+    );
+
     constructor(address _mugen, address _treasury) {
         Mugen = IMugen(_mugen);
         treasury = _treasury;
@@ -47,6 +53,7 @@ contract Treasury is Ownable {
         );
         valueDeposited += value;
         tokenMintPrice += value.div(1e3);
+        emit Deposit(msg.sender, _token, value);
         IERC20(_token).safeTransferFrom(msg.sender, treasury, _amount);
         Mugen.mint(msg.sender, value);
     }
