@@ -2,14 +2,21 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "../src/xMugen.sol";
+import "forge-std/Vm.sol";
 import "../src/Mugen.sol";
+import "../src/xMugen.sol";
 import "../src/mocks/MockERC20.sol";
 
 contract xMugenTest is Test {
-    function setUp() public {}
+    Mugen mugen;
+    xMugen xMGN;
+    MockUSDC reward;
 
-    function testExample() public {
-        assertTrue(true);
+    function setUp() public {
+        mugen = new Mugen();
+        reward = new MockUSDC(1000000 * 1e18);
+        xMGN = new xMugen(address(mugen), address(reward), address(this));
+        mugen.approve(address(xMGN), type(uint256).max);
+        reward.approve(address(xMGN), type(uint256).max);
     }
 }

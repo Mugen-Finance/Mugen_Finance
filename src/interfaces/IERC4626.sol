@@ -22,6 +22,8 @@ interface IERC4626 is IERC20, IERC20Metadata {
 
     event IssuanceParamsUpdated(uint256 freeAssets_, uint256 issuanceRate_);
 
+    event RewardDeposit(address indexed depositer_, uint256 rewardAssets_);
+
     event RewardsClaimed(address indexed user, uint256 indexed amount);
 
     /**

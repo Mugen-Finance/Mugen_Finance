@@ -34,16 +34,6 @@ contract Treasury is Ownable {
         _;
     }
 
-    //checked
-    function readValue() public view returns (uint256) {
-        return valueDeposited;
-    }
-
-    //checked
-    function readPrice() external view returns (uint256) {
-        return tokenMintPrice;
-    }
-
     function deposit(IERC20 _token, uint256 _amount)
         external
         depositable(_token)
@@ -74,6 +64,20 @@ contract Treasury is Ownable {
     function removeTokenInfo(IERC20 _token) external onlyOwner {
         delete depositableTokens[_token];
         delete priceFeeds[_token];
+    }
+
+    /**************************/
+    /*** Internal Functions ***/
+    /**************************/
+
+    //checked
+    function readValue() public view returns (uint256) {
+        return valueDeposited;
+    }
+
+    //checked
+    function readPrice() external view returns (uint256) {
+        return tokenMintPrice;
     }
 
     //checked
