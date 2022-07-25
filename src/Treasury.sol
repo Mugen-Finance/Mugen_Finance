@@ -29,6 +29,7 @@ contract Treasury is Ownable {
         IERC20 indexed token,
         uint256 valueOfDeposit
     );
+    event DepositableToken(IERC20 indexed token, address indexed PriceFeed);
 
     constructor(address _mugen, address _treasury) {
         Mugen = IMugen(_mugen);
@@ -65,6 +66,7 @@ contract Treasury is Ownable {
     {
         priceFeeds[_token] = AggregatorV3Interface(_pricefeed);
         depositableTokens[_token] = true;
+        emit DepositableToken(_token, _pricefeed);
     }
 
     //checked
