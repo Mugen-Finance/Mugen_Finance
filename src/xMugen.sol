@@ -1,30 +1,18 @@
-/*
-What I need to do for this contract right now:
-
-Implement variable reward rate that changes as more rewards get added and make the other minor changes necessary.
-*/
-
 // SPDX-License-Identifier: MIT
-// Inspired by https://solidity-by-example.org/defi/staking-rewards/
+
 pragma solidity ^0.8.7;
 
 import "openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./interfaces/IERC4626.sol";
+import "openzeppelin/contracts/access/Ownable.sol";
 
 error TRANSFER_FAILED();
-error NeedsMoreThanZero();
 
-contract xMugen is IERC4626, ERC20, ReentrancyGuard {
+contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     address public s_rewardsToken;
     address public s_stakingToken;
 
-    address public owner;
-
-    // This is the reward token per second
-    // Which will be multiplied by the tokens the user staked divided by the total
-    // This ensures a steady reward rate of the platform
-    // So the more users stake, the less for everyone who is staking.
     uint256 public REWARD_RATE;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
@@ -37,14 +25,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
     event WithdrewStake(address indexed user, uint256 indexed amount);
     event IssuanceUpdated(uint256 issuance, uint256 vestingPeriodEnd);
 
-    constructor(
-        address stakingToken,
-        address rewardsToken,
-        address _owner
-    ) ERC20("xMugen", "xMGN") {
+    constructor(address stakingToken, address rewardsToken)
+        ERC20("xMugen", "xMGN")
+    {
         s_stakingToken = stakingToken;
         s_rewardsToken = rewardsToken;
-        owner = _owner;
     }
 
     /**
@@ -58,8 +43,8 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
     function issuanceRate(uint256 rewards, uint256 _vestingPeriod)
         external
         nonReentrant
+        onlyOwner
     {
-        require(msg.sender == owner, "NOT_OWNER");
         require(totalSupply() != 0, "xMGN:UVS:ZERO_SUPPLY");
         vestingPeriodFinish = block.timestamp + _vestingPeriod;
         bool success = ERC20(s_rewardsToken).transferFrom(
@@ -104,6 +89,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
     /**
      * @notice Deposit tokens into this contract
      * @param assets_ | How much to stake
+     * @param receiver_ | How is staking and getting xMugen
      */
     function deposit(uint256 assets_, address receiver_)
         external
@@ -130,6 +116,8 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
     /**
      * @notice Withdraw tokens from this contract
      * @param assets_ | How much to withdraw
+     * @param receiver_ | Address receiving Mugen back
+     * @param owner_ | Address that owns those assets
      */
     function withdraw(
         uint256 assets_,
@@ -176,7 +164,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         require(assets_ != uint256(0), "xMGN:M:ZERO_ASSETS");
 
         _mint(receiver_, shares_);
-
         bool success = ERC20(s_stakingToken).transferFrom(
             receiver_,
             address(this),
@@ -203,12 +190,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         require(shares_ != uint256(0), "xMGN:B:ZERO_SHARES");
         require(assets_ != uint256(0), "xMGN:B:ZERO_ASSETS");
 
-        // if (caller_ != owner_) {
-        //     _decreaseAllowance(owner_, caller_, shares_);
-        // }
+        if (caller_ != owner_) {
+            decreaseAllowance(caller_, shares_);
+        }
         claimReward(shares_);
         _burn(owner_, shares_);
-
         emit Withdraw(caller_, receiver_, owner_, assets_, shares_);
 
         bool success = ERC20(s_stakingToken).transfer(receiver_, assets_);
@@ -218,14 +204,16 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         }
     }
 
-    function claimReward(uint256 amount) internal updateReward(msg.sender) {
-        uint256 claimedPercentage = (100 * amount) / (balanceOf(msg.sender));
-        uint256 reward = s_rewards[msg.sender];
-        uint256 claimed = (reward * claimedPercentage) / 100;
-        s_rewards[msg.sender] -= claimed;
-        unvestedRewards = unvestedRewards - claimed;
-        emit RewardsClaimed(msg.sender, claimed);
-        bool success = ERC20(s_rewardsToken).transfer(msg.sender, claimed);
+    /**
+     * @notice calculates the percentage of their balance they are unstake them pays that percentage of their rewards
+     * @param amount | how many tokens they are unstaking
+     */
+    function claimReward(uint256 amount) internal {
+        uint256 reward = (s_rewards[msg.sender] * amount) /
+            balanceOf(msg.sender);
+        s_rewards[msg.sender] -= reward;
+        emit RewardsClaimed(msg.sender, reward);
+        bool success = ERC20(s_rewardsToken).transfer(msg.sender, reward);
         if (!success) {
             revert TRANSFER_FAILED();
         }
@@ -239,12 +227,16 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
     }
 
     function _updateIssuanceParams() internal {
-        REWARD_RATE = block.timestamp > vestingPeriodFinish ? 0 : REWARD_RATE;
+        REWARD_RATE = block.timestamp >= vestingPeriodFinish
+            ? 0
+            : (ERC20(s_rewardsToken).balanceOf(address(this)) -
+                unvestedRewards) / (vestingPeriodFinish - block.timestamp);
     }
 
     /********************/
-    /* Modifiers Functions */
+    /* Modifier Function */
     /********************/
+
     modifier updateReward(address account) {
         s_rewardPerTokenStored = rewardPerToken();
         unVestedAssets();
@@ -255,20 +247,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         _;
     }
 
-    modifier moreThanZero(uint256 amount) {
-        if (amount == 0) {
-            revert NeedsMoreThanZero();
-        }
-        _;
-    }
-
     /********************/
     /* View Functions */
     /********************/
-    // Ideally, we'd have getter functions for all our s_ variables we want exposed, and set them all to private.
-    // But, for the purpose of this demo, we've left them public for simplicity.
 
-    function getStaked(address account) public view returns (uint256) {
+    function getStaked(address account) external view returns (uint256) {
         return balanceOf(account);
     }
 
@@ -276,12 +259,10 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         return unvestedRewards;
     }
 
-    //Checked
-    function checkRR() external view returns (uint256) {
+    function getRewardRate() external view returns (uint256) {
         return REWARD_RATE;
     }
 
-    //checked
     function checkVestingEnd() external view returns (uint256) {
         return vestingPeriodFinish;
     }
@@ -292,7 +273,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard {
         override
         returns (address assetTokenAddress)
     {
-        return s_rewardsToken;
+        return s_stakingToken;
     }
 
     function totalAssets()

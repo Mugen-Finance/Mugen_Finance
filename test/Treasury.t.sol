@@ -6,18 +6,14 @@ import "forge-std/Vm.sol";
 import "../src/Mugen.sol";
 import "../src/Treasury.sol";
 import "../src/mocks/MockERC20.sol";
+import "../lib/chainlink/contracts/src/v0.8/tests/MockV3Aggregator.sol";
 
 contract TreasuryTest is Test {
     Treasury treasury;
     Mugen mugen;
     MockERC20 asset;
+    MockV3Aggregator USDCAggregator;
+    MockERC20 USDC;
 
-    function setUp() public {
-        mugen = new Mugen();
-        treasury = new Treasury(address(mugen), msg.sender);
-        mugen.transferOwnership(address(treasury));
-        asset = new MockDAI(1e24);
-    }
-
-    function test() public {}
+    function setUp() public {}
 }

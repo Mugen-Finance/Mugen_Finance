@@ -12,11 +12,5 @@ contract xMugenTest is Test {
     xMugen xMGN;
     MockUSDC reward;
 
-    function setUp() public {
-        mugen = new Mugen();
-        reward = new MockUSDC(1000000 * 1e18);
-        xMGN = new xMugen(address(mugen), address(reward), address(this));
-        mugen.approve(address(xMGN), type(uint256).max);
-        reward.approve(address(xMGN), type(uint256).max);
-    }
+    function setUp() public {}
 }
