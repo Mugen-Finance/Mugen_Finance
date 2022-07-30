@@ -7,7 +7,7 @@ import "./interfaces/IMugen.sol";
 import "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "openzeppelin/contracts/utils/math/SafeMath.sol";
 import "openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./interfaces/NotAggregatorV3Interface.sol";
+import "./interfaces/AggregatorV3Interface.sol";
 import "./NonblockingLzApp.sol";
 
 contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
@@ -15,7 +15,7 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     address public treasury;
 
     mapping(IERC20 => bool) public depositableTokens;
-    mapping(IERC20 => NotAggregatorV3Interface) public priceFeeds;
+    mapping(IERC20 => AggregatorV3Interface) public priceFeeds;
 
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
@@ -76,7 +76,7 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
         external
         onlyOwner
     {
-        priceFeeds[_token] = NotAggregatorV3Interface(_pricefeed);
+        priceFeeds[_token] = AggregatorV3Interface(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }

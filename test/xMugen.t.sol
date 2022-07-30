@@ -6,11 +6,72 @@ import "forge-std/Vm.sol";
 import "../src/Mugen.sol";
 import "../src/xMugen.sol";
 import "../src/mocks/MockERC20.sol";
+import "../src/mocks/LZEndpointMock.sol";
 
 contract xMugenTest is Test {
     Mugen mugen;
     xMugen xMGN;
     MockUSDC reward;
+    LZEndpointMock endpoint;
 
-    function setUp() public {}
+    function setUp() public {
+        endpoint = new LZEndpointMock(2);
+        mugen = new Mugen(address(endpoint));
+        reward = new MockUSDC(type(uint256).max);
+        xMGN = new xMugen(address(mugen), address(reward));
+        reward.approve(address(xMGN), type(uint256).max);
+        mugen.approve(address(xMGN), type(uint256).max);
+        mugen.mint(address(this), type(uint256).max);
+    }
+
+    function testIssuance() public {
+        xMGN.deposit(100, address(this));
+        xMGN.issuanceRate(100000 * 1e18, 200000);
+        uint256 rr = (100000 * 1e18) / 200000;
+        assertEq(xMGN.checkVestingEnd(), 200001);
+        assertEq(xMGN.getRewardRate(), rr);
+    }
+
+    function testDeposit() public {
+        xMGN.deposit(100, address(this));
+        assertEq(mugen.balanceOf(address(xMGN)), 100);
+        assertEq(xMGN.balanceOf(address(this)), 100);
+        assertEq(xMGN.totalSupply(), 100);
+        xMGN.mint(100, address(this));
+        assertEq(mugen.balanceOf(address(xMGN)), 200);
+        assertEq(xMGN.balanceOf(address(this)), 200);
+        assertEq(xMGN.totalSupply(), 200);
+    }
+
+    function testWithdraw() public {
+        xMGN.deposit(100, address(this));
+        xMGN.withdraw(100, address(this), address(this));
+        assertEq(mugen.balanceOf(address(xMGN)), 0);
+        assertEq(xMGN.totalSupply(), 0);
+        xMGN.deposit(100, address(this));
+        xMGN.redeem(100, address(this), address(this));
+        assertEq(mugen.balanceOf(address(xMGN)), 0);
+        assertEq(xMGN.totalSupply(), 0);
+    }
+
+    function testAccounting() public {
+        xMGN.mint(100000000 * 1e18, address(this));
+        xMGN.issuanceRate(1000000 * 1e18, 200000);
+        vm.warp(10000);
+        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
+        vm.warp(10000);
+        xMGN.earned(address(this));
+        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
+        vm.warp(100001);
+        xMGN.earned(address(this));
+        xMGN.rewardPerToken();
+        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
+        vm.warp(1000);
+        xMGN.totalSupply();
+        xMGN.getStored();
+        xMGN.getPaid(address(this));
+        xMGN.getRewardRate();
+        // xMGN.rewardPerToken();
+        // xMGN.withdraw(25000000 * 1e18, address(this), address(this));
+    }
 }

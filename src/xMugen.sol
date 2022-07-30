@@ -40,6 +40,14 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     /*** Accounting Logic ***/
     /************************/
 
+    function getStored() external view returns (uint256) {
+        return s_rewardPerTokenStored;
+    }
+
+    function getPaid(address account) external view returns (uint256) {
+        return s_userRewardPerTokenPaid[account];
+    }
+
     function issuanceRate(uint256 rewards, uint256 _vestingPeriod)
         external
         nonReentrant
@@ -212,6 +220,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         uint256 reward = (s_rewards[msg.sender] * amount) /
             balanceOf(msg.sender);
         s_rewards[msg.sender] -= reward;
+        unvestedRewards -= reward;
         emit RewardsClaimed(msg.sender, reward);
         bool success = ERC20(s_rewardsToken).transfer(msg.sender, reward);
         if (!success) {
@@ -227,10 +236,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     }
 
     function _updateIssuanceParams() internal {
-        REWARD_RATE = block.timestamp >= vestingPeriodFinish
-            ? 0
-            : (ERC20(s_rewardsToken).balanceOf(address(this)) -
-                unvestedRewards) / (vestingPeriodFinish - block.timestamp);
+        REWARD_RATE = block.timestamp >= vestingPeriodFinish ? 0 : REWARD_RATE;
     }
 
     /********************/
