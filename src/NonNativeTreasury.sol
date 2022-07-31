@@ -49,7 +49,8 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     ) external nonReentrant depositable(_token) {
         require(_amount > 0, "Deposit must be more than 0");
         uint256 _value = getValue(_token, _amount);
-        bytes memory payload = abi.encode(_value);
+        uint256 increase = _value.div(1e3);
+        bytes memory payload = abi.encode(increase);
         uint16 version = 1;
         uint256 gasForDestinationLzReceive = 350000;
         bytes memory adapterParams = abi.encodePacked(
