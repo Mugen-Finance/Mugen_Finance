@@ -125,6 +125,13 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
      * helps keep a relatively close token mint price to one another.
      */
 
+    function addLayerZeroMapping(address _srcTreasuryAddress, uint16 srcChain)
+        external
+        onlyOwner
+    {
+        layerZeroAddress[_srcTreasuryAddress] = srcChain;
+    }
+
     function _nonblockingLzReceive(
         uint16,
         bytes memory _srcAddress,
