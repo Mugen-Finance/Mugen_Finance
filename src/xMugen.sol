@@ -6,14 +6,15 @@ import "openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./interfaces/IERC4626.sol";
 import "openzeppelin/contracts/access/Ownable.sol";
+import "openzeppelin/contracts/utils/math/Math.sol";
 
 error TRANSFER_FAILED();
 
 contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
-    address public s_rewardsToken;
-    address public s_stakingToken;
+    address public immutable s_rewardsToken;
+    address public immutable s_stakingToken;
 
-    uint256 public REWARD_RATE;
+    uint256 public rewardRate;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
     uint256 public vestingPeriodFinish;
@@ -54,18 +55,23 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         onlyOwner
     {
         require(totalSupply() != 0, "xMGN:UVS:ZERO_SUPPLY");
-        vestingPeriodFinish = block.timestamp + _vestingPeriod;
+        s_rewardPerTokenStored = rewardPerToken();
+        unVestedAssets();
+        uint256 _vestingPeriodFinish;
+        vestingPeriodFinish = _vestingPeriodFinish =
+            block.timestamp +
+            _vestingPeriod;
         bool success = ERC20(s_rewardsToken).transferFrom(
             msg.sender,
             address(this),
             rewards
         );
-        REWARD_RATE =
+        uint256 _rewardRate;
+        rewardRate = _rewardRate =
             (ERC20(s_rewardsToken).balanceOf(address(this)) - unvestedRewards) /
             _vestingPeriod;
-        uint256 _rewardRate = REWARD_RATE;
         emit RewardDeposit(msg.sender, rewards);
-        emit IssuanceUpdated(_rewardRate, vestingPeriodFinish);
+        emit IssuanceUpdated(_rewardRate, _vestingPeriodFinish);
 
         if (!success) revert TRANSFER_FAILED();
     }
@@ -76,8 +82,10 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         }
         return
             s_rewardPerTokenStored +
-            (((block.timestamp - s_lastUpdateTime) * REWARD_RATE * 1e18) /
-                totalSupply());
+            (((Math.min(vestingPeriodFinish, block.timestamp) -
+                s_lastUpdateTime) *
+                rewardRate *
+                1e18) / totalSupply());
     }
 
     /**
@@ -114,7 +122,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         external
         virtual
         override
-        updateReward(msg.sender)
+        updateReward(receiver_)
         nonReentrant
         returns (uint256 assets_)
     {
@@ -135,7 +143,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         external
         virtual
         override
-        updateReward(msg.sender)
+        updateReward(receiver_)
         nonReentrant
         returns (uint256 shares_)
     {
@@ -173,7 +181,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
 
         _mint(receiver_, shares_);
         bool success = ERC20(s_stakingToken).transferFrom(
-            receiver_,
+            msg.sender,
             address(this),
             assets_
         );
@@ -181,7 +189,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
             revert TRANSFER_FAILED();
         }
 
-        emit Deposit(caller_, receiver_, assets_, shares_);
+        emit Deposit(msg.sender, receiver_, assets_, shares_);
     }
 
     /**
@@ -199,7 +207,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         require(assets_ != uint256(0), "xMGN:B:ZERO_ASSETS");
 
         if (caller_ != owner_) {
-            decreaseAllowance(caller_, shares_);
+            _spendAllowance(owner_, caller_, shares_);
         }
         claimReward(shares_);
         _burn(owner_, shares_);
@@ -229,14 +237,10 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     }
 
     function unVestedAssets() internal {
-        if (REWARD_RATE == 0) unvestedRewards = unvestedRewards;
         unvestedRewards =
-            ((block.timestamp - s_lastUpdateTime) * REWARD_RATE) +
+            ((Math.min(vestingPeriodFinish, block.timestamp) -
+                s_lastUpdateTime) * rewardRate) +
             unvestedRewards;
-    }
-
-    function _updateIssuanceParams() internal {
-        REWARD_RATE = block.timestamp >= vestingPeriodFinish ? 0 : REWARD_RATE;
     }
 
     /********************/
@@ -246,7 +250,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     modifier updateReward(address account) {
         s_rewardPerTokenStored = rewardPerToken();
         unVestedAssets();
-        _updateIssuanceParams();
         s_lastUpdateTime = block.timestamp;
         s_rewards[account] = earned(account);
         s_userRewardPerTokenPaid[account] = s_rewardPerTokenStored;
@@ -266,7 +269,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     }
 
     function getRewardRate() external view returns (uint256) {
-        return REWARD_RATE;
+        return rewardRate;
     }
 
     function checkVestingEnd() external view returns (uint256) {
@@ -286,12 +289,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         external
         view
         override
-        returns (uint256 totalManagedAssets)
+        returns (uint256 totalManagedMugen, uint256 totalManagedReward)
     {
         uint256 stakedAmount = ERC20(s_stakingToken).balanceOf(address(this));
         uint256 rewardAmount = ERC20(s_rewardsToken).balanceOf(address(this));
-        uint256 totalAmount = stakedAmount + rewardAmount;
-        return totalAmount;
+        return (stakedAmount, rewardAmount);
     }
 
     function balanceOfAssets(address account_)

@@ -11,8 +11,8 @@ import "./interfaces/AggregatorV3Interface.sol";
 import "./NonblockingLzApp.sol";
 
 contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
-    IMugen Mugen;
-    address public treasury;
+    IMugen public immutable mugen;
+    address public immutable treasury;
 
     mapping(IERC20 => bool) public depositableTokens;
     mapping(IERC20 => AggregatorV3Interface) public priceFeeds;
@@ -23,7 +23,11 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     uint256 internal valueDeposited;
     uint256 internal tokenMintPrice;
 
+    uint256 internal constant validPeriod = 12 hours;
+
     error NotDepositable();
+    error NotUpdated();
+    error InvalidPrice();
     error TransferFail();
 
     event Deposit(
@@ -38,9 +42,13 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
         address _treasury,
         address _endpoint
     ) NonblockingLzApp(_endpoint) {
-        Mugen = IMugen(_mugen);
+        mugen = IMugen(_mugen);
         treasury = _treasury;
     }
+
+    /*************************/
+    /****  User Functions ****/
+    /*************************/
 
     function deposit(
         IERC20 _token,
@@ -49,8 +57,8 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     ) external nonReentrant depositable(_token) {
         require(_amount > 0, "Deposit must be more than 0");
         uint256 _value = getValue(_token, _amount);
-        uint256 increase = _value.div(1e3);
-        bytes memory payload = abi.encode(increase);
+        uint256 increase = _value / 1e3;
+        bytes memory payload = abi.encode(_value, increase, msg.sender);
         uint16 version = 1;
         uint256 gasForDestinationLzReceive = 350000;
         bytes memory adapterParams = abi.encodePacked(
@@ -66,7 +74,7 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
         );
         emit Deposit(msg.sender, _token, _value);
         IERC20(_token).safeTransferFrom(msg.sender, treasury, _amount);
-        Mugen.mint(msg.sender, _value);
+        mugen.mint(msg.sender, _value);
     }
 
     /**************************/
@@ -77,6 +85,10 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
         external
         onlyOwner
     {
+        require(
+            AggregatorV3Interface(_pricefeed).decimals() == 8,
+            "wrong decimals"
+        );
         priceFeeds[_token] = AggregatorV3Interface(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
@@ -91,12 +103,13 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     /****  View Functions ****/
     /*************************/
 
+    //Think about the necessity of the tokenMintPrice variable in this function. Can this be abstracted away to the main treasury contract?
     function getValue(IERC20 _token, uint256 _amount)
         internal
         view
         returns (uint256)
     {
-        uint256 value = usdPrice(_token).mul(_amount).div(tokenMintPrice);
+        uint256 value = (usdPrice(_token) * _amount * 1e18) / tokenMintPrice;
         return value;
     }
 
@@ -109,13 +122,16 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
     }
 
     function getPrice(IERC20 _token) public view returns (uint256) {
-        (, int256 price, , , ) = priceFeeds[_token].latestRoundData();
+        (, int256 price, , uint256 updatedAt, ) = priceFeeds[_token]
+            .latestRoundData();
+        if (block.timestamp - updatedAt > validPeriod) revert NotUpdated();
+        if (price <= 0) revert InvalidPrice();
         return uint256(price);
     }
 
     function usdPrice(IERC20 _token) public view returns (uint256) {
         uint256 tokenPrice = getPrice(_token);
-        uint256 tokenUsdPrice = tokenPrice.div(1e8);
+        uint256 tokenUsdPrice = tokenPrice / 1e8;
         return tokenUsdPrice;
     }
 
@@ -138,8 +154,11 @@ contract NonNativeTreasury is NonblockingLzApp, ReentrancyGuard {
         uint64, /*_nonce*/
         bytes memory _payload
     ) internal override {
-        uint256 tokenPrice = abi.decode(_payload, (uint256));
-        tokenMintPrice = tokenPrice.div(1e18);
+        (uint256 mintAmount, address _depositor) = abi.decode(
+            _payload,
+            (uint256, address)
+        );
+        mugen.mint(_depositor, mintAmount);
     }
 
     receive() external payable {}

@@ -28,7 +28,8 @@ contract xMugenTest is Test {
         xMGN.deposit(100, address(this));
         xMGN.issuanceRate(100000 * 1e18, 200000);
         uint256 rr = (100000 * 1e18) / 200000;
-        assertEq(xMGN.checkVestingEnd(), 200001);
+        uint256 time = block.timestamp + 200000;
+        assertEq(xMGN.checkVestingEnd(), time);
         assertEq(xMGN.getRewardRate(), rr);
     }
 
@@ -54,24 +55,13 @@ contract xMugenTest is Test {
         assertEq(xMGN.totalSupply(), 0);
     }
 
-    function testAccounting() public {
-        xMGN.mint(100000000 * 1e18, address(this));
-        xMGN.issuanceRate(1000000 * 1e18, 200000);
-        vm.warp(10000);
-        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
-        vm.warp(10000);
+    function testAccounting(uint176 amount) public {
+        vm.assume(amount > 1e18);
+        xMGN.mint(amount, address(this));
+        xMGN.issuanceRate(amount, 200000);
+        vm.warp(100000);
         xMGN.earned(address(this));
-        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
-        vm.warp(100001);
-        xMGN.earned(address(this));
-        xMGN.rewardPerToken();
-        xMGN.withdraw(25000000 * 1e18, address(this), address(this));
-        vm.warp(1000);
-        xMGN.totalSupply();
-        xMGN.getStored();
-        xMGN.getPaid(address(this));
-        xMGN.getRewardRate();
-        // xMGN.rewardPerToken();
-        // xMGN.withdraw(25000000 * 1e18, address(this), address(this));
+        uint256 quarter = (amount) / 2;
+        xMGN.withdraw(quarter, address(this), address(this));
     }
 }

@@ -9,10 +9,11 @@ import "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "openzeppelin/contracts/utils/math/SafeMath.sol";
 import "openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./interfaces/AggregatorV3Interface.sol";
+import "openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 contract Treasury is NonblockingLzApp, ReentrancyGuard {
-    IMugen Mugen;
-    address public treasury;
+    IMugen public immutable mugen;
+    address public immutable treasury;
 
     mapping(IERC20 => bool) public depositableTokens;
     mapping(IERC20 => AggregatorV3Interface) public priceFeeds;
@@ -23,9 +24,13 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
 
     uint256 internal valueDeposited;
     uint256 internal tokenMintPrice;
+    uint256 internal constant validPeriod = 12 hours;
 
     error NotDepositable();
+    error NotUpdated();
+    error InvalidPrice();
 
+    event TokenRemoved(IERC20 indexed _token);
     event Deposit(
         address indexed depositor,
         IERC20 indexed token,
@@ -38,11 +43,11 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         address _treasury,
         address _endpoint
     ) NonblockingLzApp(_endpoint) {
-        Mugen = IMugen(_mugen);
+        mugen = IMugen(_mugen);
         treasury = _treasury;
     }
 
-    function deposit(IERC20 _token, uint256 _amount)
+    function deposit(IERC20Metadata _token, uint256 _amount)
         external
         nonReentrant
         depositable(_token)
@@ -51,14 +56,15 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         if (tokenMintPrice == 0) {
             tokenMintPrice += 100 * 1e18;
         }
-        uint256 value = usdPrice(_token).mul(_amount).div(
-            tokenMintPrice.div(1e18)
-        );
+        uint256 tokenPrice = getPrice(_token);
+        uint256 value = ((tokenPrice * _amount * 1e18) / tokenMintPrice) /
+            10**_token.decimals();
+        // require(value >= )
         valueDeposited += value;
         tokenMintPrice += value.div(1e3);
         emit Deposit(msg.sender, _token, value);
         IERC20(_token).safeTransferFrom(msg.sender, treasury, _amount);
-        Mugen.mint(msg.sender, value);
+        mugen.mint(msg.sender, value);
     }
 
     /**************************/
@@ -69,6 +75,10 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         external
         onlyOwner
     {
+        require(
+            AggregatorV3Interface(_pricefeed).decimals() == 8,
+            "wrong decimals"
+        );
         priceFeeds[_token] = AggregatorV3Interface(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
@@ -77,6 +87,7 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
     function removeTokenInfo(IERC20 _token) external onlyOwner {
         delete depositableTokens[_token];
         delete priceFeeds[_token];
+        emit TokenRemoved(_token);
     }
 
     /*************************/
@@ -92,7 +103,10 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
     }
 
     function getPrice(IERC20 _token) public view returns (uint256) {
-        (, int256 price, , , ) = priceFeeds[_token].latestRoundData();
+        (, int256 price, , uint256 updatedAt, ) = priceFeeds[_token]
+            .latestRoundData();
+        if (block.timestamp - updatedAt > validPeriod) revert NotUpdated();
+        if (price <= 0) revert InvalidPrice();
         return uint256(price);
     }
 
@@ -144,9 +158,13 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
             sendBackToAddress := mload(add(_srcAddress, 20))
         }
         uint16 _returnChainId = layerZeroAddress[sendBackToAddress];
-        uint256 _value = abi.decode(_payload, (uint256));
-        tokenMintPrice += _value;
-        bytes memory payload = abi.encode(tokenMintPrice);
+        (uint256 _value, uint256 _increase, address _depositor) = abi.decode(
+            _payload,
+            (uint256, uint256, address)
+        );
+        uint256 mintAmount = _value / tokenMintPrice;
+        tokenMintPrice += _increase;
+        bytes memory payload = abi.encode(mintAmount, _depositor);
         uint16 version = 1;
         uint256 gasForDestinationLzReceive = 350000;
         bytes memory adapterParams = abi.encodePacked(

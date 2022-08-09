@@ -59,7 +59,10 @@ interface IERC4626 is IERC20, IERC20Metadata {
      * - MUST be inclusive of any fees that are charged against assets in the Vault.
      * - MUST NOT revert.
      */
-    function totalAssets() external view returns (uint256 totalManagedAssets);
+    function totalAssets()
+        external
+        view
+        returns (uint256 totalManagedMugen, uint256 totalManagedReward);
 
     /**
      * @dev Returns the amount of shares that the Vault would exchange for the amount of assets provided, in an ideal
