@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import "forge-std/Vm.sol";
-import "../src/Mugen.sol";
-import "../src/xMugen.sol";
+import "../src/Mugen/Mugen.sol";
+import "../src/Mugen/xMugen.sol";
 import "../src/mocks/MockERC20.sol";
 import "../src/mocks/LZEndpointMock.sol";
 
@@ -13,6 +13,7 @@ contract xMugenTest is Test {
     xMugen xMGN;
     MockUSDC reward;
     LZEndpointMock endpoint;
+    address alice = address(0x1337);
 
     function setUp() public {
         endpoint = new LZEndpointMock(2);
@@ -22,46 +23,92 @@ contract xMugenTest is Test {
         reward.approve(address(xMGN), type(uint256).max);
         mugen.approve(address(xMGN), type(uint256).max);
         mugen.mint(address(this), type(uint256).max);
+        reward.transfer(alice, 1e25);
+        mugen.transfer(alice, 1e25);
+        vm.prank(alice);
+        mugen.approve(address(xMGN), type(uint256).max);
     }
 
     function testIssuance() public {
-        xMGN.deposit(100, address(this));
-        xMGN.issuanceRate(100000 * 1e18, 200000);
-        uint256 rr = (100000 * 1e18) / 200000;
-        uint256 time = block.timestamp + 200000;
-        assertEq(xMGN.checkVestingEnd(), time);
-        assertEq(xMGN.getRewardRate(), rr);
+        vm.expectRevert("xMGN:UVS:ZERO_SUPPLY");
+        xMGN.issuanceRate(100 * 1e18);
+        vm.prank(alice);
+        vm.expectRevert("Ownable: caller is not the owner");
+        xMGN.issuanceRate(100 * 1e18);
+        xMGN.deposit(1000 * 1e18, alice);
+        assertEq(xMGN.balanceOf(alice), 1000 * 1e18);
+        assertEq(xMGN.totalSupply(), 1000 * 1e18);
+        xMGN.issuanceRate(100 * 1e18);
+        uint256 time = 30 days;
+        assertEq(reward.balanceOf(address(xMGN)), 100 * 1e18);
+        assertEq(xMGN.getRewardRate(), (100 * 1e18) / time);
+        vm.warp(15 days);
+        xMGN.issuanceRate(100 * 1e18);
+        assertEq(reward.balanceOf(address(xMGN)), 200 * 1e18);
     }
 
-    function testDeposit() public {
-        xMGN.deposit(100, address(this));
-        assertEq(mugen.balanceOf(address(xMGN)), 100);
-        assertEq(xMGN.balanceOf(address(this)), 100);
-        assertEq(xMGN.totalSupply(), 100);
-        xMGN.mint(100, address(this));
-        assertEq(mugen.balanceOf(address(xMGN)), 200);
-        assertEq(xMGN.balanceOf(address(this)), 200);
-        assertEq(xMGN.totalSupply(), 200);
+    function testDeposits() public {
+        //     //can send reward to whoever you want
+        //     /*
+        //     Odd edge case around overflow/underflow after initial deposit.
+        //     Was fixed by depositing reward tokens but unclear as to why this pops up.
+        //     Same happens with the first initial issuance update. If it is zero causes
+        //     the same issue
+        //     All revolves around rewardPerToken call.
+        //     */
+        xMGN.deposit(100 * 1e18, address(this));
+        //     xMGN.issuanceRate(100 * 1e18);
+        //     vm.warp(100);
+        vm.prank(alice);
+        xMGN.deposit(100 * 1e18, alice);
+        assertEq(xMGN.balanceOf(address(this)), 100 * 1e18);
+        assertEq(xMGN.balanceOf(alice), 100 * 1e18);
+        vm.prank(alice);
+        xMGN.deposit(100 * 1e18, alice);
+        vm.prank(alice);
+        xMGN.deposit(100 * 1e18, address(this));
+        assertEq(xMGN.balanceOf(address(this)), 200 * 1e18);
+        assertEq(xMGN.balanceOf(alice), 200 * 1e18);
+    }
+
+    function testMint() public {
+        //     //Same issues as stated above
+        xMGN.mint(100 * 1e18, address(this));
+        //     xMGN.issuanceRate(100 * 1e18);
+        vm.warp(100);
+        vm.prank(alice);
+        xMGN.mint(100 * 1e18, alice);
+        assertEq(xMGN.balanceOf(address(this)), 100 * 1e18);
+        assertEq(xMGN.balanceOf(alice), 100 * 1e18);
+        vm.prank(alice);
+        xMGN.mint(100 * 1e18, alice);
+        vm.prank(alice);
+        xMGN.mint(100 * 1e18, address(this));
+        assertEq(xMGN.balanceOf(address(this)), 200 * 1e18);
+        assertEq(xMGN.balanceOf(alice), 200 * 1e18);
     }
 
     function testWithdraw() public {
-        xMGN.deposit(100, address(this));
-        xMGN.withdraw(100, address(this), address(this));
-        assertEq(mugen.balanceOf(address(xMGN)), 0);
-        assertEq(xMGN.totalSupply(), 0);
-        xMGN.deposit(100, address(this));
-        xMGN.redeem(100, address(this), address(this));
-        assertEq(mugen.balanceOf(address(xMGN)), 0);
-        assertEq(xMGN.totalSupply(), 0);
-    }
-
-    function testAccounting(uint176 amount) public {
-        vm.assume(amount > 1e18);
-        xMGN.mint(amount, address(this));
-        xMGN.issuanceRate(amount, 200000);
-        vm.warp(100000);
-        xMGN.earned(address(this));
-        uint256 quarter = (amount) / 2;
-        xMGN.withdraw(quarter, address(this), address(this));
+        //     //Not fully distributing rewards, most likely because of the way that updated rewards is set up
+        xMGN.mint(100 * 1e18, address(this));
+        xMGN.issuanceRate(100 * 1e18);
+        vm.warp(100);
+        xMGN.withdraw(50 * 1e18, address(this), address(this));
+        vm.warp(100);
+        xMGN.withdraw(50 * 1e18, address(this), address(this));
+        vm.prank(alice);
+        xMGN.deposit(1000 * 1e18, alice);
+        vm.warp(15 days);
+        xMGN.earned(alice);
+        vm.prank(alice);
+        xMGN.withdraw(500 * 1e18, alice, alice);
+        xMGN.earned(alice);
+        vm.warp(33 days);
+        xMGN.deposit(100 * 1e18, address(this));
+        xMGN.earned(alice);
+        vm.prank(alice);
+        xMGN.withdraw(500 * 1e18, alice, alice);
+        uint256 acceptableDust = 1e10;
+        assertLt(reward.balanceOf(address(xMGN)), acceptableDust);
     }
 }

@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import "forge-std/Vm.sol";
-import "../src/Fundraising.sol";
+import "../src/Mugen/Fundraising.sol";
 import "../src/mocks/MockERC20.sol";
 
 contract MugenTest is Test {

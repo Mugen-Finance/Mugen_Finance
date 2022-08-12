@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import "forge-std/Vm.sol";
-import "../src/Mugen.sol";
+import "../src/Mugen/Mugen.sol";
 
 contract MugenTest is Test {
     Mugen mugen;

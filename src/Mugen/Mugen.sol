@@ -5,7 +5,7 @@ pragma solidity 0.8.7;
 import "openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin/contracts/utils/introspection/IERC165.sol";
 import "./OFTCore.sol";
-import "./interfaces/IMugen.sol";
+import "../interfaces/IMugen.sol";
 
 contract Mugen is OFTCore, ERC20, IMugen {
     constructor(address _lzEndpoint)

@@ -4,136 +4,133 @@ pragma solidity ^0.8.7;
 
 import "openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "./interfaces/IERC4626.sol";
+import "../interfaces/IERC4626.sol";
 import "openzeppelin/contracts/access/Ownable.sol";
 import "openzeppelin/contracts/utils/math/Math.sol";
 
 error TRANSFER_FAILED();
 
 contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
-    address public immutable s_rewardsToken;
-    address public immutable s_stakingToken;
+    ERC20 public rewardsToken;
+    ERC20 public stakingToken;
 
-    uint256 public rewardRate;
-    uint256 public s_lastUpdateTime;
-    uint256 public s_rewardPerTokenStored;
-    uint256 public vestingPeriodFinish;
-    uint256 public unvestedRewards;
+    uint256 public lastUpdateTime;
+    uint256 public rewardPerTokenStored;
+    uint256 public periodFinish = 0;
+    uint256 public rewardRate = 0;
+    uint256 public rewardsDuration = 30 days;
 
-    mapping(address => uint256) public s_userRewardPerTokenPaid;
-    mapping(address => uint256) public s_rewards;
+    mapping(address => uint256) public userRewardPerTokenPaid;
+    mapping(address => uint256) public rewards;
 
     event WithdrewStake(address indexed user, uint256 indexed amount);
     event IssuanceUpdated(uint256 issuance, uint256 vestingPeriodEnd);
 
-    constructor(address stakingToken, address rewardsToken)
+    constructor(address _stakingToken, address _rewardsToken)
         ERC20("xMugen", "xMGN")
     {
-        s_stakingToken = stakingToken;
-        s_rewardsToken = rewardsToken;
+        rewardsToken = ERC20(_rewardsToken);
+        stakingToken = ERC20(_stakingToken);
     }
-
-    /**
-     * @notice How much reward a token gets based on how long it's been in and during which "snapshots"
-     */
 
     /************************/
     /*** Accounting Logic ***/
     /************************/
 
-    function getStored() external view returns (uint256) {
-        return s_rewardPerTokenStored;
-    }
-
-    function getPaid(address account) external view returns (uint256) {
-        return s_userRewardPerTokenPaid[account];
-    }
-
-    function issuanceRate(uint256 rewards, uint256 _vestingPeriod)
+    function issuanceRate(uint256 _rewards)
         external
         nonReentrant
         onlyOwner
+        updateReward(address(0))
     {
         require(totalSupply() != 0, "xMGN:UVS:ZERO_SUPPLY");
-        s_rewardPerTokenStored = rewardPerToken();
-        unVestedAssets();
-        uint256 _vestingPeriodFinish;
-        vestingPeriodFinish = _vestingPeriodFinish =
-            block.timestamp +
-            _vestingPeriod;
-        bool success = ERC20(s_rewardsToken).transferFrom(
+        if (block.timestamp >= periodFinish) {
+            rewardRate = _rewards / rewardsDuration;
+        } else {
+            uint256 remaining = periodFinish - block.timestamp;
+            uint256 leftover = remaining * rewardRate;
+            rewardRate = (_rewards + leftover) / rewardsDuration;
+        }
+
+        // Ensure the provided reward amount is not more than the balance in the contract.
+        // This keeps the reward rate in the right range, preventing overflows due to
+        // very high values of rewardRate in the earned and rewardsPerToken functions;
+        // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
+        bool success = ERC20(rewardsToken).transferFrom(
             msg.sender,
             address(this),
-            rewards
+            _rewards
         );
-        uint256 _rewardRate;
-        rewardRate = _rewardRate =
-            (ERC20(s_rewardsToken).balanceOf(address(this)) - unvestedRewards) /
-            _vestingPeriod;
-        emit RewardDeposit(msg.sender, rewards);
-        emit IssuanceUpdated(_rewardRate, _vestingPeriodFinish);
 
+        lastUpdateTime = block.timestamp;
+        periodFinish = block.timestamp + rewardsDuration;
+
+        emit RewardDeposit(msg.sender, _rewards);
         if (!success) revert TRANSFER_FAILED();
+    }
+
+    function lastTimeRewardApplicable() public view returns (uint256) {
+        return block.timestamp < periodFinish ? block.timestamp : periodFinish;
     }
 
     function rewardPerToken() public view returns (uint256) {
         if (totalSupply() == 0) {
-            return s_rewardPerTokenStored;
+            return rewardPerTokenStored;
         }
         return
-            s_rewardPerTokenStored +
-            (((Math.min(vestingPeriodFinish, block.timestamp) -
-                s_lastUpdateTime) *
+            rewardPerTokenStored +
+            (((lastTimeRewardApplicable() - lastUpdateTime) *
                 rewardRate *
                 1e18) / totalSupply());
     }
 
-    /**
-     * @notice How much reward a user has earned
-     */
     function earned(address account) public view returns (uint256) {
         return
             ((balanceOf(account) *
-                (rewardPerToken() - s_userRewardPerTokenPaid[account])) /
-                1e18) + s_rewards[account];
+                (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18) +
+            rewards[account];
+    }
+
+    function getRewardForDuration() external view returns (uint256) {
+        return rewardRate * rewardsDuration;
     }
 
     /************************/
-    /*** Staker Functions ***/
+    /**** User Functions ****/
     /************************/
+
+    //examine these for just basic interface purposes (IERC4626);
 
     /**
      * @notice Deposit tokens into this contract
      * @param assets_ | How much to stake
-     * @param receiver_ | How is staking and getting xMugen
+     * @param receiver_ | Who is receiving xMugen
      */
     function deposit(uint256 assets_, address receiver_)
         external
         virtual
         override
-        updateReward(msg.sender)
+        updateReward(receiver_)
         nonReentrant
         returns (uint256 shares_)
     {
         _mint(shares_ = assets_, assets_, receiver_, msg.sender);
     }
 
-    function mint(uint256 shares_, address receiver_)
+    function mint(uint256 assets_, address receiver_)
         external
         virtual
         override
         updateReward(receiver_)
         nonReentrant
-        returns (uint256 assets_)
+        returns (uint256 shares_)
     {
-        _mint(shares_, assets_ = shares_, receiver_, msg.sender);
+        _mint(shares_ = assets_, assets_, receiver_, msg.sender);
     }
 
     /**
      * @notice Withdraw tokens from this contract
      * @param assets_ | How much to withdraw
-     * @param receiver_ | Address receiving Mugen back
-     * @param owner_ | Address that owns those assets
      */
     function withdraw(
         uint256 assets_,
@@ -143,26 +140,26 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         external
         virtual
         override
-        updateReward(receiver_)
+        updateReward(owner_)
         nonReentrant
         returns (uint256 shares_)
     {
-        _burn(shares_ = assets_, assets_, receiver_, owner_, msg.sender);
+        burn(shares_ = assets_, assets_, receiver_, owner_, msg.sender);
     }
 
     function redeem(
-        uint256 shares_,
+        uint256 assets_,
         address receiver_,
         address owner_
     )
         external
         virtual
         override
-        updateReward(msg.sender)
+        updateReward(owner_)
         nonReentrant
-        returns (uint256 assets_)
+        returns (uint256 shares_)
     {
-        _burn(shares_, assets_ = shares_, receiver_, owner_, msg.sender);
+        burn(shares_ = assets_, assets_, receiver_, owner_, msg.sender);
     }
 
     /********************/
@@ -177,10 +174,9 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     ) internal {
         require(receiver_ != address(0), "xMGN:M:ZERO_RECEIVER");
         require(shares_ != uint256(0), "xMGN:M:ZERO_SHARES");
-        require(assets_ != uint256(0), "xMGN:M:ZERO_ASSETS");
 
         _mint(receiver_, shares_);
-        bool success = ERC20(s_stakingToken).transferFrom(
+        bool success = ERC20(stakingToken).transferFrom(
             msg.sender,
             address(this),
             assets_
@@ -189,13 +185,13 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
             revert TRANSFER_FAILED();
         }
 
-        emit Deposit(msg.sender, receiver_, assets_, shares_);
+        emit Deposit(caller_, msg.sender, receiver_, assets_, shares_);
     }
 
     /**
      * @notice User claims their tokens
      */
-    function _burn(
+    function burn(
         uint256 shares_,
         uint256 assets_,
         address receiver_,
@@ -204,7 +200,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     ) internal {
         require(receiver_ != address(0), "xMGN:B:ZERO_RECEIVER");
         require(shares_ != uint256(0), "xMGN:B:ZERO_SHARES");
-        require(assets_ != uint256(0), "xMGN:B:ZERO_ASSETS");
 
         if (caller_ != owner_) {
             _spendAllowance(owner_, caller_, shares_);
@@ -213,7 +208,9 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         _burn(owner_, shares_);
         emit Withdraw(caller_, receiver_, owner_, assets_, shares_);
 
-        bool success = ERC20(s_stakingToken).transfer(receiver_, assets_);
+        if (caller_ != owner_) increaseAllowance(caller_, shares_);
+
+        bool success = ERC20(stakingToken).transfer(receiver_, assets_);
 
         if (!success) {
             revert TRANSFER_FAILED();
@@ -225,22 +222,13 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
      * @param amount | how many tokens they are unstaking
      */
     function claimReward(uint256 amount) internal {
-        uint256 reward = (s_rewards[msg.sender] * amount) /
-            balanceOf(msg.sender);
-        s_rewards[msg.sender] -= reward;
-        unvestedRewards -= reward;
+        uint256 reward = (rewards[msg.sender] * amount) / balanceOf(msg.sender);
+        rewards[msg.sender] -= reward;
         emit RewardsClaimed(msg.sender, reward);
-        bool success = ERC20(s_rewardsToken).transfer(msg.sender, reward);
+        bool success = ERC20(rewardsToken).transfer(msg.sender, reward);
         if (!success) {
             revert TRANSFER_FAILED();
         }
-    }
-
-    function unVestedAssets() internal {
-        unvestedRewards =
-            ((Math.min(vestingPeriodFinish, block.timestamp) -
-                s_lastUpdateTime) * rewardRate) +
-            unvestedRewards;
     }
 
     /********************/
@@ -248,11 +236,12 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     /********************/
 
     modifier updateReward(address account) {
-        s_rewardPerTokenStored = rewardPerToken();
-        unVestedAssets();
-        s_lastUpdateTime = block.timestamp;
-        s_rewards[account] = earned(account);
-        s_userRewardPerTokenPaid[account] = s_rewardPerTokenStored;
+        rewardPerTokenStored = rewardPerToken();
+        lastUpdateTime = lastTimeRewardApplicable();
+        if (account != address(0)) {
+            rewards[account] = earned(account);
+            userRewardPerTokenPaid[account] = rewardPerTokenStored;
+        }
         _;
     }
 
@@ -260,20 +249,20 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     /* View Functions */
     /********************/
 
+    function getStored() external view returns (uint256) {
+        return rewardPerTokenStored;
+    }
+
+    function getPaid(address account) external view returns (uint256) {
+        return userRewardPerTokenPaid[account];
+    }
+
     function getStaked(address account) external view returns (uint256) {
         return balanceOf(account);
     }
 
-    function getUnvested() public view returns (uint256) {
-        return unvestedRewards;
-    }
-
     function getRewardRate() external view returns (uint256) {
         return rewardRate;
-    }
-
-    function checkVestingEnd() external view returns (uint256) {
-        return vestingPeriodFinish;
     }
 
     function asset()
@@ -282,7 +271,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         override
         returns (address assetTokenAddress)
     {
-        return s_stakingToken;
+        return address(stakingToken);
     }
 
     function totalAssets()
@@ -291,8 +280,8 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         override
         returns (uint256 totalManagedMugen, uint256 totalManagedReward)
     {
-        uint256 stakedAmount = ERC20(s_stakingToken).balanceOf(address(this));
-        uint256 rewardAmount = ERC20(s_rewardsToken).balanceOf(address(this));
+        uint256 stakedAmount = ERC20(stakingToken).balanceOf(address(this));
+        uint256 rewardAmount = ERC20(rewardsToken).balanceOf(address(this));
         return (stakedAmount, rewardAmount);
     }
 

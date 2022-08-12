@@ -14,6 +14,7 @@ import "openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
  */
 interface IERC4626 is IERC20, IERC20Metadata {
     event Deposit(
+        address indexed _caller,
         address indexed caller,
         address indexed owner,
         uint256 assets,

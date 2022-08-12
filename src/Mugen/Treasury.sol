@@ -1,35 +1,41 @@
 //SPDX-License-Identifier: MIT
 
+//TODO: Remove Reserve Token Address Implementations
+
 pragma solidity 0.8.7;
 
 import "./NonblockingLzApp.sol";
 import "openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./interfaces/IMugen.sol";
+import "../interfaces/IMugen.sol";
 import "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "openzeppelin/contracts/utils/math/SafeMath.sol";
 import "openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./interfaces/AggregatorV3Interface.sol";
+import "../interfaces/ThisThing.sol";
 import "openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "../../Bancor/BancorFormula.sol";
 
-contract Treasury is NonblockingLzApp, ReentrancyGuard {
+contract Treasury is NonblockingLzApp, ReentrancyGuard, BancorFormula {
     IMugen public immutable mugen;
     address public immutable treasury;
 
     mapping(IERC20 => bool) public depositableTokens;
-    mapping(IERC20 => AggregatorV3Interface) public priceFeeds;
+    mapping(IERC20 => ThisThing) public priceFeeds;
     mapping(address => uint16) public layerZeroAddress;
 
     using SafeERC20 for IERC20;
-    using SafeMath for uint256;
 
-    uint256 internal valueDeposited;
-    uint256 internal tokenMintPrice;
-    uint256 internal constant validPeriod = 12 hours;
+    uint256 public constant SCALE = 10**18;
+    uint256 public reserveBalance = 10 * SCALE;
+    uint256 public constant RESERVE_RATIO = 800000;
+    uint256 public valueDeposited;
+    uint256 public s_totalSupply;
+    uint256 internal constant VALID_PERIOD = 12 hours;
+    uint256 internal constant MIN_VALUE = 100 * 1e18;
 
     error NotDepositable();
     error NotUpdated();
     error InvalidPrice();
 
+    event TokenPrice(uint256 _price);
     event TokenRemoved(IERC20 indexed _token);
     event Deposit(
         address indexed depositor,
@@ -52,19 +58,19 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         nonReentrant
         depositable(_token)
     {
-        require(_amount > 0, "Deposit must be more than 0");
-        if (tokenMintPrice == 0) {
-            tokenMintPrice += 100 * 1e18;
+        if (s_totalSupply == 0) {
+            s_totalSupply += 1e18;
         }
-        uint256 tokenPrice = getPrice(_token);
-        uint256 value = ((tokenPrice * _amount * 1e18) / tokenMintPrice) /
-            10**_token.decimals();
-        // require(value >= )
+        require(_amount > 0, "Deposit must be more than 0");
+        uint256 tokenPrice = usdPrice(_token);
+        uint256 value = tokenPrice * _amount;
+        require(value >= MIN_VALUE, "less than minimum deposit");
+        uint256 calculated = _continuousMint(_amount);
+        s_totalSupply += calculated;
         valueDeposited += value;
-        tokenMintPrice += value.div(1e3);
         emit Deposit(msg.sender, _token, value);
         IERC20(_token).safeTransferFrom(msg.sender, treasury, _amount);
-        mugen.mint(msg.sender, value);
+        mugen.mint(msg.sender, calculated);
     }
 
     /**************************/
@@ -75,11 +81,8 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         external
         onlyOwner
     {
-        require(
-            AggregatorV3Interface(_pricefeed).decimals() == 8,
-            "wrong decimals"
-        );
-        priceFeeds[_token] = AggregatorV3Interface(_pricefeed);
+        require(ThisThing(_pricefeed).decimals() == 8, "wrong decimals");
+        priceFeeds[_token] = ThisThing(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }
@@ -98,21 +101,17 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         return valueDeposited;
     }
 
-    function readPrice() external view returns (uint256) {
-        return tokenMintPrice;
-    }
-
     function getPrice(IERC20 _token) public view returns (uint256) {
         (, int256 price, , uint256 updatedAt, ) = priceFeeds[_token]
             .latestRoundData();
-        if (block.timestamp - updatedAt > validPeriod) revert NotUpdated();
+        if (block.timestamp - updatedAt > VALID_PERIOD) revert NotUpdated();
         if (price <= 0) revert InvalidPrice();
         return uint256(price);
     }
 
     function usdPrice(IERC20 _token) public view returns (uint256) {
         uint256 tokenPrice = getPrice(_token);
-        uint256 tokenUsdPrice = tokenPrice.div(1e8);
+        uint256 tokenUsdPrice = tokenPrice / 1e8;
         return tokenUsdPrice;
     }
 
@@ -127,6 +126,30 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
     modifier depositable(IERC20 _token) {
         if (depositableTokens[_token] != true) revert NotDepositable();
         _;
+    }
+
+    /**************************/
+    /**** Bancor Functions ****/
+    /**************************/
+
+    function calculateContinuousMintReturn(uint256 _amount)
+        public
+        view
+        returns (uint256 mintAmount)
+    {
+        return
+            purchaseTargetAmount(
+                s_totalSupply,
+                reserveBalance,
+                uint32(RESERVE_RATIO),
+                _amount
+            );
+    }
+
+    function _continuousMint(uint256 _deposit) internal returns (uint256) {
+        uint256 amount = calculateContinuousMintReturn(_deposit);
+        reserveBalance += _deposit;
+        return amount;
     }
 
     /**************************/
@@ -158,12 +181,12 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
             sendBackToAddress := mload(add(_srcAddress, 20))
         }
         uint16 _returnChainId = layerZeroAddress[sendBackToAddress];
-        (uint256 _value, uint256 _increase, address _depositor) = abi.decode(
+        (uint256 _value, address _depositor) = abi.decode(
             _payload,
-            (uint256, uint256, address)
+            (uint256, address)
         );
-        uint256 mintAmount = _value / tokenMintPrice;
-        tokenMintPrice += _increase;
+        uint256 mintAmount = _continuousMint(_value);
+        s_totalSupply += mintAmount;
         bytes memory payload = abi.encode(mintAmount, _depositor);
         uint16 version = 1;
         uint256 gasForDestinationLzReceive = 350000;
@@ -173,23 +196,6 @@ contract Treasury is NonblockingLzApp, ReentrancyGuard {
         );
         _lzSend(
             _returnChainId,
-            payload,
-            payable(address(this)),
-            address(0x0),
-            adapterParams
-        );
-    }
-
-    function updateCrossChainPrice(uint16 _dstChainId) external {
-        bytes memory payload = abi.encode(tokenMintPrice);
-        uint16 version = 1;
-        uint256 gasForDestinationLzReceive = 350000;
-        bytes memory adapterParams = abi.encodePacked(
-            version,
-            gasForDestinationLzReceive
-        );
-        _lzSend(
-            _dstChainId,
             payload,
             payable(address(this)),
             address(0x0),
