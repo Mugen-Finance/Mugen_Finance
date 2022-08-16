@@ -2,10 +2,10 @@
 
 pragma solidity 0.8.7;
 
-import "openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IMugen.sol";
-import "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../interfaces/ThisThing.sol";
 import "./NonblockingLzApp.sol";
 

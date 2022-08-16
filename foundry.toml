@@ -1,6 +1,19 @@
 [profile.default]
-src = 'src'
+src = 'contracts'
 out = 'out'
-libs = ['lib']
-fuzz_runs = 50000
+libs = ['node_modules', 'lib']
+test = 'test/foundry'
+cache_path  = 'forge-cache'
+fuzz_runs = 2500
+remappings = [
+    'ds-test/=lib/forge-std/lib/ds-test/src/',
+    'forge-std/=lib/forge-std/src/',
+    '@chainlink/=node_modules/@chainlink/',
+    '@openzeppelin/=node_modules/@openzeppelin/',
+    '@rari-capital/=node_modules/@rari-capital/',
+    'eth-gas-reporter/=node_modules/eth-gas-reporter/',
+    'hardhat-deploy/=node_modules/hardhat-deploy/',
+    'hardhat/=node_modules/hardhat/',
+]
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

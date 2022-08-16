@@ -2,12 +2,13 @@
 
 pragma solidity 0.8.7;
 
-import "openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IMugen.sol";
-import "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../interfaces/ThisThing.sol";
-import "openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "../../Bancor/BancorFormula.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "../Bancor/BancorFormula.sol";
 import "../interfaces/ITreasury.sol";
 
 contract Treasury is BancorFormula, ITreasury {
@@ -26,7 +27,7 @@ contract Treasury is BancorFormula, ITreasury {
     uint256 public valueDeposited;
     uint256 public s_totalSupply;
     uint256 internal constant VALID_PERIOD = 12 hours;
-    uint256 internal constant MIN_VALUE = 100 * 1e18;
+    uint256 internal constant MIN_VALUE = 100 * 10**18;
     uint256 private locked = 1;
     address public owner;
     address public Communicator;
@@ -36,6 +37,7 @@ contract Treasury is BancorFormula, ITreasury {
     error InvalidPrice();
     error NotOwner();
     error NotCommunicator();
+    error UnderMinDeposit();
 
     constructor(
         address _mugen,
@@ -52,15 +54,16 @@ contract Treasury is BancorFormula, ITreasury {
     /***  Staker Functions ****/
     /**************************/
 
-    function deposit(IERC20Metadata _token, uint256 _amount)
+    function deposit(IERC20 _token, uint256 _amount)
         external
         nonReentrant
         depositable(_token)
     {
         require(_amount > 0, "Deposit must be more than 0");
-        uint256 tokenPrice = usdPrice(_token);
-        uint256 value = tokenPrice * _amount;
-        require(value >= MIN_VALUE, "less than minimum deposit");
+        uint256 tokenPrice = getPrice(_token);
+        uint256 value = (tokenPrice * _amount) /
+            10**(priceFeeds[_token].decimals());
+        require(value >= MIN_VALUE, "less than min deposit");
         uint256 calculated = _continuousMint(_amount);
         s_totalSupply += calculated;
         valueDeposited += value;
@@ -86,7 +89,6 @@ contract Treasury is BancorFormula, ITreasury {
 
     function addTokenInfo(IERC20 _token, address _pricefeed) external {
         if (msg.sender != owner) revert NotOwner();
-        require(ThisThing(_pricefeed).decimals() == 8, "wrong decimals");
         priceFeeds[_token] = ThisThing(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
@@ -120,10 +122,8 @@ contract Treasury is BancorFormula, ITreasury {
         return uint256(price);
     }
 
-    function usdPrice(IERC20 _token) internal view returns (uint256) {
-        uint256 tokenPrice = getPrice(_token);
-        uint256 tokenUsdPrice = tokenPrice / 1e8;
-        return tokenUsdPrice;
+    function readSupply() external view returns (uint256) {
+        return s_totalSupply;
     }
 
     /**************************/
@@ -163,7 +163,7 @@ contract Treasury is BancorFormula, ITreasury {
             );
     }
 
-    function _continuousMint(uint256 _deposit) internal returns (uint256) {
+    function _continuousMint(uint256 _deposit) public returns (uint256) {
         uint256 amount = calculateContinuousMintReturn(_deposit);
         reserveBalance += _deposit;
         return amount;
