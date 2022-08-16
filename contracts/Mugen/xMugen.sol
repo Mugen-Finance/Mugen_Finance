@@ -14,6 +14,8 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     ERC20 public rewardsToken;
     ERC20 public stakingToken;
 
+    error NotOwner();
+
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
     uint256 public periodFinish = 0;
@@ -200,15 +202,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     ) internal {
         require(receiver_ != address(0), "xMGN:B:ZERO_RECEIVER");
         require(shares_ != uint256(0), "xMGN:B:ZERO_SHARES");
+        if (owner_ != msg.sender) revert NotOwner();
 
-        if (caller_ != owner_) {
-            _spendAllowance(owner_, caller_, shares_);
-        }
         claimReward(shares_);
         _burn(owner_, shares_);
         emit Withdraw(caller_, receiver_, owner_, assets_, shares_);
-
-        if (caller_ != owner_) increaseAllowance(caller_, shares_);
 
         bool success = ERC20(stakingToken).transfer(receiver_, assets_);
 

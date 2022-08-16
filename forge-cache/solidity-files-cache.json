@@ -607,8 +607,8 @@
       }
     },
     "contracts/Mugen/xMugen.sol": {
-      "lastModificationDate": 1660509841442,
-      "contentHash": "75bd65ce5ce108c3cd5abf7e102e44ac",
+      "lastModificationDate": 1660682324024,
+      "contentHash": "7f5186a96277272e925913ccc185fb7c",
       "sourceName": "contracts/Mugen/xMugen.sol",
       "solcConfig": {
         "settings": {
@@ -649,7 +649,7 @@
       "versionRequirement": "^0.8.7",
       "artifacts": {
         "xMugen": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "xMugen.sol/xMugen.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "xMugen.sol/xMugen.0.8.16.json"
         }
       }
     },
@@ -734,7 +734,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC4626": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC4626.sol/IERC4626.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC4626.sol/IERC4626.0.8.16.json"
         }
       }
     },
@@ -1231,7 +1231,7 @@
       "versionRequirement": ">=0.5.0",
       "artifacts": {
         "DSTest": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "test.sol/DSTest.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "test.sol/DSTest.0.8.16.json"
         }
       }
     },
@@ -1273,7 +1273,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Script": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Script.sol/Script.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Script.sol/Script.0.8.16.json"
         }
       }
     },
@@ -1317,16 +1317,16 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Test": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/Test.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/Test.0.8.16.json"
         },
         "stdError": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdError.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdError.0.8.16.json"
         },
         "stdMath": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdMath.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdMath.0.8.16.json"
         },
         "stdStorage": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdStorage.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdStorage.0.8.16.json"
         }
       }
     },
@@ -1364,7 +1364,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Vm": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Vm.sol/Vm.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Vm.sol/Vm.0.8.16.json"
         }
       }
     },
@@ -1402,7 +1402,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console.sol/console.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "console.sol/console.0.8.16.json"
         }
       }
     },
@@ -1440,7 +1440,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console2": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console2.sol/console2.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "console2.sol/console2.0.8.16.json"
         }
       }
     },
@@ -1675,7 +1675,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ReentrancyGuard": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.0.8.16.json"
         }
       }
     },
@@ -1717,7 +1717,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ERC20": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ERC20.sol/ERC20.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "ERC20.sol/ERC20.0.8.16.json"
         }
       }
     },
@@ -1755,7 +1755,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20.sol/IERC20.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20.sol/IERC20.0.8.16.json"
         }
       }
     },
@@ -1795,7 +1795,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20Metadata": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.0.8.16.json"
         }
       }
     },
@@ -1951,7 +1951,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "Context": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Context.sol/Context.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "Context.sol/Context.0.8.16.json"
         }
       }
     },
@@ -2029,7 +2029,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC165": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC165.sol/IERC165.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC165.sol/IERC165.0.8.16.json"
         }
       }
     },
@@ -2105,7 +2105,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "SafeMath": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "SafeMath.sol/SafeMath.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "SafeMath.sol/SafeMath.0.8.16.json"
         }
       }
     },
@@ -2357,8 +2357,8 @@
       }
     },
     "test/foundry/xMugen.t.sol": {
-      "lastModificationDate": 1660673598161,
-      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "lastModificationDate": 1660682276148,
+      "contentHash": "802be7c6315984fa1e97514c8939ee24",
       "sourceName": "test/foundry/xMugen.t.sol",
       "solcConfig": {
         "settings": {
@@ -2386,11 +2386,40 @@
           "libraries": {}
         }
       },
-      "imports": [],
-      "versionRequirement": null,
+      "imports": [
+        "contracts/Mugen/LzApp.sol",
+        "contracts/Mugen/Mugen.sol",
+        "contracts/Mugen/NonblockingLzApp.sol",
+        "contracts/Mugen/OFTCore.sol",
+        "contracts/Mugen/xMugen.sol",
+        "contracts/interfaces/IERC4626.sol",
+        "contracts/interfaces/ILayerZeroEndpoint.sol",
+        "contracts/interfaces/ILayerZeroReceiver.sol",
+        "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
+        "contracts/interfaces/IMugen.sol",
+        "contracts/interfaces/IOFTCore.sol",
+        "contracts/mocks/LZEndpointMock.sol",
+        "contracts/mocks/MockERC20.sol",
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Test.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/Math.sol"
+      ],
+      "versionRequirement": "^0.8.0",
       "artifacts": {
-        "xMugen.t": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "xMugen.t.sol/xMugen.t.json"
+        "xMugenTest": {
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "xMugen.t.sol/xMugenTest.json"
         }
       }
     }
