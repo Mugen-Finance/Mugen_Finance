@@ -761,19 +761,19 @@ contract Power {
     //     return res / 0xde1bc4d19efcac82445da75b00000000; // divide by 34!
     // }
 
-    // /**
-    //  * @dev computes W(x / FIXED_1) / (x / FIXED_1) * FIXED_1
-    //  * input range: LAMBERT_CONV_RADIUS + 1 <= x <= LAMBERT_POS2_MAXVAL
-    //  */
-    // // function lambertPos2(uint256 _x) internal view returns (uint256) {
-    // //     uint256 x = _x - LAMBERT_CONV_RADIUS - 1;
-    // //     uint256 i = x / LAMBERT_POS2_SAMPLE;
-    // //     uint256 a = LAMBERT_POS2_SAMPLE * i;
-    // //     uint256 b = LAMBERT_POS2_SAMPLE * (i + 1);
-    // //     uint256 c = lambertArray[i];
-    // //     uint256 d = lambertArray[i + 1];
-    // //     return (c * (b - x) + d * (x - a)) / LAMBERT_POS2_SAMPLE;
-    // // }
+    /**
+     * @dev computes W(x / FIXED_1) / (x / FIXED_1) * FIXED_1
+     * input range: LAMBERT_CONV_RADIUS + 1 <= x <= LAMBERT_POS2_MAXVAL
+     */
+    // function lambertPos2(uint256 _x) internal view returns (uint256) {
+    //     uint256 x = _x - LAMBERT_CONV_RADIUS - 1;
+    //     uint256 i = x / LAMBERT_POS2_SAMPLE;
+    //     uint256 a = LAMBERT_POS2_SAMPLE * i;
+    //     uint256 b = LAMBERT_POS2_SAMPLE * (i + 1);
+    //     uint256 c = lambertArray[i];
+    //     uint256 d = lambertArray[i + 1];
+    //     return (c * (b - x) + d * (x - a)) / LAMBERT_POS2_SAMPLE;
+    // }
 
     // /**
     //  * @dev computes W(x / FIXED_1) / (x / FIXED_1) * FIXED_1
@@ -785,11 +785,11 @@ contract Power {
     //     return ((l1 - l2 + (l2 * FIXED_1) / l1) * FIXED_1) / _x;
     // }
 
-    // /**
-    //  * @dev computes W(-x / FIXED_1) / (-x / FIXED_1) * FIXED_1
-    //  * input range: 1 <= x <= 1 / e * FIXED_1
-    //  * auto-generated via 'PrintFunctionLambertNeg1.py'
-    //  */
+    /**
+     * @dev computes W(-x / FIXED_1) / (-x / FIXED_1) * FIXED_1
+     * input range: 1 <= x <= 1 / e * FIXED_1
+     * auto-generated via 'PrintFunctionLambertNeg1.py'
+     */
     // function lambertNeg1(uint256 _x) internal pure returns (uint256) {
     //     uint256 xi = _x;
     //     uint256 res = 0;

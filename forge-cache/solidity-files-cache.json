@@ -13,7 +13,7 @@
   },
   "files": {
     "contracts/Bancor/BancorFormula.sol": {
-      "lastModificationDate": 1660671820362,
+      "lastModificationDate": 1660699171904,
       "contentHash": "a5edcb16bfe08ac0848ad045edb34b7a",
       "sourceName": "contracts/Bancor/BancorFormula.sol",
       "solcConfig": {
@@ -55,7 +55,7 @@
       }
     },
     "contracts/Bancor/IBancorFormula.sol": {
-      "lastModificationDate": 1660671819151,
+      "lastModificationDate": 1660699157676,
       "contentHash": "4cb0f5f408863b712b08235b1af43d37",
       "sourceName": "contracts/Bancor/IBancorFormula.sol",
       "solcConfig": {
@@ -93,8 +93,8 @@
       }
     },
     "contracts/Bancor/Power.sol": {
-      "lastModificationDate": 1660671944687,
-      "contentHash": "47b5fbc226a228a590e27fed3a64d6f9",
+      "lastModificationDate": 1660699152188,
+      "contentHash": "5d44c94b2d70f39e8d7c83351aff69b1",
       "sourceName": "contracts/Bancor/Power.sol",
       "solcConfig": {
         "settings": {
@@ -171,8 +171,8 @@
       }
     },
     "contracts/Governance/Vote.sol": {
-      "lastModificationDate": 1660487065368,
-      "contentHash": "41a787a3bdbc92ba7777b72a37c23125",
+      "lastModificationDate": 1660755135490,
+      "contentHash": "212bb3aaf6015620ada86993ffd2ccae",
       "sourceName": "contracts/Governance/Vote.sol",
       "solcConfig": {
         "settings": {
@@ -209,8 +209,8 @@
       }
     },
     "contracts/Mugen/Communicator.sol": {
-      "lastModificationDate": 1660603480942,
-      "contentHash": "0000a41f3241736e9850549864559cf1",
+      "lastModificationDate": 1660755144693,
+      "contentHash": "ad11bd4ed14ca66128ae9c50af33f429",
       "sourceName": "contracts/Mugen/Communicator.sol",
       "solcConfig": {
         "settings": {
@@ -403,8 +403,8 @@
       }
     },
     "contracts/Mugen/NonNativeTreasury.sol": {
-      "lastModificationDate": 1660509767164,
-      "contentHash": "3146b79f11273d0d8cd8727716e34e5b",
+      "lastModificationDate": 1660754190095,
+      "contentHash": "26e505e9a01f6b12f1edabfdb8701b70",
       "sourceName": "contracts/Mugen/NonNativeTreasury.sol",
       "solcConfig": {
         "settings": {
@@ -439,11 +439,13 @@
         "contracts/interfaces/ILayerZeroReceiver.sol",
         "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
         "contracts/interfaces/IMugen.sol",
+        "contracts/interfaces/INonNativeTreasury.sol",
         "contracts/interfaces/IOFTCore.sol",
         "contracts/interfaces/ThisThing.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "node_modules/@openzeppelin/contracts/utils/Address.sol",
@@ -553,8 +555,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1660673422378,
-      "contentHash": "1e62a1e338cd50bcc80bdf3b699b37e5",
+      "lastModificationDate": 1660743243178,
+      "contentHash": "fbe39ef8b6c0beed003be6598bcd0e67",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -607,8 +609,8 @@
       }
     },
     "contracts/Mugen/xMugen.sol": {
-      "lastModificationDate": 1660682324024,
-      "contentHash": "7f5186a96277272e925913ccc185fb7c",
+      "lastModificationDate": 1660744211175,
+      "contentHash": "942554bdc7ede1f15f5679d5142f2182",
       "sourceName": "contracts/Mugen/xMugen.sol",
       "solcConfig": {
         "settings": {
@@ -893,6 +895,46 @@
       "artifacts": {
         "IMugen": {
           "0.8.16+commit.07a7930e.Darwin.appleclang": "IMugen.sol/IMugen.0.8.16.json"
+        }
+      }
+    },
+    "contracts/interfaces/INonNativeTreasury.sol": {
+      "lastModificationDate": 1660754096014,
+      "contentHash": "629976170263f4958cec31d140c61537",
+      "sourceName": "contracts/interfaces/INonNativeTreasury.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionRequirement": "=0.8.7",
+      "artifacts": {
+        "INonNativeTreasury": {
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "INonNativeTreasury.sol/INonNativeTreasury.json"
         }
       }
     },
@@ -1231,7 +1273,7 @@
       "versionRequirement": ">=0.5.0",
       "artifacts": {
         "DSTest": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "test.sol/DSTest.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "test.sol/DSTest.json"
         }
       }
     },
@@ -1273,7 +1315,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Script": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Script.sol/Script.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Script.sol/Script.json"
         }
       }
     },
@@ -1317,16 +1359,16 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Test": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/Test.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/Test.json"
         },
         "stdError": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdError.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdError.json"
         },
         "stdMath": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdMath.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdMath.json"
         },
         "stdStorage": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdStorage.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdStorage.json"
         }
       }
     },
@@ -1364,7 +1406,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Vm": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Vm.sol/Vm.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Vm.sol/Vm.json"
         }
       }
     },
@@ -1402,7 +1444,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console.sol/console.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console.sol/console.json"
         }
       }
     },
@@ -1440,7 +1482,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console2": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console2.sol/console2.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console2.sol/console2.json"
         }
       }
     },
@@ -1675,7 +1717,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ReentrancyGuard": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
         }
       }
     },
@@ -1717,7 +1759,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ERC20": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "ERC20.sol/ERC20.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ERC20.sol/ERC20.json"
         }
       }
     },
@@ -1755,7 +1797,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20.sol/IERC20.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20.sol/IERC20.json"
         }
       }
     },
@@ -1795,7 +1837,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20Metadata": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.json"
         }
       }
     },
@@ -1951,7 +1993,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "Context": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Context.sol/Context.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Context.sol/Context.json"
         }
       }
     },
@@ -2029,7 +2071,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC165": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC165.sol/IERC165.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC165.sol/IERC165.json"
         }
       }
     },
@@ -2105,7 +2147,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "SafeMath": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "SafeMath.sol/SafeMath.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "SafeMath.sol/SafeMath.json"
         }
       }
     },
@@ -2153,8 +2195,8 @@
       }
     },
     "test/foundry/Communicator.t.sol": {
-      "lastModificationDate": 1660668894751,
-      "contentHash": "4e1775b781edbc037c7071a2cbf0823f",
+      "lastModificationDate": 1660743490746,
+      "contentHash": "78210e067ceea845278e29cc5e76860f",
       "sourceName": "test/foundry/Communicator.t.sol",
       "solcConfig": {
         "settings": {
@@ -2278,8 +2320,8 @@
       }
     },
     "test/foundry/Treasury.t.sol": {
-      "lastModificationDate": 1660673922489,
-      "contentHash": "094218b35edb3a579c0697afd6811447",
+      "lastModificationDate": 1660760736223,
+      "contentHash": "53257a195bc08688309efe5b15c63e5a",
       "sourceName": "test/foundry/Treasury.t.sol",
       "solcConfig": {
         "settings": {
@@ -2357,8 +2399,8 @@
       }
     },
     "test/foundry/xMugen.t.sol": {
-      "lastModificationDate": 1660682276148,
-      "contentHash": "802be7c6315984fa1e97514c8939ee24",
+      "lastModificationDate": 1660754914004,
+      "contentHash": "5a10650cb07437fc05bdacb11fc6f317",
       "sourceName": "test/foundry/xMugen.t.sol",
       "solcConfig": {
         "settings": {

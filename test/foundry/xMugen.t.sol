@@ -14,15 +14,19 @@ contract xMugenTest is Test {
     Mugen mugen;
     xMugen xMGN;
     address alice = address(0x1337);
+    address bob = address(0x4321);
 
     function setUp() public {
         mock = new MockUSDC(type(uint256).max);
         EndPoint = new LZEndpointMock(1);
         mugen = new Mugen(address(EndPoint));
         mugen.mint(address(this), type(uint104).max);
+        mugen.transfer(alice, 1000 * 1e18);
         xMGN = new xMugen(address(mugen), address(mock));
         mock.approve(address(xMGN), type(uint256).max);
-        mugen.approve(address(xMGN), type(uint104).max);
+        mugen.approve(address(xMGN), type(uint256).max);
+        vm.prank(alice);
+        mugen.approve(address(xMGN), type(uint256).max);
     }
 
     function testIssuance(uint256 amount) public {
@@ -41,11 +45,11 @@ contract xMugenTest is Test {
         assertEq(xMGN.balanceOf(address(this)), 100);
     }
 
-    function testAllowance() public {
-        xMGN.deposit(100, address(this));
-        vm.expectRevert(xMugen.NotOwner.selector);
+    function testReceiver() public {
+        xMGN.deposit(100 * 1e18, alice);
+        xMGN.issuanceRate(10000000 * 1e18);
+        vm.warp(20 days);
         vm.prank(alice);
-        xMGN.withdraw(100, address(this), address(this));
-        xMGN.withdraw(100, address(this), address(this));
+        xMGN.withdraw(100 * 1e18, alice, alice);
     }
 }

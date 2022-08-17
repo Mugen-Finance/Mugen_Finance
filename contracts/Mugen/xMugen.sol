@@ -202,9 +202,9 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     ) internal {
         require(receiver_ != address(0), "xMGN:B:ZERO_RECEIVER");
         require(shares_ != uint256(0), "xMGN:B:ZERO_SHARES");
-        if (owner_ != msg.sender) revert NotOwner();
+        if (caller_ != owner_) _spendAllowance(owner_, caller_, shares_);
 
-        claimReward(shares_);
+        claimReward(shares_, owner_);
         _burn(owner_, shares_);
         emit Withdraw(caller_, receiver_, owner_, assets_, shares_);
 
@@ -219,11 +219,11 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
      * @notice calculates the percentage of their balance they are unstake them pays that percentage of their rewards
      * @param amount | how many tokens they are unstaking
      */
-    function claimReward(uint256 amount) internal {
-        uint256 reward = (rewards[msg.sender] * amount) / balanceOf(msg.sender);
-        rewards[msg.sender] -= reward;
-        emit RewardsClaimed(msg.sender, reward);
-        bool success = ERC20(rewardsToken).transfer(msg.sender, reward);
+    function claimReward(uint256 amount, address account) internal {
+        uint256 reward = (rewards[account] * amount) / balanceOf(account);
+        rewards[account] -= reward;
+        emit RewardsClaimed(account, reward);
+        bool success = ERC20(rewardsToken).transfer(account, reward);
         if (!success) {
             revert TRANSFER_FAILED();
         }

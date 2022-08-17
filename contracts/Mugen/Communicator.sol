@@ -1,8 +1,5 @@
 //SPDX-License-Identifier: MIT;
 
-//Need safe gaurds in place for failures as it will have to update the totalSupply
-//when calling the treasury function.
-
 pragma solidity 0.8.7;
 
 import "./NonblockingLzApp.sol";

@@ -19,9 +19,11 @@ contract TreasuryTest is Test {
     Communicator comms;
     address alice = address(0x1337);
 
+    //retest treasury functions after changing mock feed
+
     function setUp() public {
-        mock = new MockUSDC(type(uint256).max);
-        feed = new NotMockAggregator(8, 100000000);
+        mock = new MockDAI(type(uint256).max);
+        feed = new NotMockAggregator(6, 2e6);
         Endpoint = new LZEndpointMock(1);
         mugen = new Mugen(address(Endpoint));
         comms = new Communicator(address(Endpoint));
@@ -38,21 +40,21 @@ contract TreasuryTest is Test {
         assertEq(mugen.owner(), address(treasury));
     }
 
-    function testDeposits() public {
-        vm.expectRevert("Deposit must be more than 0");
-        treasury.deposit(mock, 0);
-        vm.expectRevert("less than min deposit");
-        treasury.deposit(mock, 90 * 1e18);
-        uint256 expected = treasury.calculateContinuousMintReturn(23523 * 1e18);
-        treasury.deposit(mock, 23523 * 1e18);
-        assertEq(expected, mugen.totalSupply());
-        assertEq(expected, mugen.balanceOf(address(this)));
-        assertEq(treasury.readSupply(), expected + 1e18);
-        vm.expectRevert(Treasury.NotOwner.selector);
-        vm.prank(alice);
-        treasury.removeTokenInfo(mock);
-        vm.expectRevert(Treasury.NotOwner.selector);
-        vm.prank(alice);
-        treasury.setCommunicator(alice);
+    function testCalculate() public {
+        uint256 expected = treasury.calculateContinuousMintReturn(10000 * 1e18);
+        assertEq(250389573978420943928, expected);
+    }
+
+    function testFeedDecimals() public {
+        //Test with 18 decimals on the pricefeed
+        treasury.deposit(mock, 100 * 1e18);
+        mugen.totalSupply();
+        //5.809483127522301301 total supply of mugen when feed is 18 decimals
+
+        //Test results with 8 decimals on pricefeed
+        //5.809483127522301301
+
+        //Test results with 6 decimals on pricefeed
+        //5.809483127522301301
     }
 }

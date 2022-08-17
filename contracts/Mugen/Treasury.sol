@@ -54,11 +54,15 @@ contract Treasury is BancorFormula, ITreasury {
     /***  Staker Functions ****/
     /**************************/
 
-    function deposit(IERC20 _token, uint256 _amount)
+    function deposit(IERC20Metadata _token, uint256 _amount)
         external
         nonReentrant
         depositable(_token)
     {
+        if (IERC20Metadata(_token).decimals() < 18) {
+            uint256 dec = 18 - (IERC20Metadata(_token).decimals());
+            _amount = _amount * 10**dec;
+        }
         require(_amount > 0, "Deposit must be more than 0");
         uint256 tokenPrice = getPrice(_token);
         uint256 value = (tokenPrice * _amount) /

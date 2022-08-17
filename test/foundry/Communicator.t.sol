@@ -20,7 +20,7 @@ contract CommunicatorTest is Test {
     address alice = address(0x1337);
 
     function setUp() public {
-        mock = new MockUSDC(type(uint256).max);
+        mock = new MockDAI(type(uint256).max);
         feed = new NotMockAggregator(8, 100000000);
         Endpoint = new LZEndpointMock(1);
         mugen = new Mugen(address(Endpoint));
@@ -31,7 +31,7 @@ contract CommunicatorTest is Test {
         mugen.transferOwnership(address(treasury));
     }
 
-    function testMessage(uint256 amount) public {
+    function testMessage(uint200 amount) public {
         vm.assume(amount > 0);
         vm.assume(amount < 4851651944097902779691068306);
         uint256 first = treasury.calculateContinuousMintReturn(amount);
@@ -53,3 +53,4 @@ contract CommunicatorTest is Test {
     //250.389573978420943928
     //17011148.419142234939118780
 }
+//3,638,658,538,924,045,119,126,437,326
