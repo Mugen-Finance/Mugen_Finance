@@ -2,34 +2,6 @@
 
 pragma solidity 0.8.7;
 
-/*
-What should this do?
-
-1. Be able to add strategy contracts
-2. Send funds to those contracts of a certain percentage
-    a. Upgradable yes or no?
-
-What will it need?
-
-Constraints
-    How frequently strategies can receive funds.
-    How much of the funds they can receive.
-    Which funds they can receive.
-*/
-
-/*
-Ecosystem Ideas 
-
-Must be fully decentralized. Meaning more thought needs to go into this to think of potential edge cases, incentive alignments, and ways the system can be manipulated. 
-It is of the upmost important that this is the case. Focus on education is critical, how to guides, video tutorials, etc must all be created in order for individuals to be able to participate and learn how the system works.
-
-
-Whitelisting is done through governance with each holder having an equal vote same with strategies. 
-    Min requirement?
-
-Forced Growth. Start slow with local hosting and etherscan
- */
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "../interfaces/IStrategyHub.sol";
