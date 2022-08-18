@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IMugen.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "../interfaces/ThisThing.sol";
+import "../interfaces/AggregatorPriceFeeds.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "../Bancor/BancorFormula.sol";
 import "../interfaces/ITreasury.sol";
@@ -16,7 +16,7 @@ contract Treasury is BancorFormula, ITreasury {
     address public immutable treasury;
 
     mapping(IERC20 => bool) public depositableTokens;
-    mapping(IERC20 => ThisThing) public priceFeeds;
+    mapping(IERC20 => AggregatorPriceFeeds) public priceFeeds;
     mapping(address => uint16) public layerZeroAddress;
 
     using SafeERC20 for IERC20;
@@ -93,7 +93,7 @@ contract Treasury is BancorFormula, ITreasury {
 
     function addTokenInfo(IERC20 _token, address _pricefeed) external {
         if (msg.sender != owner) revert NotOwner();
-        priceFeeds[_token] = ThisThing(_pricefeed);
+        priceFeeds[_token] = AggregatorPriceFeeds(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }

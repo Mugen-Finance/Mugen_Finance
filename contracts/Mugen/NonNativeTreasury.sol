@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "../interfaces/IMugen.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "../interfaces/ThisThing.sol";
+import "../interfaces/AggregatorPriceFeeds.sol";
 import "./NonblockingLzApp.sol";
 import "../interfaces/INonNativeTreasury.sol";
 
@@ -21,7 +21,7 @@ contract NonNativeTreasury is
     uint16 public immutable dstChainId;
 
     mapping(IERC20 => bool) public depositableTokens;
-    mapping(IERC20 => ThisThing) public priceFeeds;
+    mapping(IERC20 => AggregatorPriceFeeds) public priceFeeds;
 
     using SafeERC20 for IERC20;
 
@@ -96,7 +96,7 @@ contract NonNativeTreasury is
         external
         onlyOwner
     {
-        priceFeeds[_token] = ThisThing(_pricefeed);
+        priceFeeds[_token] = AggregatorPriceFeeds(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }

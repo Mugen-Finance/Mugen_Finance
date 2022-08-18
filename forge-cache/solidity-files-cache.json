@@ -403,8 +403,8 @@
       }
     },
     "contracts/Mugen/NonNativeTreasury.sol": {
-      "lastModificationDate": 1660754190095,
-      "contentHash": "26e505e9a01f6b12f1edabfdb8701b70",
+      "lastModificationDate": 1660792954363,
+      "contentHash": "fbcad0bec1c0cffc74216f6b6af2d099",
       "sourceName": "contracts/Mugen/NonNativeTreasury.sol",
       "solcConfig": {
         "settings": {
@@ -435,13 +435,13 @@
       "imports": [
         "contracts/Mugen/LzApp.sol",
         "contracts/Mugen/NonblockingLzApp.sol",
+        "contracts/interfaces/AggregatorPriceFeeds.sol",
         "contracts/interfaces/ILayerZeroEndpoint.sol",
         "contracts/interfaces/ILayerZeroReceiver.sol",
         "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
         "contracts/interfaces/IMugen.sol",
         "contracts/interfaces/INonNativeTreasury.sol",
         "contracts/interfaces/IOFTCore.sol",
-        "contracts/interfaces/ThisThing.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
@@ -555,8 +555,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1660743243178,
-      "contentHash": "fbe39ef8b6c0beed003be6598bcd0e67",
+      "lastModificationDate": 1660792962826,
+      "contentHash": "167d3411ea616d4771626eedd6566a54",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -588,10 +588,10 @@
         "contracts/Bancor/BancorFormula.sol",
         "contracts/Bancor/IBancorFormula.sol",
         "contracts/Bancor/Power.sol",
+        "contracts/interfaces/AggregatorPriceFeeds.sol",
         "contracts/interfaces/IMugen.sol",
         "contracts/interfaces/IOFTCore.sol",
         "contracts/interfaces/ITreasury.sol",
-        "contracts/interfaces/ThisThing.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
@@ -696,6 +696,44 @@
       "artifacts": {
         "StrategyHub": {
           "0.8.7+commit.e28d00a7.Darwin.appleclang": "StrategyHub.sol/StrategyHub.json"
+        }
+      }
+    },
+    "contracts/interfaces/AggregatorPriceFeeds.sol": {
+      "lastModificationDate": 1660792935127,
+      "contentHash": "dcfc2141cf0828b7012f114452a703b5",
+      "sourceName": "contracts/interfaces/AggregatorPriceFeeds.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "AggregatorPriceFeeds": {
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorPriceFeeds.sol/AggregatorPriceFeeds.0.8.16.json"
         }
       }
     },
@@ -1056,44 +1094,6 @@
       "artifacts": {
         "ITreasury": {
           "0.8.7+commit.e28d00a7.Darwin.appleclang": "ITreasury.sol/ITreasury.json"
-        }
-      }
-    },
-    "contracts/interfaces/ThisThing.sol": {
-      "lastModificationDate": 1660154751072,
-      "contentHash": "b02504563f3a789454fe8df05446ad77",
-      "sourceName": "contracts/interfaces/ThisThing.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "ThisThing": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "ThisThing.sol/ThisThing.0.8.16.json"
         }
       }
     },
@@ -2234,13 +2234,13 @@
         "contracts/Mugen/NonblockingLzApp.sol",
         "contracts/Mugen/OFTCore.sol",
         "contracts/Mugen/Treasury.sol",
+        "contracts/interfaces/AggregatorPriceFeeds.sol",
         "contracts/interfaces/ILayerZeroEndpoint.sol",
         "contracts/interfaces/ILayerZeroReceiver.sol",
         "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
         "contracts/interfaces/IMugen.sol",
         "contracts/interfaces/IOFTCore.sol",
         "contracts/interfaces/ITreasury.sol",
-        "contracts/interfaces/ThisThing.sol",
         "contracts/mocks/LZEndpointMock.sol",
         "contracts/mocks/MockERC20.sol",
         "contracts/mocks/NotMockAggregator.sol",
@@ -2320,8 +2320,8 @@
       }
     },
     "test/foundry/Treasury.t.sol": {
-      "lastModificationDate": 1660760736223,
-      "contentHash": "53257a195bc08688309efe5b15c63e5a",
+      "lastModificationDate": 1660760757607,
+      "contentHash": "5e4a148968bb028e9522c76e0732a3b6",
       "sourceName": "test/foundry/Treasury.t.sol",
       "solcConfig": {
         "settings": {
@@ -2359,13 +2359,13 @@
         "contracts/Mugen/NonblockingLzApp.sol",
         "contracts/Mugen/OFTCore.sol",
         "contracts/Mugen/Treasury.sol",
+        "contracts/interfaces/AggregatorPriceFeeds.sol",
         "contracts/interfaces/ILayerZeroEndpoint.sol",
         "contracts/interfaces/ILayerZeroReceiver.sol",
         "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
         "contracts/interfaces/IMugen.sol",
         "contracts/interfaces/IOFTCore.sol",
         "contracts/interfaces/ITreasury.sol",
-        "contracts/interfaces/ThisThing.sol",
         "contracts/mocks/LZEndpointMock.sol",
         "contracts/mocks/MockERC20.sol",
         "contracts/mocks/NotMockAggregator.sol",
