@@ -168,7 +168,7 @@ contract Treasury is BancorFormula, ITreasury {
             );
     }
 
-    function _continuousMint(uint256 _deposit) public returns (uint256) {
+    function _continuousMint(uint256 _deposit) internal returns (uint256) {
         uint256 amount = calculateContinuousMintReturn(_deposit);
         reserveBalance += _deposit;
         return amount;

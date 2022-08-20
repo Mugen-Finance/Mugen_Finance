@@ -45,6 +45,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         onlyOwner
         updateReward(address(0))
     {
+        require(_rewards > 0, "Zero rewards");
         require(totalSupply() != 0, "xMGN:UVS:ZERO_SUPPLY");
         if (block.timestamp >= periodFinish) {
             rewardRate = _rewards / rewardsDuration;
@@ -100,8 +101,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     /************************/
     /**** User Functions ****/
     /************************/
-
-    //examine these for just basic interface purposes (IERC4626);
 
     /**
      * @notice Deposit tokens into this contract

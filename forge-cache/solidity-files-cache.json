@@ -555,8 +555,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1661022549893,
-      "contentHash": "f3fad8c94389416b369488e3902f0b4c",
+      "lastModificationDate": 1661023785332,
+      "contentHash": "3cc115fa5a4a5a517388e231f5254fa4",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -609,8 +609,8 @@
       }
     },
     "contracts/Mugen/xMugen.sol": {
-      "lastModificationDate": 1660744211175,
-      "contentHash": "942554bdc7ede1f15f5679d5142f2182",
+      "lastModificationDate": 1661028438774,
+      "contentHash": "b81bacf64ae49da2a87dc67b3a5557d0",
       "sourceName": "contracts/Mugen/xMugen.sol",
       "solcConfig": {
         "settings": {
@@ -2841,8 +2841,8 @@
       }
     },
     "test/foundry/Treasury.t.sol": {
-      "lastModificationDate": 1661022474089,
-      "contentHash": "38a4ca810af74a04c751af8a5e2b6014",
+      "lastModificationDate": 1661023599927,
+      "contentHash": "3bdf3c992a98d5d33a8520e7fcdd8a4b",
       "sourceName": "test/foundry/Treasury.t.sol",
       "solcConfig": {
         "settings": {
@@ -2920,8 +2920,8 @@
       }
     },
     "test/foundry/xMugen.t.sol": {
-      "lastModificationDate": 1660754914004,
-      "contentHash": "5a10650cb07437fc05bdacb11fc6f317",
+      "lastModificationDate": 1661029236065,
+      "contentHash": "9d285ac23853cbfa8d88dd0e382a984a",
       "sourceName": "test/foundry/xMugen.t.sol",
       "solcConfig": {
         "settings": {

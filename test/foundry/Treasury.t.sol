@@ -62,5 +62,30 @@ contract TreasuryTest is Test {
         assertEq(treasury.readSupply(), expected + 1e18);
         assertEq(mugen.balanceOf(address(this)), expected);
         assertEq(usdc.balanceOf(alice), 1000 * 1e6);
+        assertEq(treasury.valueDeposited(), 1000 * 1e18);
+    }
+
+    function testAdmin() public {
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.addTokenInfo(mock, address(feed));
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.removeTokenInfo(mock);
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.setCommunicator(address(comms));
+        //
+        assertEq(treasury.depositableTokens(mock), true);
+        assertEq(treasury.depositableTokens(usdc), true);
+        treasury.removeTokenInfo(mock);
+        treasury.removeTokenInfo(usdc);
+        assertEq(treasury.depositableTokens(mock), false);
+        assertEq(treasury.depositableTokens(usdc), false);
+        //
+        treasury.setCommunicator(address(comms));
+        assertEq(treasury.Communicator(), address(comms));
+        vm.expectRevert(Treasury.NotCommunicator.selector);
+        treasury.receiveMessage(100 * 1e18);
     }
 }
