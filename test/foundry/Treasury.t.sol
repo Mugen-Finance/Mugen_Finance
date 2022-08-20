@@ -57,4 +57,14 @@ contract TreasuryTest is Test {
         //Test results with 6 decimals on pricefeed
         //5.809483127522301301
     }
+
+    function testMillion() public {
+        //treasury.deposit(mock, 999999999 * 1e18);
+        treasury.calculateContinuousMintReturn(1e18);
+    }
+    //.003184857303915691
+    //.001267914553727987
+    //.002009509141389596
+    //5.809483127522301301
+    //.079230345298890765
 }
