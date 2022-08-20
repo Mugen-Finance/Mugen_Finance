@@ -41,14 +41,14 @@ contract CommunicatorTest is Test {
         assertEq(first, second);
     }
 
-    function testDeposits(uint128 amount) public {
-        vm.assume(amount > 100 * 1e18);
-        vm.assume(amount < 4851651944097902779691068306);
-        uint256 predicted = treasury.calculateContinuousMintReturn(amount);
-        treasury.deposit(mock, amount);
-        uint256 actual = mugen.totalSupply();
-        assertEq(predicted, actual);
-    }
+    // function testDeposits(uint128 amount) public {
+    //     vm.assume(amount > 100 * 1e18);
+    //     vm.assume(amount < 4851651944097902779691068306);
+    //     uint256 predicted = treasury.calculateContinuousMintReturn(amount);
+    //     treasury.deposit(mock, amount);
+    //     uint256 actual = mugen.totalSupply();
+    //     assertEq(predicted, actual);
+    // }
     //39.128885573036870855
     //250.389573978420943928
     //17011148.419142234939118780

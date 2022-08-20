@@ -555,8 +555,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1660792962826,
-      "contentHash": "167d3411ea616d4771626eedd6566a54",
+      "lastModificationDate": 1661022549893,
+      "contentHash": "f3fad8c94389416b369488e3902f0b4c",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -772,8 +772,8 @@
       }
     },
     "contracts/Strategy/Arbitrum Strategies/MyceliumStrategy.sol": {
-      "lastModificationDate": 1660940776647,
-      "contentHash": "eec5f0b3954e6a99c8db08eb2de27edc",
+      "lastModificationDate": 1660941105744,
+      "contentHash": "a2331241b6d181b906a29693f7f5d5a2",
       "sourceName": "contracts/Strategy/Arbitrum Strategies/MyceliumStrategy.sol",
       "solcConfig": {
         "settings": {
@@ -1631,7 +1631,7 @@
       "versionRequirement": ">=0.5.0",
       "artifacts": {
         "DSTest": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "test.sol/DSTest.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "test.sol/DSTest.json"
         }
       }
     },
@@ -1673,7 +1673,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Script": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Script.sol/Script.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Script.sol/Script.json"
         }
       }
     },
@@ -1717,16 +1717,16 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Test": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/Test.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/Test.json"
         },
         "stdError": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdError.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdError.json"
         },
         "stdMath": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdMath.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdMath.json"
         },
         "stdStorage": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdStorage.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdStorage.json"
         }
       }
     },
@@ -1764,7 +1764,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Vm": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Vm.sol/Vm.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Vm.sol/Vm.json"
         }
       }
     },
@@ -1802,7 +1802,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console.sol/console.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console.sol/console.json"
         }
       }
     },
@@ -1840,7 +1840,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console2": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console2.sol/console2.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console2.sol/console2.json"
         }
       }
     },
@@ -2157,7 +2157,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ReentrancyGuard": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
         }
       }
     },
@@ -2199,7 +2199,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "ERC20": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "ERC20.sol/ERC20.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ERC20.sol/ERC20.json"
         }
       }
     },
@@ -2237,7 +2237,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20.sol/IERC20.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20.sol/IERC20.json"
         }
       }
     },
@@ -2320,7 +2320,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC20Metadata": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.json"
         }
       }
     },
@@ -2476,7 +2476,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "Context": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Context.sol/Context.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Context.sol/Context.json"
         }
       }
     },
@@ -2592,7 +2592,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC165": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC165.sol/IERC165.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "IERC165.sol/IERC165.json"
         }
       }
     },
@@ -2668,7 +2668,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "SafeMath": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "SafeMath.sol/SafeMath.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "SafeMath.sol/SafeMath.json"
         }
       }
     },
@@ -2716,8 +2716,8 @@
       }
     },
     "test/foundry/Communicator.t.sol": {
-      "lastModificationDate": 1660743490746,
-      "contentHash": "78210e067ceea845278e29cc5e76860f",
+      "lastModificationDate": 1661021704864,
+      "contentHash": "b7af5d427e1b332f03b926f27e7e0e1c",
       "sourceName": "test/foundry/Communicator.t.sol",
       "solcConfig": {
         "settings": {
@@ -2841,8 +2841,8 @@
       }
     },
     "test/foundry/Treasury.t.sol": {
-      "lastModificationDate": 1660919424136,
-      "contentHash": "778f4cef25ded2be895f2621a55af7c4",
+      "lastModificationDate": 1661022474089,
+      "contentHash": "38a4ca810af74a04c751af8a5e2b6014",
       "sourceName": "test/foundry/Treasury.t.sol",
       "solcConfig": {
         "settings": {
