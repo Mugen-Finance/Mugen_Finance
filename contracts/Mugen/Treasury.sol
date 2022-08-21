@@ -39,11 +39,7 @@ contract Treasury is BancorFormula, ITreasury {
     error NotCommunicator();
     error UnderMinDeposit();
 
-    constructor(
-        address _mugen,
-        address _treasury,
-        address _endpoint
-    ) {
+    constructor(address _mugen, address _treasury) {
         mugen = IMugen(_mugen);
         treasury = _treasury;
         s_totalSupply += 1e18;

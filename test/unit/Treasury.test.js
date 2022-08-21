@@ -55,11 +55,7 @@ describe("Treasury: ", function () {
     OFTDst = await MugenARB.deploy(lzEndpointDstMock.address);
     OFTSrc = await MugenETH.deploy(lzEndpointSrcMock.address);
 
-    TreasurySrc = await TreasuryETH.deploy(
-      OFTSrc.address,
-      owner.address,
-      lzEndpointSrcMock.address
-    );
+    TreasurySrc = await TreasuryETH.deploy(OFTSrc.address, owner.address);
     TreasuryDst = await TreasuryARB.deploy(
       OFTDst.address,
       owner.address,

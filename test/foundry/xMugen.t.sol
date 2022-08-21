@@ -106,5 +106,35 @@ contract xMugenTest is Test {
         xMGN.withdraw(100 * 1e18, alice, alice);
     }
 
-    function testMultipleRewards() public {}
+    function testMultipleRewards() public {
+        xMGN.deposit(1000 * 1e18, address(this));
+        vm.prank(alice);
+        xMGN.deposit(1000 * 1e18, alice);
+        xMGN.issuanceRate(10000 * 1e18);
+        vm.warp(31 days);
+        uint256 first = xMGN.earned(address(this));
+        uint256 second = xMGN.earned(alice);
+        xMGN.withdraw(1000 * 1e18, address(this), address(this));
+        vm.prank(alice);
+        xMGN.withdraw(1000 * 1e18, alice, alice);
+        assertEq(first, second);
+        assertGt(mock.balanceOf(alice), 5000 * 1e18 - 1e6); //Will always be a little bit of "dust" that does not get distributed
+    }
+
+    function testAllowance() public {
+        xMGN.deposit(1000 * 1e18, address(this));
+        vm.prank(alice);
+        xMGN.deposit(1000 * 1e18, alice);
+        xMGN.issuanceRate(10000 * 1e18);
+        xMGN.increaseAllowance(alice, 1000 * 1e18);
+        vm.warp(31 days);
+        vm.prank(alice);
+        xMGN.withdraw(1000 * 1e18, alice, address(this));
+        assertEq(mock.balanceOf(alice), 0);
+        assertGt(
+            mock.balanceOf(address(this)),
+            type(uint256).max - 6000 * 1e18
+        );
+        assertEq(xMGN.allowance(address(this), alice), 0);
+    }
 }

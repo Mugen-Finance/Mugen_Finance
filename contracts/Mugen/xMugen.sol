@@ -246,22 +246,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     /* View Functions */
     /********************/
 
-    function getStored() external view returns (uint256) {
-        return rewardPerTokenStored;
-    }
-
-    function getPaid(address account) external view returns (uint256) {
-        return userRewardPerTokenPaid[account];
-    }
-
-    function getStaked(address account) external view returns (uint256) {
-        return balanceOf(account);
-    }
-
-    function getRewardRate() external view returns (uint256) {
-        return rewardRate;
-    }
-
     function asset()
         external
         view

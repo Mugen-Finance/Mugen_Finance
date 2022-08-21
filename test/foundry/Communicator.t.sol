@@ -25,7 +25,7 @@ contract CommunicatorTest is Test {
         Endpoint = new LZEndpointMock(1);
         mugen = new Mugen(address(Endpoint));
         comms = new Communicator(address(Endpoint));
-        treasury = new Treasury(address(mugen), alice, address(Endpoint));
+        treasury = new Treasury(address(mugen), alice);
         treasury.addTokenInfo(mock, address(feed));
         mock.approve(address(treasury), type(uint256).max);
         mugen.transferOwnership(address(treasury));
