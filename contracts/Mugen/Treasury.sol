@@ -108,6 +108,7 @@ contract Treasury is BancorFormula, ITreasury {
     }
 
     function setRemotes(uint16 _srcChainId, bytes calldata _srcAddress) public {
+        if (msg.sender != owner) revert NotOwner();
         mugen.setTrustedRemote(_srcChainId, _srcAddress);
     }
 
@@ -125,6 +126,10 @@ contract Treasury is BancorFormula, ITreasury {
 
     function readSupply() external view returns (uint256) {
         return s_totalSupply;
+    }
+
+    function mugenPrice() external view returns (uint256 price) {
+        price = 1e18 / calculateContinuousMintReturn(1e18);
     }
 
     /**************************/

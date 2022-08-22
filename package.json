@@ -3,7 +3,7 @@
     "@chainlink/contracts": "^0.4.1",
     "@openzeppelin/contracts": "^4.7.0",
     "dotenv": "^16.0.1",
-    "hardhat": "^2.10.1"
+    "hardhat": "^2.10.2"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
@@ -19,7 +19,7 @@
     "chai": "^4.2.0",
     "ethers": "^5.5.4",
     "hardhat-contract-sizer": "^2.6.1",
-    "hardhat-deploy": "^0.11.11",
+    "hardhat-deploy": "^0.11.12",
     "hardhat-gas-reporter": "^1.0.8",
     "hardhat-tracer": "^1.1.0-rc.6",
     "prettier": "^2.7.1",

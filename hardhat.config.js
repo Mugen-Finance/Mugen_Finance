@@ -6,6 +6,7 @@ require("hardhat-tracer");
 
 const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const TESTNET_URL = process.env.TESTNET_RPC;
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   defaultNetwork: "hardhat",
@@ -16,6 +17,11 @@ module.exports = {
       forking: {
         url: MAINNET_RPC_URL,
       },
+    },
+    arbitrum_rinkeby: {
+      chainId: 421611,
+      url: TESTNET_URL,
+      accounts: [PRIVATE_KEY],
     },
   },
   solidity: {
