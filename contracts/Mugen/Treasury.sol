@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../interfaces/AggregatorPriceFeeds.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "../Bancor/BancorFormula.sol";
+import {BancorFormula} from "../Bancor/BancorFormula.sol";
 import "../interfaces/ITreasury.sol";
 
 contract Treasury is BancorFormula, ITreasury {
@@ -26,7 +26,8 @@ contract Treasury is BancorFormula, ITreasury {
     uint256 public constant RESERVE_RATIO = 800000;
     uint256 public valueDeposited;
     uint256 public s_totalSupply;
-    uint256 internal constant VALID_PERIOD = 12 hours;
+    uint256 public depositCap;
+    uint256 internal constant VALID_PERIOD = 1 days;
     uint256 internal constant MIN_VALUE = 100 * 10**18;
     uint256 private locked = 1;
     address public owner;
@@ -38,6 +39,7 @@ contract Treasury is BancorFormula, ITreasury {
     error NotOwner();
     error NotCommunicator();
     error UnderMinDeposit();
+    error CapReached();
 
     constructor(address _mugen, address _treasury) {
         mugen = IMugen(_mugen);
@@ -54,6 +56,7 @@ contract Treasury is BancorFormula, ITreasury {
         external
         nonReentrant
         depositable(_token)
+        Capped
     {
         uint256 amount = _amount;
         if (IERC20Metadata(_token).decimals() < 18) {
@@ -111,6 +114,11 @@ contract Treasury is BancorFormula, ITreasury {
         mugen.setTrustedRemote(_srcChainId, _srcAddress);
     }
 
+    function setCap(uint256 _amount) external {
+        if (msg.sender != owner) revert NotOwner();
+        depositCap = _amount;
+    }
+
     /*************************/
     /****  View Functions ****/
     /*************************/
@@ -143,6 +151,11 @@ contract Treasury is BancorFormula, ITreasury {
 
     modifier depositable(IERC20 _token) {
         if (depositableTokens[_token] != true) revert NotDepositable();
+        _;
+    }
+
+    modifier Capped() {
+        if (depositCap < valueDeposited) revert CapReached();
         _;
     }
 

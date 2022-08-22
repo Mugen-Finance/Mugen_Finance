@@ -1,5 +1,15 @@
 //SPDX-License-Identifier: MIT
 
+//Finish this today.
+/**
+ * What all does this need to do?
+ * Receive funds and send them where they should go
+ * Determine what percentage goes where
+ * add and remove strategies
+ * add and remove governors
+ * set up multi sig aspect.
+ */
+
 pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -14,12 +24,12 @@ contract StrategyHub is IStrategyHub {
     error AlreadySet();
     error NotOwner();
 
-    //Percentages are done through basic division. So if percentage is 2 this equates to 50%
     mapping(address => uint16) percentages;
     mapping(address => uint256) cooldown;
     mapping(address => bool) strategies;
+    mapping(address => mapping(IERC20 => bool)) acceptableTokens;
+    mapping(address => bool) governance;
 
-    address public governance;
     address public owner;
     bool public governanceSet;
 
@@ -30,12 +40,14 @@ contract StrategyHub is IStrategyHub {
     function transferToStrategy(IERC20 _token, address _strategy)
         external
         override
+        acceptableTransfer(_strategy, _token)
     {
         if (strategies[_strategy] != true) revert NotAStrategy();
         if (cooldown[_strategy] > block.timestamp) revert StrategyCooldown();
-        cooldown[_strategy] = block.timestamp + 3 days;
+        cooldown[_strategy] = block.timestamp + 2 days;
         uint16 percentage = percentages[_strategy];
-        uint256 amount = IERC20(_token).balanceOf(address(this)) / percentage;
+        uint256 amount = (IERC20(_token).balanceOf(address(this)) *
+            percentage) / 1000;
         IERC20(_token).safeTransferFrom(address(this), _strategy, amount);
     }
 
@@ -63,15 +75,23 @@ contract StrategyHub is IStrategyHub {
         emit StrategyRemoved(_strategy);
     }
 
-    function setGovernance(address _governance) external {
+    function addGovernors(address _governor) external {
         if (msg.sender != owner) revert NotOwner();
-        if (governanceSet = true) revert AlreadySet();
-        governance = _governance;
-        governanceSet = true;
+        governance[_governor] = true;
+    }
+
+    function removeGovernors(address _governor) external {
+        if (msg.sender != owner) revert NotOwner();
+        delete governance[_governor];
     }
 
     modifier onlyGovernance() {
-        require(msg.sender == governance);
+        if (msg.sender != owner || governance[msg.sender] != true)
+            revert NotOwner();
+        _;
+    }
+    modifier acceptableTransfer(address _strategy, IERC20 _token) {
+        require(acceptableTokens[_strategy][_token] = true);
         _;
     }
 }

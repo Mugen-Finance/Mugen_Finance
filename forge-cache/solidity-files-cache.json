@@ -132,82 +132,6 @@
         }
       }
     },
-    "contracts/Counter.sol": {
-      "lastModificationDate": 1660653180510,
-      "contentHash": "ae6c800a2b4c57768024d6e9423d39e8",
-      "sourceName": "contracts/Counter.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.13",
-      "artifacts": {
-        "Counter": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Counter.sol/Counter.json"
-        }
-      }
-    },
-    "contracts/Governance/Vote.sol": {
-      "lastModificationDate": 1660755135490,
-      "contentHash": "212bb3aaf6015620ada86993ffd2ccae",
-      "sourceName": "contracts/Governance/Vote.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "=0.8.7",
-      "artifacts": {
-        "Vote": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Vote.sol/Vote.json"
-        }
-      }
-    },
     "contracts/Mugen/Communicator.sol": {
       "lastModificationDate": 1660755144693,
       "contentHash": "ad11bd4ed14ca66128ae9c50af33f429",
@@ -555,8 +479,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1661093219773,
-      "contentHash": "e2ec37ddfd19832bd0439ed0b390280d",
+      "lastModificationDate": 1661199950682,
+      "contentHash": "ab3791258d115b576e0aff79ad45c050",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -652,44 +576,6 @@
       "artifacts": {
         "xMugen": {
           "0.8.16+commit.07a7930e.Darwin.appleclang": "xMugen.sol/xMugen.0.8.16.json"
-        }
-      }
-    },
-    "contracts/Security/MultiSig.sol": {
-      "lastModificationDate": 1660870580690,
-      "contentHash": "5ecefee60dfd569ca81ca9688740b61a",
-      "sourceName": "contracts/Security/MultiSig.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "=0.8.7",
-      "artifacts": {
-        "MultiSig": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "MultiSig.sol/MultiSig.json"
         }
       }
     },
@@ -938,8 +824,8 @@
       }
     },
     "contracts/Strategy/StrategyHub.sol": {
-      "lastModificationDate": 1660834339416,
-      "contentHash": "0cb2ad53a42af784efbe745ee1c6b678",
+      "lastModificationDate": 1661190551612,
+      "contentHash": "492750627b362702408dda1e37182d79",
       "sourceName": "contracts/Strategy/StrategyHub.sol",
       "solcConfig": {
         "settings": {
@@ -1631,7 +1517,7 @@
       "versionRequirement": ">=0.5.0",
       "artifacts": {
         "DSTest": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "test.sol/DSTest.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "test.sol/DSTest.json"
         }
       }
     },
@@ -1673,7 +1559,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Script": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Script.sol/Script.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Script.sol/Script.json"
         }
       }
     },
@@ -1717,16 +1603,16 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Test": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/Test.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/Test.json"
         },
         "stdError": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdError.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdError.json"
         },
         "stdMath": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdMath.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdMath.json"
         },
         "stdStorage": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Test.sol/stdStorage.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Test.sol/stdStorage.json"
         }
       }
     },
@@ -1764,7 +1650,7 @@
       "versionRequirement": ">=0.6.0, <0.9.0",
       "artifacts": {
         "Vm": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Vm.sol/Vm.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Vm.sol/Vm.json"
         }
       }
     },
@@ -1802,7 +1688,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console.sol/console.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console.sol/console.json"
         }
       }
     },
@@ -1840,7 +1726,7 @@
       "versionRequirement": ">=0.4.22, <0.9.0",
       "artifacts": {
         "console2": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "console2.sol/console2.0.8.16.json"
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "console2.sol/console2.json"
         }
       }
     },
@@ -2672,49 +2558,6 @@
         }
       }
     },
-    "script/Counter.s.sol": {
-      "lastModificationDate": 1660653180510,
-      "contentHash": "0705c52104730a78aef4aa6694175c81",
-      "sourceName": "script/Counter.s.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "lib/forge-std/src/Script.sol",
-        "lib/forge-std/src/Vm.sol",
-        "lib/forge-std/src/console.sol",
-        "lib/forge-std/src/console2.sol"
-      ],
-      "versionRequirement": "^0.8.13",
-      "artifacts": {
-        "CounterScript": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Counter.s.sol/CounterScript.json"
-        }
-      }
-    },
     "test/foundry/Communicator.t.sol": {
       "lastModificationDate": 1661093284747,
       "contentHash": "9117b225c5a4d63b07b60899b65f8b13",
@@ -2791,52 +2634,6 @@
       "artifacts": {
         "CommunicatorTest": {
           "0.8.7+commit.e28d00a7.Darwin.appleclang": "Communicator.t.sol/CommunicatorTest.json"
-        }
-      }
-    },
-    "test/foundry/Counter.t.sol": {
-      "lastModificationDate": 1660653855527,
-      "contentHash": "1fc150226f5d75d538f40bb97d41b409",
-      "sourceName": "test/foundry/Counter.t.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "contracts/Counter.sol",
-        "lib/forge-std/lib/ds-test/src/test.sol",
-        "lib/forge-std/src/Script.sol",
-        "lib/forge-std/src/Test.sol",
-        "lib/forge-std/src/Vm.sol",
-        "lib/forge-std/src/console.sol",
-        "lib/forge-std/src/console2.sol"
-      ],
-      "versionRequirement": "^0.8.13",
-      "artifacts": {
-        "CounterTest": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "Counter.t.sol/CounterTest.json"
         }
       }
     },
@@ -2920,8 +2717,8 @@
       }
     },
     "test/foundry/xMugen.t.sol": {
-      "lastModificationDate": 1661091834618,
-      "contentHash": "22d7635e5585f01638f023a874a9fc3c",
+      "lastModificationDate": 1661184273365,
+      "contentHash": "0fc9abcf7dfc39090180b92860830bb7",
       "sourceName": "test/foundry/xMugen.t.sol",
       "solcConfig": {
         "settings": {
