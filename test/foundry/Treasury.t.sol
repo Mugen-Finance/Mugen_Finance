@@ -27,19 +27,18 @@ contract TreasuryTest is Test {
         Endpoint = new LZEndpointMock(1);
         mugen = new Mugen(address(Endpoint));
         comms = new Communicator(address(Endpoint));
-        treasury = new Treasury(address(mugen), alice);
+        treasury = new Treasury(address(mugen), alice, address(this));
         treasury.addTokenInfo(mock, address(feed));
         treasury.addTokenInfo(usdc, address(feed));
         mock.approve(address(treasury), type(uint256).max);
         usdc.approve(address(treasury), type(uint256).max);
-        mugen.transferOwnership(address(treasury));
+        mugen.setMinter(address(treasury));
     }
 
     function testSetUp() public {
         assertEq(treasury.readSupply(), 1e18);
         assertEq(treasury.owner(), address(this));
         assertEq(treasury.treasury(), alice);
-        assertEq(mugen.owner(), address(treasury));
     }
 
     function testDeposit() public {
@@ -87,5 +86,10 @@ contract TreasuryTest is Test {
         assertEq(treasury.Communicator(), address(comms));
         vm.expectRevert(Treasury.NotCommunicator.selector);
         treasury.receiveMessage(100 * 1e18);
+    }
+
+    function testMinterSet() public {
+        vm.expectRevert(Mugen.MinterSet.selector);
+        mugen.setMinter(alice);
     }
 }

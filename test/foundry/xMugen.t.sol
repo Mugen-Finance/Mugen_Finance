@@ -30,6 +30,7 @@ contract xMugenTest is Test {
     }
 
     function testIssuance(uint256 amount) public {
+        vm.assume(amount > 0);
         vm.expectRevert("Ownable: caller is not the owner");
         vm.prank(alice);
         xMGN.issuanceRate(100 * 1e18);
