@@ -38,29 +38,32 @@ contract TreasuryTest is Test {
         mugen.setMinter(address(treasury));
     }
 
-    /**
-     * What needs to be tested?
-     *
-     * Adding and removing strategies
-     * Transfering to a strategy
-     * Access Control
-     * Updating Percentages
-     * Updating acceptable tokens
-     */
-
-    function testStrategy() public {
-        vm.expectRevert(StrategyHub.NotOwner.selector);
-        vm.prank(alice);
-        hub.addStrategies(alice);
-        hub.addStrategies(alice);
-        vm.expectRevert(StrategyHub.NotOwner.selector);
-        vm.prank(alice);
-        hub.addTransferableTokens(alice, mock);
-        hub.addTransferableTokens(alice, mock);
-        treasury.deposit(mock, 100000 * 1e18);
-        assertEq(mock.balanceOf(address(hub)), 100000 * 1e18);
-        hub.updatePercentage(1000, alice);
+    function testTransferStrategy() public {
+        assertEq(hub.administrator(), address(this));
+        treasury.deposit(mock, 1000 * 1e18);
+        assertEq(mock.balanceOf(address(hub)), 1000 * 1e18);
+        vm.expectRevert(StrategyHub.NotAStrategy.selector);
         hub.transferToStrategy(mock, alice);
-        assertEq(mock.balanceOf(alice), 100000 * 1e18);
+        hub.addStrategies(alice);
+        vm.expectRevert(StrategyHub.NotAStrategy.selector); //Fix customer error
+        hub.transferToStrategy(mock, alice);
+        hub.addTransferableTokens(alice, mock);
+        vm.expectRevert(StrategyHub.NotOwner.selector);
+        vm.prank(alice);
+        hub.updatePercentage(1000, alice);
+        hub.updatePercentage(500, alice);
+        vm.expectRevert("Invalid Percentages");
+        hub.updatePercentage(1500, alice);
+        vm.expectRevert("Invalid Percentages");
+        hub.updatePercentage(0, alice);
+        hub.transferToStrategy(mock, alice);
+        assertEq(mock.balanceOf(alice), 500 * 1e18);
+        vm.expectRevert(StrategyHub.StrategyCooldown.selector);
+        hub.transferToStrategy(mock, alice);
+        uint256 cooldownTime = hub.checkCooldown(alice);
+        uint256 day = 2 days;
+        assertEq(cooldownTime, block.timestamp + day);
     }
+
+    function testLocks() public {}
 }

@@ -2,25 +2,28 @@
 
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../interfaces/IERC4626.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
-
-error TRANSFER_FAILED();
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC4626} from "../interfaces/IERC4626.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
+    using SafeERC20 for IERC20;
     ERC20 public rewardsToken;
     ERC20 public stakingToken;
 
     error NotOwner();
+    error NotYield();
+    error TRANSFER_FAILED();
 
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
     uint256 public rewardsDuration = 30 days;
+    address public yieldDistributor;
 
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
@@ -35,16 +38,21 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         stakingToken = ERC20(_stakingToken);
     }
 
+    function setYield(address _yield) external onlyOwner {
+        yieldDistributor = _yield;
+    }
+
     /************************/
     /*** Accounting Logic ***/
     /************************/
 
     function issuanceRate(uint256 _rewards)
-        external
+        public
+        override
         nonReentrant
-        onlyOwner
         updateReward(address(0))
     {
+        if (msg.sender != yieldDistributor) revert NotYield();
         require(_rewards > 0, "Zero rewards");
         require(totalSupply() != 0, "xMGN:UVS:ZERO_SUPPLY");
         if (block.timestamp >= periodFinish) {
@@ -59,7 +67,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        bool success = ERC20(rewardsToken).transferFrom(
+        IERC20(rewardsToken).safeTransferFrom(
             msg.sender,
             address(this),
             _rewards
@@ -69,7 +77,6 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         periodFinish = block.timestamp + rewardsDuration;
 
         emit RewardDeposit(msg.sender, _rewards);
-        if (!success) revert TRANSFER_FAILED();
     }
 
     function lastTimeRewardApplicable() public view returns (uint256) {

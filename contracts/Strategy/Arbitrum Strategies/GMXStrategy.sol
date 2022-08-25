@@ -8,6 +8,12 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+/**
+ * Should there be a set up for accounting on the gmx strategy?
+ * What about what will happen when/if the contract gets depreciated how will funds get back to the
+ * Strategy Hub contract?
+ */
+
 contract GMXStrategy is Ownable {
     IRewardRouterV2 rewardRouterV2;
 
@@ -45,6 +51,10 @@ contract GMXStrategy is Ownable {
     }
 
     function stakeGMXRewards() external {
+        require(
+            ERC20(ES_GMX).balanceOf(address(this)) > 0,
+            "O balance of contract"
+        );
         uint256 amount = ERC20(ES_GMX).balanceOf(address(this));
         rewardRouterV2.stakeEsGmx(amount);
         emit EsGMXStaked(msg.sender, amount);

@@ -56,7 +56,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     function updatePercentage(uint16 _percentage, address _destinationContract)
         external
         override
-        onlyOwner
+        onlyOwners
     {
         require(_percentage > 0 && _percentage <= 1000, "Invalid Percentages");
         percentages[_destinationContract] = _percentage;
@@ -98,8 +98,13 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
         administrator = address(0);
     }
 
+    function checkCooldown(address _strategy) external view returns (uint256) {
+        uint256 time = cooldown[_strategy];
+        return time;
+    }
+
     modifier acceptableTransfer(address _strategy, IERC20 _token) {
-        require(acceptableTokens[_strategy][_token] = true);
+        if (acceptableTokens[_strategy][_token] != true) revert NotAStrategy();
         _;
     }
 

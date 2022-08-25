@@ -32,7 +32,7 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
     uint256 internal constant MIN_VALUE = 50 * 10**18;
     address public administrator;
     address public Communicator;
-    bool public adminRemoved;
+    bool public adminRemoved = false;
 
     error NotDepositable();
     error NotUpdated();
@@ -133,9 +133,11 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
     }
 
     function setAdministrator(address newAdmin) external {
-        if (adminRemoved = true) revert AdminRemoved();
-        if (msg.sender != owner() || msg.sender != administrator)
-            revert NotOwner();
+        if (adminRemoved != false) revert AdminRemoved();
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "not the owner"
+        );
         administrator = newAdmin;
     }
 
@@ -158,6 +160,15 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
 
     function readSupply() external view returns (uint256) {
         return s_totalSupply;
+    }
+
+    function checkDepositable(IERC20 _token) external view returns (bool) {
+        return depositableTokens[_token];
+    }
+
+    function pricePerToken() external view returns (uint256) {
+        uint256 _price = (100 * 1e18) / calculateContinuousMintReturn(1e18);
+        return _price;
     }
 
     /**************************/

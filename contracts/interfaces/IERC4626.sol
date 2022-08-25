@@ -290,4 +290,6 @@ interface IERC4626 is IERC20, IERC20Metadata {
         address receiver,
         address owner
     ) external returns (uint256 assets);
+
+    function issuanceRate(uint256 _rewards) external;
 }
