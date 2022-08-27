@@ -27,11 +27,12 @@ contract xMugenTest is Test {
         mugen.approve(address(xMGN), type(uint256).max);
         vm.prank(alice);
         mugen.approve(address(xMGN), type(uint256).max);
+        xMGN.setYield(address(this));
     }
 
-    function testIssuance(uint256 amount) public {
+    function testIssuance(uint192 amount) public {
         vm.assume(amount > 0);
-        vm.expectRevert("Ownable: caller is not the owner");
+        vm.expectRevert(xMugen.NotYield.selector);
         vm.prank(alice);
         xMGN.issuanceRate(100 * 1e18);
         vm.expectRevert("xMGN:UVS:ZERO_SUPPLY");
@@ -41,6 +42,14 @@ contract xMugenTest is Test {
         uint256 time = 30 days;
         assertEq(xMGN.rewardRate(), amount / time);
         assertEq(mock.balanceOf(address(xMGN)), amount);
+        assertEq(xMGN.lastUpdateTime(), block.timestamp);
+        assertEq(xMGN.periodFinish(), block.timestamp + time);
+        vm.warp(30 days);
+        uint256 remaining = xMGN.periodFinish() - block.timestamp;
+        uint256 leftover = remaining * xMGN.rewardRate();
+        xMGN.issuanceRate(100 * 1e18);
+        uint256 rr = (100 * 1e18 + leftover) / time;
+        assertEq(xMGN.rewardRate(), rr);
     }
 
     function testMintOrDeposit() public {
@@ -94,7 +103,7 @@ contract xMugenTest is Test {
     /**
      Rewards will be in eth and while not going above 184 (due to overflow)
      does not cover all possible scenerios,
-     it does cover up until a deposit of around 2.45e37 eth. Or at current prices of eth around 
+     it does cover up until a deposit of around 2.45e37 eth. Or at current prices of eth around
      3.6e40 USD which I am quite comfortable with.
      */
     function testSingleRewardCalc(uint184 amount) public {
@@ -138,5 +147,4 @@ contract xMugenTest is Test {
         );
         assertEq(xMGN.allowance(address(this), alice), 0);
     }
-    //test
 }

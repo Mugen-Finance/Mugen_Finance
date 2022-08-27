@@ -12,6 +12,7 @@ import {IERC4626} from "../interfaces/IERC4626.sol";
 
 contract YieldDistributor is Ownable {
     using SafeERC20 for IERC20;
+
     address stakingContract;
 
     error RewardsToHigh();
@@ -33,12 +34,10 @@ contract YieldDistributor is Ownable {
     }
 
     function transferRewards() external payable {
-        require(
-            address(stakingContract) != address(0),
-            "staking contract not set"
-        );
-        if (IERC20(weth).balanceOf(address(this)) < 5 * 1e18)
+        require(address(stakingContract) != address(0), "staking contract not set");
+        if (IERC20(weth).balanceOf(address(this)) < 5 * 1e18) {
             revert RewardsToLow();
+        }
         (uint256 team, uint256 reward) = calculateRewards();
         ERC20(weth).approve(address(stakingContract), reward);
         IERC20(weth).safeTransfer(teamfund, team);
@@ -51,8 +50,9 @@ contract YieldDistributor is Ownable {
         uint256 currentRewards = IERC20(weth).balanceOf(address(this));
         uint256 teamPercent = (currentRewards * 100) / 1000;
         uint256 rewards = (currentRewards * 900) / 1000;
-        if (teamPercent + rewards > IERC20(weth).balanceOf(address(this)))
+        if (teamPercent + rewards > IERC20(weth).balanceOf(address(this))) {
             revert RewardsToHigh();
+        }
         return (teamPercent, rewards);
     }
 
@@ -61,7 +61,9 @@ contract YieldDistributor is Ownable {
     }
 
     function setAdministrator(address newAdmin) external onlyOwners {
-        if (adminRemoved != false) revert AdminRemoved();
+        if (adminRemoved != false) {
+            revert AdminRemoved();
+        }
         administrator = newAdmin;
     }
 
@@ -71,10 +73,7 @@ contract YieldDistributor is Ownable {
     }
 
     modifier onlyOwners() {
-        require(
-            msg.sender == owner() || msg.sender == administrator,
-            "not the owner"
-        );
+        require(msg.sender == owner() || msg.sender == administrator, "not the owner");
         _;
     }
 }

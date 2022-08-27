@@ -15,10 +15,7 @@ interface IVault {
      * @param assets Amount of assets to convert.
      * @return shares Amount of shares calculated for the amount of given assets, rounded down towards 0. Does not include any fees that are charged against assets in the Vault.
      */
-    function convertToShares(uint256 assets)
-        external
-        view
-        returns (uint256 shares);
+    function convertToShares(uint256 assets) external view returns (uint256 shares);
 
     /**
      * The amount of `assets` that the Vault would exchange for the amount of `shares` provided, in an ideal scenario where all the conditions are met.
@@ -30,10 +27,7 @@ interface IVault {
      *
      * @return assets Amount of assets calculated for the given amount of shares, rounded down towards 0. Does not include fees that are charged against assets in the Vault.
      */
-    function convertToAssets(uint256 shares)
-        external
-        view
-        returns (uint256 assets);
+    function convertToAssets(uint256 shares) external view returns (uint256 assets);
 
     /**
      * Maximum amount of the underlying asset that can be deposited into the Vault for the receiver, through a deposit call.
@@ -48,10 +42,7 @@ interface IVault {
      *
      * @return maxAssets Max assets that can be deposited for receiver. Returns 2 ** 256 - 1 if there is no limit on the maximum amount of assets that may be deposited. Returns 0 if deposits are entirely disabled (even temporarily).
      */
-    function maxDeposit(address receiver)
-        external
-        view
-        returns (uint256 maxAssets);
+    function maxDeposit(address receiver) external view returns (uint256 maxAssets);
 
     /**
      * Allows an on-chain or off-chain user to simulate the effects of their deposit at the current block, given current on-chain conditions.
@@ -64,10 +55,7 @@ interface IVault {
      *
      * @return shares exact amount of shares that would be minted in a deposit call. That includes deposit fees. Integrators should be aware of the existence of deposit fees.
      */
-    function previewDeposit(uint256 assets)
-        external
-        view
-        returns (uint256 shares);
+    function previewDeposit(uint256 assets) external view returns (uint256 shares);
 
     /**
      * @return The current vault State
@@ -100,10 +88,7 @@ interface IVault {
      *
      * Returns `2 ** 256 - 1` if there is no limit on the maximum amount of shares that may be minted.
      */
-    function maxMint(address receiver)
-        external
-        view
-        returns (uint256 maxShares);
+    function maxMint(address receiver) external view returns (uint256 maxShares);
 
     /**
      * Allows an on-chain or off-chain user to simulate the effects of their mint at the current block, given current on-chain conditions.
@@ -122,10 +107,7 @@ interface IVault {
      *
      * @return maxAssets The maximum amount of assets that could be transferred from `owner` through `withdraw` and not cause a revert, which must not be higher than the actual maximum that would be accepted (it should underestimate if necessary).
      */
-    function maxWithdraw(address owner)
-        external
-        view
-        returns (uint256 maxAssets);
+    function maxWithdraw(address owner) external view returns (uint256 maxAssets);
 
     /**
      * Allows an on-chain or off-chain user to simulate the effects of their withdrawal at the current block, given current on-chain conditions.
@@ -135,10 +117,7 @@ interface IVault {
      *
      * @return shares Shares available to withdraw for specified assets. This includes of withdrawal fees. Integrators should be aware of the existence of withdrawal fees.
      */
-    function previewWithdraw(uint256 assets)
-        external
-        view
-        returns (uint256 shares);
+    function previewWithdraw(uint256 assets) external view returns (uint256 shares);
 
     /**
      * Maximum amount of Vault shares that can be redeemed from the `owner` balance in the Vault, through a `redeem` call.
@@ -155,10 +134,7 @@ interface IVault {
      *
      * @return assets Amount of assets redeemable for given shares. Includes of withdrawal fees. Integrators should be aware of the existence of withdrawal fees.
      */
-    function previewRedeem(uint256 shares)
-        external
-        view
-        returns (uint256 assets);
+    function previewRedeem(uint256 shares) external view returns (uint256 assets);
 
     // ============================= User functions ================================
 
@@ -169,9 +145,7 @@ interface IVault {
      *
      * Emits a {Deposit} event
      */
-    function deposit(uint256 assets, address receiver)
-        external
-        returns (uint256 shares);
+    function deposit(uint256 assets, address receiver) external returns (uint256 shares);
 
     /**
      * Mints exactly `shares` Vault shares to `receiver` by depositing `amount` of underlying tokens.
@@ -180,9 +154,7 @@ interface IVault {
      *
      * Emits a {Deposit} event
      */
-    function mint(uint256 shares, address receiver)
-        external
-        returns (uint256 assets);
+    function mint(uint256 shares, address receiver) external returns (uint256 assets);
 
     /**
      * Burns `shares` from `owner` and sends exactly `assets` of underlying tokens to `receiver`. Only available outside of management window.
@@ -192,11 +164,7 @@ interface IVault {
      *
      * Emits a {Withdraw} event
      */
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) external returns (uint256 shares);
+    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256 shares);
 
     /**
      * Burns exactly `shares` from `owner` and sends `assets` of underlying tokens to `receiver`. Only available outside of management window.
@@ -206,11 +174,7 @@ interface IVault {
      *
      * Emits a {Withdraw} event
      */
-    function redeem(
-        uint256 shares,
-        address receiver,
-        address owner
-    ) external returns (uint256 assets);
+    function redeem(uint256 shares, address receiver, address owner) external returns (uint256 assets);
 
     // ============================= Strategy functions ================================
 
@@ -266,18 +230,14 @@ interface IVault {
      * @param _contractAddress The address of the contract to check
      * @return `true` if the contract is whitelisted, `false` otherwise
      */
-    function whitelistedContract(address _contractAddress)
-        external
-        view
-        returns (bool);
+    function whitelistedContract(address _contractAddress) external view returns (bool);
 
     /**
      * @notice Removes a contract from the whitelist.
      * @dev Removed contracts wont be able to interact with the vault.
      * @param contractAddress The address of the contract to whitelist.
      */
-    function removeContractAddressFromWhitelist(address contractAddress)
-        external;
+    function removeContractAddressFromWhitelist(address contractAddress) external;
 
     /**
      * Migrate vault to new vault contract.
@@ -308,10 +268,7 @@ interface IVault {
      * @param _snapshotAssetBalance Overrides the value of the snapshotted asset balance
      * @param _snapshotShareSupply Overrides the value of the snapshotted share supply
      */
-    function initialRun(
-        uint256 _snapshotAssetBalance,
-        uint256 _snapshotShareSupply
-    ) external;
+    function initialRun(uint256 _snapshotAssetBalance, uint256 _snapshotShareSupply) external;
 
     /**
      * Enable/diable charging performance & management fees
@@ -347,23 +304,14 @@ interface IVault {
      * `caller` has exchanged `assets` for `shares`, and transferred those `shares` to `owner`.
      * Emitted when tokens are deposited into the Vault via the `mint` and `deposit` methods.
      */
-    event Deposit(
-        address indexed caller,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
-    );
+    event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
 
     /**
      * `caller` has exchanged `shares`, owned by `owner`, for `assets`, and transferred those `assets` to `receiver`.
      * Will be emitted when shares are withdrawn from the Vault in `ERC4626.redeem` or `ERC4626.withdraw` methods.
      */
     event Withdraw(
-        address indexed caller,
-        address indexed receiver,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
+        address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares
     );
 
     /**
@@ -372,11 +320,7 @@ interface IVault {
      * @param _vaultBalance vault balance value
      * @param _jonesAssetSupply jDPX total supply value
      */
-    event Snapshot(
-        uint256 indexed _timestamp,
-        uint256 _vaultBalance,
-        uint256 _jonesAssetSupply
-    );
+    event Snapshot(uint256 indexed _timestamp, uint256 _vaultBalance, uint256 _jonesAssetSupply);
 
     /**
      * emitted when asset management window is opened
@@ -384,22 +328,15 @@ interface IVault {
      * @param _assetBalance new vault balance value
      * @param _shareSupply share token total supply at this time
      */
-    event EpochStarted(
-        uint256 indexed _timestamp,
-        uint256 _assetBalance,
-        uint256 _shareSupply
-    );
+    event EpochStarted(uint256 indexed _timestamp, uint256 _assetBalance, uint256 _shareSupply);
 
-    /** emitted when claim and deposit windows are open
+    /**
+     * emitted when claim and deposit windows are open
      * @param _timestamp snapshot timestamp (indexed)
      * @param _assetBalance new vault balance value
      * @param _shareSupply share token total supply at this time
      */
-    event EpochEnded(
-        uint256 indexed _timestamp,
-        uint256 _assetBalance,
-        uint256 _shareSupply
-    );
+    event EpochEnded(uint256 indexed _timestamp, uint256 _assetBalance, uint256 _shareSupply);
 
     // ============================= Errors ================================
     error MSG_SENDER_NOT_WHITELISTED_USER();

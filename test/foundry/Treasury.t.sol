@@ -125,4 +125,26 @@ contract TreasuryTest is Test {
         vm.expectRevert(Treasury.CapReached.selector);
         treasury.deposit(mock, 100 * 1e18);
     }
+
+    function testAverage() public {
+        treasury.setCap(10000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        mugen.totalSupply();
+        treasury.pricePerToken();
+        //Total supply of 2511885.451604671543066581
+        //Price at 497.63
+        //Market cap of 1.25 billion so 250 million dollar difference at 1 billion deposits
+
+        //10 billion desposits
+        //Total Supply of 15848930.937290280390442002
+        //Pirce of 788.69
+        //Marketcap of 12.5 billion so again about a 25% difference
+
+        //If 75% are staked that puts it at around 11.886 million 25% apy on the treasury
+        //would be a 26% return based on staking numbers and current
+    }
 }

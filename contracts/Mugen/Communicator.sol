@@ -18,10 +18,7 @@ contract Communicator is NonblockingLzApp {
 
     constructor(address _endpoint) NonblockingLzApp(_endpoint) {}
 
-    function addLayerZeroMapping(address _srcTreasuryAddress, uint16 srcChain)
-        external
-        onlyOwner
-    {
+    function addLayerZeroMapping(address _srcTreasuryAddress, uint16 srcChain) external onlyOwner {
         layerZeroAddress[_srcTreasuryAddress] = srcChain;
     }
 
@@ -31,48 +28,30 @@ contract Communicator is NonblockingLzApp {
     }
 
     function setTreasury(address _treasury) public {
-        if (set != false) revert TreasurySet();
+        if (set != false) {
+            revert TreasurySet();
+        }
         treasury = ITreasury(_treasury);
         set = true;
     }
 
-    function _nonblockingLzReceive(
-        uint16,
-        bytes memory _srcAddress,
-        uint64, /*_nonce*/
-        bytes memory _payload
-    ) internal override {
+    function _nonblockingLzReceive(uint16, bytes memory _srcAddress, uint64, /*_nonce*/ bytes memory _payload)
+        internal
+        override
+    {
         // use assembly to extract the address from the bytes memory parameter
         address sendBackToAddress;
         assembly {
             sendBackToAddress := mload(add(_srcAddress, 20))
         }
         uint16 _returnChainId = layerZeroAddress[sendBackToAddress];
-        (
-            uint256 _value,
-            address _depositor,
-            IERC20 _token,
-            uint256 _amount
-        ) = abi.decode(_payload, (uint256, address, IERC20, uint256));
+        (uint256 _value, address _depositor, IERC20 _token, uint256 _amount) =
+            abi.decode(_payload, (uint256, address, IERC20, uint256));
         uint256 mintAmount = sendMessage(_value);
-        bytes memory payload = abi.encode(
-            mintAmount,
-            _depositor,
-            _token,
-            _amount
-        );
+        bytes memory payload = abi.encode(mintAmount, _depositor, _token, _amount);
         uint16 version = 1;
         uint256 gasForDestinationLzReceive = 350000;
-        bytes memory adapterParams = abi.encodePacked(
-            version,
-            gasForDestinationLzReceive
-        );
-        _lzSend(
-            _returnChainId,
-            payload,
-            payable(address(this)),
-            address(0x0),
-            adapterParams
-        );
+        bytes memory adapterParams = abi.encodePacked(version, gasForDestinationLzReceive);
+        _lzSend(_returnChainId, payload, payable(address(this)), address(0x0), adapterParams);
     }
 }

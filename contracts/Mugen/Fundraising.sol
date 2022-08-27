@@ -25,21 +25,11 @@ contract Fundraiser is ERC20, Pausable {
 
     mapping(address => uint256) public cooldown;
 
-    event Deposit(
-        address indexed Creditor,
-        uint256 Amount,
-        uint256 DebtTakenOn
-    );
-    event Payment(
-        address indexed Debtor,
-        uint256 PayedBack,
-        uint256 RemainingDebt
-    );
+    event Deposit(address indexed Creditor, uint256 Amount, uint256 DebtTakenOn);
+    event Payment(address indexed Debtor, uint256 PayedBack, uint256 RemainingDebt);
     event Claimed(address indexed Claimer, uint256 paid, uint256 CooldownEnd);
 
-    constructor(address _asset, address _fund)
-        ERC20("Mugen Debt Token", "dtMugen")
-    {
+    constructor(address _asset, address _fund) ERC20("Mugen Debt Token", "dtMugen") {
         asset = _asset;
         fund = _fund;
         owner = msg.sender;
@@ -51,7 +41,9 @@ contract Fundraiser is ERC20, Pausable {
     }
 
     function deposit(uint256 amount) external whenNotPaused {
-        if (debt >= 1500000 * 1e18) revert FundReached();
+        if (debt >= 1500000 * 1e18) {
+            revert FundReached();
+        }
         uint256 _debt = amount.mul(5).div(2);
         debt += _debt;
         IERC20(asset).safeTransferFrom(msg.sender, fund, amount);
@@ -60,8 +52,7 @@ contract Fundraiser is ERC20, Pausable {
     }
 
     function rewardPerToken() public view returns (uint256) {
-        return ((IERC20(asset).balanceOf(address(this)) * 1e18) /
-            totalSupply());
+        return ((IERC20(asset).balanceOf(address(this)) * 1e18) / totalSupply());
     }
 
     /**
@@ -72,7 +63,9 @@ contract Fundraiser is ERC20, Pausable {
     }
 
     function payDebt(uint256 amount) external onlyOwner {
-        if (totalSupply() <= 0) revert NoDebt();
+        if (totalSupply() <= 0) {
+            revert NoDebt();
+        }
         remaining = totalSupply() - amount;
         IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
         emit Payment(msg.sender, amount, remaining);
@@ -92,11 +85,7 @@ contract Fundraiser is ERC20, Pausable {
         return remaining;
     }
 
-    function getCoolDownEnd(address account)
-        external
-        view
-        returns (uint256 cooldownBlockNumber)
-    {
+    function getCoolDownEnd(address account) external view returns (uint256 cooldownBlockNumber) {
         return cooldown[account];
     }
 }

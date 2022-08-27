@@ -23,7 +23,10 @@ interface IOFTCore is IERC165 {
         uint256 _amount,
         bool _useZro,
         bytes calldata _adapterParams
-    ) external view returns (uint256 nativeFee, uint256 zroFee);
+    )
+        external
+        view
+        returns (uint256 nativeFee, uint256 zroFee);
 
     /**
      * @dev send `_amount` amount of token to (`_dstChainId`, `_toAddress`) from `_from`
@@ -43,7 +46,9 @@ interface IOFTCore is IERC165 {
         address payable _refundAddress,
         address _zroPaymentAddress,
         bytes calldata _adapterParams
-    ) external payable;
+    )
+        external
+        payable;
 
     /**
      * @dev returns the circulating amount of tokens on current chain
@@ -55,11 +60,7 @@ interface IOFTCore is IERC165 {
      * `_nonce` is the outbound nonce
      */
     event SendToChain(
-        address indexed _sender,
-        uint16 indexed _dstChainId,
-        bytes indexed _toAddress,
-        uint256 _amount,
-        uint64 _nonce
+        address indexed _sender, uint16 indexed _dstChainId, bytes indexed _toAddress, uint256 _amount, uint64 _nonce
     );
 
     /**

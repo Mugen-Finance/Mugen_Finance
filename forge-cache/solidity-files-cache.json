@@ -13,8 +13,8 @@
   },
   "files": {
     "contracts/Bancor/BancorFormula.sol": {
-      "lastModificationDate": 1660699171904,
-      "contentHash": "a5edcb16bfe08ac0848ad045edb34b7a",
+      "lastModificationDate": 1661514932670,
+      "contentHash": "9a7ade570a02c6fdf0c115c54b6be444",
       "sourceName": "contracts/Bancor/BancorFormula.sol",
       "solcConfig": {
         "settings": {
@@ -56,8 +56,8 @@
       }
     },
     "contracts/Bancor/IBancorFormula.sol": {
-      "lastModificationDate": 1660699157676,
-      "contentHash": "4cb0f5f408863b712b08235b1af43d37",
+      "lastModificationDate": 1661514932668,
+      "contentHash": "d30da0439445a5d34e55786a67c44aab",
       "sourceName": "contracts/Bancor/IBancorFormula.sol",
       "solcConfig": {
         "settings": {
@@ -95,8 +95,8 @@
       }
     },
     "contracts/Bancor/Power.sol": {
-      "lastModificationDate": 1660699152188,
-      "contentHash": "5d44c94b2d70f39e8d7c83351aff69b1",
+      "lastModificationDate": 1661514932711,
+      "contentHash": "77107d640bf92e13490c6ca02090d960",
       "sourceName": "contracts/Bancor/Power.sol",
       "solcConfig": {
         "settings": {
@@ -136,8 +136,8 @@
       }
     },
     "contracts/Governance/GovernanceContract.sol": {
-      "lastModificationDate": 1661373652772,
-      "contentHash": "acae3a8f5f2b240ff34f99af02d8ab27",
+      "lastModificationDate": 1661514932663,
+      "contentHash": "9a977221f745348e057420594f1260e9",
       "sourceName": "contracts/Governance/GovernanceContract.sol",
       "solcConfig": {
         "settings": {
@@ -200,8 +200,8 @@
       }
     },
     "contracts/Governance/TimeLock.sol": {
-      "lastModificationDate": 1661373285817,
-      "contentHash": "758ae21ec067b4ade0ea5fdf1fba7e51",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "8eb3022d4f6d5ee726eaca12e3e577a1",
       "sourceName": "contracts/Governance/TimeLock.sol",
       "solcConfig": {
         "settings": {
@@ -250,8 +250,8 @@
       }
     },
     "contracts/Mugen/Communicator.sol": {
-      "lastModificationDate": 1660755144693,
-      "contentHash": "ad11bd4ed14ca66128ae9c50af33f429",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "681b83ad4c26f31d65264181393c1a4c",
       "sourceName": "contracts/Mugen/Communicator.sol",
       "solcConfig": {
         "settings": {
@@ -299,8 +299,8 @@
       }
     },
     "contracts/Mugen/Fundraising.sol": {
-      "lastModificationDate": 1660509748182,
-      "contentHash": "6a4a542e0959c9e38cc02a093ca03e93",
+      "lastModificationDate": 1661514932665,
+      "contentHash": "d1192be3f22e5da8b39491f422d4f193",
       "sourceName": "contracts/Mugen/Fundraising.sol",
       "solcConfig": {
         "settings": {
@@ -348,8 +348,8 @@
       }
     },
     "contracts/Mugen/LzApp.sol": {
-      "lastModificationDate": 1660509751742,
-      "contentHash": "84e685cb72da4e2f4069c0a1321c5720",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "b6872c91d2318fcb1ab745617a7c9171",
       "sourceName": "contracts/Mugen/LzApp.sol",
       "solcConfig": {
         "settings": {
@@ -393,8 +393,8 @@
       }
     },
     "contracts/Mugen/Mugen.sol": {
-      "lastModificationDate": 1661373285818,
-      "contentHash": "25d6efbf1c1b97401c639610ff140d03",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "7b124bcfb1c998db31261874e46b9114",
       "sourceName": "contracts/Mugen/Mugen.sol",
       "solcConfig": {
         "settings": {
@@ -458,8 +458,8 @@
       }
     },
     "contracts/Mugen/NonNativeTreasury.sol": {
-      "lastModificationDate": 1660792954363,
-      "contentHash": "fbcad0bec1c0cffc74216f6b6af2d099",
+      "lastModificationDate": 1661514932666,
+      "contentHash": "bf7bb21d92def16f240d2647d1c84fef",
       "sourceName": "contracts/Mugen/NonNativeTreasury.sol",
       "solcConfig": {
         "settings": {
@@ -516,8 +516,8 @@
       }
     },
     "contracts/Mugen/NonblockingLzApp.sol": {
-      "lastModificationDate": 1658862228277,
-      "contentHash": "360977bdcb1c05fca8cdbb7c98454968",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "a364fc1ea0c42fc464e672f9764af202",
       "sourceName": "contracts/Mugen/NonblockingLzApp.sol",
       "solcConfig": {
         "settings": {
@@ -562,8 +562,8 @@
       }
     },
     "contracts/Mugen/OFTCore.sol": {
-      "lastModificationDate": 1660509771081,
-      "contentHash": "376de017966f47a77001899959102c04",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "4dae512104ebf503a8bd1b9acd42fbe7",
       "sourceName": "contracts/Mugen/OFTCore.sol",
       "solcConfig": {
         "settings": {
@@ -613,8 +613,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1661429328010,
-      "contentHash": "06e9dac92616fed694b9195b9bbdc476",
+      "lastModificationDate": 1661532200532,
+      "contentHash": "04036a66eca8f00c68558024d72a6f67",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -670,8 +670,8 @@
       }
     },
     "contracts/Mugen/YieldDistributor.sol": {
-      "lastModificationDate": 1661446442798,
-      "contentHash": "7a53d06bd8e838cd7ee9a2a07f8dc61b",
+      "lastModificationDate": 1661514932663,
+      "contentHash": "b721356f220b2018f905d8c3e3b195c3",
       "sourceName": "contracts/Mugen/YieldDistributor.sol",
       "solcConfig": {
         "settings": {
@@ -719,8 +719,8 @@
       }
     },
     "contracts/Mugen/xMugen.sol": {
-      "lastModificationDate": 1661443351326,
-      "contentHash": "cd3924d37c8e646eb8551ff0afee470a",
+      "lastModificationDate": 1661514932666,
+      "contentHash": "5339091277b20075e8c5ec7d64eaaad1",
       "sourceName": "contracts/Mugen/xMugen.sol",
       "solcConfig": {
         "settings": {
@@ -768,10 +768,10 @@
         }
       }
     },
-    "contracts/Strategy/Arbitrum Strategies/GMXStrategy.sol": {
-      "lastModificationDate": 1661374091309,
-      "contentHash": "e03bc8cce8579e3bba92e05629170308",
-      "sourceName": "contracts/Strategy/Arbitrum Strategies/GMXStrategy.sol",
+    "contracts/Strategy/ArbitrumStrategies/GMXStrategy.sol": {
+      "lastModificationDate": 1661545684784,
+      "contentHash": "f03bea56440c2e387b75af78e5c82ee3",
+      "sourceName": "contracts/Strategy/ArbitrumStrategies/GMXStrategy.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -817,10 +817,10 @@
         }
       }
     },
-    "contracts/Strategy/Arbitrum Strategies/JonesStrategy.sol": {
-      "lastModificationDate": 1660866137509,
-      "contentHash": "985cdf3e00b8d727a802490867777de9",
-      "sourceName": "contracts/Strategy/Arbitrum Strategies/JonesStrategy.sol",
+    "contracts/Strategy/ArbitrumStrategies/JonesStrategy.sol": {
+      "lastModificationDate": 1661514932668,
+      "contentHash": "7a4990d832c6c7181984a603a10726d7",
+      "sourceName": "contracts/Strategy/ArbitrumStrategies/JonesStrategy.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -856,10 +856,10 @@
         }
       }
     },
-    "contracts/Strategy/Arbitrum Strategies/MyceliumStrategy.sol": {
-      "lastModificationDate": 1660941105744,
-      "contentHash": "a2331241b6d181b906a29693f7f5d5a2",
-      "sourceName": "contracts/Strategy/Arbitrum Strategies/MyceliumStrategy.sol",
+    "contracts/Strategy/ArbitrumStrategies/MyceliumStrategy.sol": {
+      "lastModificationDate": 1661514932668,
+      "contentHash": "0f92b6f46b000a4669356170083c1c0d",
+      "sourceName": "contracts/Strategy/ArbitrumStrategies/MyceliumStrategy.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -899,8 +899,8 @@
       }
     },
     "contracts/Strategy/Jones/IVault.sol": {
-      "lastModificationDate": 1660866006471,
-      "contentHash": "df90f11caf7410a985a4e4a91e03f559",
+      "lastModificationDate": 1661514932667,
+      "contentHash": "1bc93642835900efb504a67802515440",
       "sourceName": "contracts/Strategy/Jones/IVault.sol",
       "solcConfig": {
         "settings": {
@@ -938,8 +938,8 @@
       }
     },
     "contracts/Strategy/Jones/JonesAssets.sol": {
-      "lastModificationDate": 1660866268028,
-      "contentHash": "46a2e3a9fbfab20286257a15b0651b4d",
+      "lastModificationDate": 1661514932666,
+      "contentHash": "fc42e711442eca50009e27f9f31e5b30",
       "sourceName": "contracts/Strategy/Jones/JonesAssets.sol",
       "solcConfig": {
         "settings": {
@@ -988,7 +988,7 @@
       }
     },
     "contracts/Strategy/Jones/JonesVaultV3.sol": {
-      "lastModificationDate": 1661093204716,
+      "lastModificationDate": 1661514932681,
       "contentHash": "a5dcfed4914dca1974bfd7519852b9aa",
       "sourceName": "contracts/Strategy/Jones/JonesVaultV3.sol",
       "solcConfig": {
@@ -1027,8 +1027,8 @@
       }
     },
     "contracts/Strategy/StrategyHub.sol": {
-      "lastModificationDate": 1661447664014,
-      "contentHash": "5a0b75d41edbec517b547d586844503b",
+      "lastModificationDate": 1661514932668,
+      "contentHash": "736832eb1cc49a8bead9a3b8a53e671f",
       "sourceName": "contracts/Strategy/StrategyHub.sol",
       "solcConfig": {
         "settings": {
@@ -1075,8 +1075,8 @@
       }
     },
     "contracts/interfaces/AggregatorPriceFeeds.sol": {
-      "lastModificationDate": 1660792935127,
-      "contentHash": "dcfc2141cf0828b7012f114452a703b5",
+      "lastModificationDate": 1661514932665,
+      "contentHash": "501ddb895f6e194b691de0d07b1c4835",
       "sourceName": "contracts/interfaces/AggregatorPriceFeeds.sol",
       "solcConfig": {
         "settings": {
@@ -1114,8 +1114,8 @@
       }
     },
     "contracts/interfaces/IERC4626.sol": {
-      "lastModificationDate": 1661442825028,
-      "contentHash": "0528666c4a04147881ba0c2ba00ea45a",
+      "lastModificationDate": 1661514932666,
+      "contentHash": "505049166d9270845f3bebc5405b0204",
       "sourceName": "contracts/interfaces/IERC4626.sol",
       "solcConfig": {
         "settings": {
@@ -1156,8 +1156,8 @@
       }
     },
     "contracts/interfaces/ILayerZeroEndpoint.sol": {
-      "lastModificationDate": 1658862177199,
-      "contentHash": "5410b14aa132336dcb9045d2c3566f99",
+      "lastModificationDate": 1661514932665,
+      "contentHash": "b84ce83e9975bd495cf61aa387664564",
       "sourceName": "contracts/interfaces/ILayerZeroEndpoint.sol",
       "solcConfig": {
         "settings": {
@@ -1197,8 +1197,8 @@
       }
     },
     "contracts/interfaces/ILayerZeroReceiver.sol": {
-      "lastModificationDate": 1658862191438,
-      "contentHash": "ed9a0d4dbd5e18a6ced83725df0db4f3",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "ea6cf1a6fcbefec392326a2768c2399b",
       "sourceName": "contracts/interfaces/ILayerZeroReceiver.sol",
       "solcConfig": {
         "settings": {
@@ -1236,8 +1236,8 @@
       }
     },
     "contracts/interfaces/ILayerZeroUserApplicationConfig.sol": {
-      "lastModificationDate": 1658862205695,
-      "contentHash": "a7060465f07c5b5ae6075172ad97c5ab",
+      "lastModificationDate": 1661514932663,
+      "contentHash": "e0f533ce2a8deac6ec4d5bca83432246",
       "sourceName": "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
       "solcConfig": {
         "settings": {
@@ -1275,7 +1275,7 @@
       }
     },
     "contracts/interfaces/IMugen.sol": {
-      "lastModificationDate": 1661373285819,
+      "lastModificationDate": 1661514932664,
       "contentHash": "0be53cd6b7e696b19a3c28d18be620ac",
       "sourceName": "contracts/interfaces/IMugen.sol",
       "solcConfig": {
@@ -1318,8 +1318,8 @@
       }
     },
     "contracts/interfaces/IMyceliumStrategy.sol": {
-      "lastModificationDate": 1660927362470,
-      "contentHash": "eeb513f29b7ebf67777e49fec2c1ee2d",
+      "lastModificationDate": 1661514932666,
+      "contentHash": "4aa41ffb9a12f15c1913b3bd4dd07373",
       "sourceName": "contracts/interfaces/IMyceliumStrategy.sol",
       "solcConfig": {
         "settings": {
@@ -1357,8 +1357,8 @@
       }
     },
     "contracts/interfaces/INonNativeTreasury.sol": {
-      "lastModificationDate": 1660754096014,
-      "contentHash": "629976170263f4958cec31d140c61537",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "bdab537f5b69b253beac8d2ba88b7208",
       "sourceName": "contracts/interfaces/INonNativeTreasury.sol",
       "solcConfig": {
         "settings": {
@@ -1398,8 +1398,8 @@
       }
     },
     "contracts/interfaces/IOFTCore.sol": {
-      "lastModificationDate": 1660509692667,
-      "contentHash": "38e68649b15143a29e47c46fa575e7f7",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "e3561624532349290bd4b4d7834ead2b",
       "sourceName": "contracts/interfaces/IOFTCore.sol",
       "solcConfig": {
         "settings": {
@@ -1440,8 +1440,8 @@
       }
     },
     "contracts/interfaces/IRewardRouterV2.sol": {
-      "lastModificationDate": 1660845493258,
-      "contentHash": "b73d1dd059572ebcad2dbd50cd9b89d7",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "a65e8dab1ecc36b422b152ceac9137f9",
       "sourceName": "contracts/interfaces/IRewardRouterV2.sol",
       "solcConfig": {
         "settings": {
@@ -1479,8 +1479,8 @@
       }
     },
     "contracts/interfaces/IStrategyHub.sol": {
-      "lastModificationDate": 1661373285819,
-      "contentHash": "911c39c03f4c235cf24882538d313380",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "45c7fcb439d7130a11a46bb6ebd0c4f6",
       "sourceName": "contracts/interfaces/IStrategyHub.sol",
       "solcConfig": {
         "settings": {
@@ -1520,8 +1520,8 @@
       }
     },
     "contracts/interfaces/ITreasury.sol": {
-      "lastModificationDate": 1660587033885,
-      "contentHash": "2d67c61ea8a10533e42883952c10ff96",
+      "lastModificationDate": 1661514932665,
+      "contentHash": "abd5f6e408ef445938efaf8df6c715e5",
       "sourceName": "contracts/interfaces/ITreasury.sol",
       "solcConfig": {
         "settings": {
@@ -1561,7 +1561,7 @@
       }
     },
     "contracts/interfaces/IxMugen.sol": {
-      "lastModificationDate": 1661434492085,
+      "lastModificationDate": 1661514932664,
       "contentHash": "c078eca65a80d6a8b15c05c3a1565878",
       "sourceName": "contracts/interfaces/IxMugen.sol",
       "solcConfig": {
@@ -1595,13 +1595,13 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IxMugen": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IxMugen.sol/IxMugen.0.8.16.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IxMugen.sol/IxMugen.json"
         }
       }
     },
     "contracts/mocks/LZEndpointMock.sol": {
-      "lastModificationDate": 1659979217154,
-      "contentHash": "1d2c8ba04f96fba1d7cec484c0c0c921",
+      "lastModificationDate": 1661514932664,
+      "contentHash": "b43ae4a46752c73019f53a760c3f2d84",
       "sourceName": "contracts/mocks/LZEndpointMock.sol",
       "solcConfig": {
         "settings": {
@@ -1638,13 +1638,13 @@
       "versionRequirement": "^0.8.4",
       "artifacts": {
         "LZEndpointMock": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "LZEndpointMock.sol/LZEndpointMock.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "LZEndpointMock.sol/LZEndpointMock.0.8.16.json"
         }
       }
     },
     "contracts/mocks/MockERC20.sol": {
-      "lastModificationDate": 1660509717535,
-      "contentHash": "f9f730162828bde21ed49cbc7e75309f",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "8439c4dc54a34f92abafa5aff7dedfd1",
       "sourceName": "contracts/mocks/MockERC20.sol",
       "solcConfig": {
         "settings": {
@@ -1702,8 +1702,8 @@
       }
     },
     "contracts/mocks/NotMockAggregator.sol": {
-      "lastModificationDate": 1660509721936,
-      "contentHash": "ebc81f68f407cde980bd1b5961486e49",
+      "lastModificationDate": 1661514932662,
+      "contentHash": "435d57380f29c546f8954e795f7f32ad",
       "sourceName": "contracts/mocks/NotMockAggregator.sol",
       "solcConfig": {
         "settings": {
@@ -1740,7 +1740,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "NotMockAggregator": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "NotMockAggregator.sol/NotMockAggregator.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "NotMockAggregator.sol/NotMockAggregator.0.8.16.json"
         }
       }
     },
@@ -2032,7 +2032,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "AggregatorInterface": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorInterface.sol/AggregatorInterface.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorInterface.sol/AggregatorInterface.0.8.16.json"
         }
       }
     },
@@ -2074,7 +2074,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "AggregatorV2V3Interface": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorV2V3Interface.sol/AggregatorV2V3Interface.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorV2V3Interface.sol/AggregatorV2V3Interface.0.8.16.json"
         }
       }
     },
@@ -2113,7 +2113,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "AggregatorV3Interface": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorV3Interface.sol/AggregatorV3Interface.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "AggregatorV3Interface.sol/AggregatorV3Interface.0.8.16.json"
         }
       }
     },
@@ -2158,7 +2158,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "AccessControl": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "AccessControl.sol/AccessControl.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "AccessControl.sol/AccessControl.0.8.16.json"
         }
       }
     },
@@ -2197,7 +2197,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IAccessControl": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IAccessControl.sol/IAccessControl.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IAccessControl.sol/IAccessControl.0.8.16.json"
         }
       }
     },
@@ -2382,7 +2382,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "TimelockController": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "TimelockController.sol/TimelockController.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "TimelockController.sol/TimelockController.0.8.16.json"
         }
       }
     },
@@ -2862,7 +2862,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC1155Receiver": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC1155Receiver.sol/IERC1155Receiver.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC1155Receiver.sol/IERC1155Receiver.0.8.16.json"
         }
       }
     },
@@ -3252,7 +3252,7 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "IERC721Receiver": {
-          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC721Receiver.sol/IERC721Receiver.json"
+          "0.8.16+commit.07a7930e.Darwin.appleclang": "IERC721Receiver.sol/IERC721Receiver.0.8.16.json"
         }
       }
     },
@@ -3772,8 +3772,106 @@
         }
       }
     },
+    "script/GMXStrategy.s.sol": {
+      "lastModificationDate": 1661539815131,
+      "contentHash": "cf584ab3055fe71f4f99609d67b8087b",
+      "sourceName": "script/GMXStrategy.s.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/Strategy/ArbitrumStrategies/GMXStrategy.sol",
+        "contracts/interfaces/IRewardRouterV2.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "node_modules/@openzeppelin/contracts/utils/Address.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "GMXStrategyScript": {
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "GMXStrategy.s.sol/GMXStrategyScript.json"
+        }
+      }
+    },
+    "script/Treasury.s.sol": {
+      "lastModificationDate": 1661532264959,
+      "contentHash": "510092a59444b16aff20e52d2254a928",
+      "sourceName": "script/Treasury.s.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": "=0.8.7",
+      "artifacts": {
+        "TreasuryScript": {
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Treasury.s.sol/TreasuryScript.json"
+        }
+      }
+    },
     "test/foundry/Communicator.t.sol": {
-      "lastModificationDate": 1661373285819,
+      "lastModificationDate": 1661514932664,
       "contentHash": "ed645426f11341d05f30cee22bd9c537",
       "sourceName": "test/foundry/Communicator.t.sol",
       "solcConfig": {
@@ -3861,8 +3959,101 @@
         }
       }
     },
+    "test/foundry/GMXStrategy.t.sol": {
+      "lastModificationDate": 1661546666615,
+      "contentHash": "a33485414eeb674789fbc3c2d295968c",
+      "sourceName": "test/foundry/GMXStrategy.t.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/Bancor/BancorFormula.sol",
+        "contracts/Bancor/IBancorFormula.sol",
+        "contracts/Bancor/Power.sol",
+        "contracts/Mugen/Communicator.sol",
+        "contracts/Mugen/LzApp.sol",
+        "contracts/Mugen/Mugen.sol",
+        "contracts/Mugen/NonblockingLzApp.sol",
+        "contracts/Mugen/OFTCore.sol",
+        "contracts/Mugen/Treasury.sol",
+        "contracts/Strategy/ArbitrumStrategies/GMXStrategy.sol",
+        "contracts/Strategy/StrategyHub.sol",
+        "contracts/interfaces/AggregatorPriceFeeds.sol",
+        "contracts/interfaces/ILayerZeroEndpoint.sol",
+        "contracts/interfaces/ILayerZeroReceiver.sol",
+        "contracts/interfaces/ILayerZeroUserApplicationConfig.sol",
+        "contracts/interfaces/IMugen.sol",
+        "contracts/interfaces/IOFTCore.sol",
+        "contracts/interfaces/IRewardRouterV2.sol",
+        "contracts/interfaces/IStrategyHub.sol",
+        "contracts/interfaces/ITreasury.sol",
+        "contracts/mocks/LZEndpointMock.sol",
+        "contracts/mocks/MockERC20.sol",
+        "contracts/mocks/NotMockAggregator.sol",
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Test.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorInterface.sol",
+        "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
+        "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
+        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "node_modules/@openzeppelin/contracts/utils/Address.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Counters.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "GMXStrategyTest": {
+          "0.8.7+commit.e28d00a7.Darwin.appleclang": "GMXStrategy.t.sol/GMXStrategyTest.json"
+        }
+      }
+    },
     "test/foundry/StrategyHub.t.sol": {
-      "lastModificationDate": 1661447962277,
+      "lastModificationDate": 1661514932665,
       "contentHash": "ea22bea74e25a27a919861bcef851ad1",
       "sourceName": "test/foundry/StrategyHub.t.sol",
       "solcConfig": {
@@ -3953,8 +4144,8 @@
       }
     },
     "test/foundry/Treasury.t.sol": {
-      "lastModificationDate": 1661429308815,
-      "contentHash": "4b68acbb68fbf44e088c58be8815c834",
+      "lastModificationDate": 1661533065542,
+      "contentHash": "3adaee03372d5076796d35ef4bec1f36",
       "sourceName": "test/foundry/Treasury.t.sol",
       "solcConfig": {
         "settings": {
@@ -4042,7 +4233,7 @@
       }
     },
     "test/foundry/YieldDistributor.t.sol": {
-      "lastModificationDate": 1661446344757,
+      "lastModificationDate": 1661514932666,
       "contentHash": "4ba6670737762878088824fea96465ba",
       "sourceName": "test/foundry/YieldDistributor.t.sol",
       "solcConfig": {
@@ -4132,8 +4323,8 @@
       }
     },
     "test/foundry/xMugen.t.sol": {
-      "lastModificationDate": 1661373285820,
-      "contentHash": "7c324341867af998e74fc690ada3d71a",
+      "lastModificationDate": 1661623104998,
+      "contentHash": "11e2667b58f0bc1ce51e8c221c1b5d54",
       "sourceName": "test/foundry/xMugen.t.sol",
       "solcConfig": {
         "settings": {

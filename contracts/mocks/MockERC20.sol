@@ -6,17 +6,14 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract MockERC20 is ERC20 {
     uint8 private decimals_;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        uint8 _decimals,
-        uint256 _totalSupply
-    ) ERC20(_name, _symbol) {
+    constructor(string memory _name, string memory _symbol, uint8 _decimals, uint256 _totalSupply)
+        ERC20(_name, _symbol)
+    {
         decimals_ = _decimals;
         _mint(msg.sender, _totalSupply);
     }
 
-    function decimals() public view override(ERC20) returns (uint8) {
+    function decimals() public view override (ERC20) returns (uint8) {
         return decimals_;
     }
 
@@ -46,13 +43,9 @@ contract MockUST is MockERC20 {
 }
 
 contract MockAUST is MockERC20 {
-    constructor(uint256 supply)
-        MockERC20("Mock aUST", "mockaUST", 18, supply)
-    {}
+    constructor(uint256 supply) MockERC20("Mock aUST", "mockaUST", 18, supply) {}
 }
 
 contract MockLUSD is MockERC20 {
-    constructor(uint256 supply)
-        MockERC20("Mock LUSD", "mockLUSD", 18, supply)
-    {}
+    constructor(uint256 supply) MockERC20("Mock LUSD", "mockLUSD", 18, supply) {}
 }

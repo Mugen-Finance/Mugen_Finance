@@ -5,19 +5,15 @@ pragma solidity ^0.8.0;
     Bancor Formula interface
 */
 interface IBancorFormula {
-    function purchaseTargetAmount(
-        uint256 _supply,
-        uint256 _reserveBalance,
-        uint32 _reserveWeight,
-        uint256 _amount
-    ) external view returns (uint256);
+    function purchaseTargetAmount(uint256 _supply, uint256 _reserveBalance, uint32 _reserveWeight, uint256 _amount)
+        external
+        view
+        returns (uint256);
 
-    function saleTargetAmount(
-        uint256 _supply,
-        uint256 _reserveBalance,
-        uint32 _reserveWeight,
-        uint256 _amount
-    ) external view returns (uint256);
+    function saleTargetAmount(uint256 _supply, uint256 _reserveBalance, uint32 _reserveWeight, uint256 _amount)
+        external
+        view
+        returns (uint256);
 
     function crossReserveTargetAmount(
         uint256 _sourceReserveBalance,
@@ -25,28 +21,25 @@ interface IBancorFormula {
         uint256 _targetReserveBalance,
         uint32 _targetReserveWeight,
         uint256 _amount
-    ) external view returns (uint256);
+    )
+        external
+        view
+        returns (uint256);
 
-    function fundCost(
-        uint256 _supply,
-        uint256 _reserveBalance,
-        uint32 _reserveRatio,
-        uint256 _amount
-    ) external view returns (uint256);
+    function fundCost(uint256 _supply, uint256 _reserveBalance, uint32 _reserveRatio, uint256 _amount)
+        external
+        view
+        returns (uint256);
 
-    function fundSupplyAmount(
-        uint256 _supply,
-        uint256 _reserveBalance,
-        uint32 _reserveRatio,
-        uint256 _amount
-    ) external view returns (uint256);
+    function fundSupplyAmount(uint256 _supply, uint256 _reserveBalance, uint32 _reserveRatio, uint256 _amount)
+        external
+        view
+        returns (uint256);
 
-    function liquidateReserveAmount(
-        uint256 _supply,
-        uint256 _reserveBalance,
-        uint32 _reserveRatio,
-        uint256 _amount
-    ) external view returns (uint256);
+    function liquidateReserveAmount(uint256 _supply, uint256 _reserveBalance, uint32 _reserveRatio, uint256 _amount)
+        external
+        view
+        returns (uint256);
 
     // function balancedWeights(
     //     uint256 _primaryReserveStakedBalance,

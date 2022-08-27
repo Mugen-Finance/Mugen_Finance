@@ -18,28 +18,20 @@ contract Power {
 
     // Auto-generated via 'PrintLn2ScalingFactors.py'
     uint256 private constant LN2_NUMERATOR = 0x3f80fe03f80fe03f80fe03f80fe03f8;
-    uint256 private constant LN2_DENOMINATOR =
-        0x5b9de1d10bf4103d647b0955897ba80;
+    uint256 private constant LN2_DENOMINATOR = 0x5b9de1d10bf4103d647b0955897ba80;
 
     // Auto-generated via 'PrintFunctionOptimalLog.py' and 'PrintFunctionOptimalExp.py'
-    uint256 private constant OPT_LOG_MAX_VAL =
-        0x15bf0a8b1457695355fb8ac404e7a79e3;
-    uint256 private constant OPT_EXP_MAX_VAL =
-        0x800000000000000000000000000000000;
+    uint256 private constant OPT_LOG_MAX_VAL = 0x15bf0a8b1457695355fb8ac404e7a79e3;
+    uint256 private constant OPT_EXP_MAX_VAL = 0x800000000000000000000000000000000;
 
     // Auto-generated via 'PrintLambertFactors.py'
-    uint256 private constant LAMBERT_CONV_RADIUS =
-        0x002f16ac6c59de6f8d5d6f63c1482a7c86;
-    uint256 private constant LAMBERT_POS2_SAMPLE =
-        0x0003060c183060c183060c183060c18306;
-    uint256 private constant LAMBERT_POS2_MAXVAL =
-        0x01af16ac6c59de6f8d5d6f63c1482a7c80;
-    uint256 private constant LAMBERT_POS3_MAXVAL =
-        0x6b22d43e72c326539cceeef8bb48f255ff;
+    uint256 private constant LAMBERT_CONV_RADIUS = 0x002f16ac6c59de6f8d5d6f63c1482a7c86;
+    uint256 private constant LAMBERT_POS2_SAMPLE = 0x0003060c183060c183060c183060c18306;
+    uint256 private constant LAMBERT_POS2_MAXVAL = 0x01af16ac6c59de6f8d5d6f63c1482a7c80;
+    uint256 private constant LAMBERT_POS3_MAXVAL = 0x6b22d43e72c326539cceeef8bb48f255ff;
 
     // Auto-generated via 'PrintWeightFactors.py'
-    uint256 private constant MAX_UNF_WEIGHT =
-        0x10c6f7a0b5ed8d36b4c7f34938583621fafc8b0079a2834d26fa3fcc9ea9;
+    uint256 private constant MAX_UNF_WEIGHT = 0x10c6f7a0b5ed8d36b4c7f34938583621fafc8b0079a2834d26fa3fcc9ea9;
 
     // Auto-generated via 'PrintMaxExpArray.py'
     uint256[128] private maxExpArray;
@@ -279,28 +271,23 @@ contract Power {
 
     /**
      * @dev General Description:
-     *     Determine a value of precision.
-     *     Calculate an integer approximation of (_baseN / _baseD) ^ (_expN / _expD) * 2 ^ precision.
-     *     Return the result along with the precision used.
+     * Determine a value of precision.
+     * Calculate an integer approximation of (_baseN / _baseD) ^ (_expN / _expD) * 2 ^ precision.
+     * Return the result along with the precision used.
      *
      * Detailed Description:
-     *     Instead of calculating "base ^ exp", we calculate "e ^ (log(base) * exp)".
-     *     The value of "log(base)" is represented with an integer slightly smaller than "log(base) * 2 ^ precision".
-     *     The larger "precision" is, the more accurately this value represents the real value.
-     *     However, the larger "precision" is, the more bits are required in order to store this value.
-     *     And the exponentiation function, which takes "x" and calculates "e ^ x", is limited to a maximum exponent (maximum value of "x").
-     *     This maximum exponent depends on the "precision" used, and it is given by "maxExpArray[precision] >> (MAX_PRECISION - precision)".
-     *     Hence we need to determine the highest precision which can be used for the given input, before calling the exponentiation function.
-     *     This allows us to compute "base ^ exp" with maximum accuracy and without exceeding 256 bits in any of the intermediate computations.
-     *     This functions assumes that "_expN < 2 ^ 256 / log(MAX_NUM - 1)", otherwise the multiplication should be replaced with a "safeMul".
-     *     Since we rely on unsigned-integer arithmetic and "base < 1" ==> "log(base) < 0", this function does not support "_baseN < _baseD".
+     * Instead of calculating "base ^ exp", we calculate "e ^ (log(base) * exp)".
+     * The value of "log(base)" is represented with an integer slightly smaller than "log(base) * 2 ^ precision".
+     * The larger "precision" is, the more accurately this value represents the real value.
+     * However, the larger "precision" is, the more bits are required in order to store this value.
+     * And the exponentiation function, which takes "x" and calculates "e ^ x", is limited to a maximum exponent (maximum value of "x").
+     * This maximum exponent depends on the "precision" used, and it is given by "maxExpArray[precision] >> (MAX_PRECISION - precision)".
+     * Hence we need to determine the highest precision which can be used for the given input, before calling the exponentiation function.
+     * This allows us to compute "base ^ exp" with maximum accuracy and without exceeding 256 bits in any of the intermediate computations.
+     * This functions assumes that "_expN < 2 ^ 256 / log(MAX_NUM - 1)", otherwise the multiplication should be replaced with a "safeMul".
+     * Since we rely on unsigned-integer arithmetic and "base < 1" ==> "log(base) < 0", this function does not support "_baseN < _baseD".
      */
-    function power(
-        uint256 _baseN,
-        uint256 _baseD,
-        uint32 _expN,
-        uint32 _expD
-    ) public view returns (uint256, uint8) {
+    function power(uint256 _baseN, uint256 _baseD, uint32 _expN, uint32 _expD) public view returns (uint256, uint8) {
         require(_baseN < MAX_NUM);
 
         uint256 baseLog;
@@ -316,13 +303,7 @@ contract Power {
             return (optimalExp(baseLogTimesExp), MAX_PRECISION);
         } else {
             uint8 precision = findPositionInMaxExpArray(baseLogTimesExp);
-            return (
-                generalExp(
-                    baseLogTimesExp >> (MAX_PRECISION - precision),
-                    precision
-                ),
-                precision
-            );
+            return (generalExp(baseLogTimesExp >> (MAX_PRECISION - precision), precision), precision);
         }
     }
 
@@ -384,22 +365,25 @@ contract Power {
      * - This function finds the position of [the smallest value in "maxExpArray" larger than or equal to "x"]
      * - This function finds the highest position of [a value in "maxExpArray" larger than or equal to "x"]
      */
-    function findPositionInMaxExpArray(uint256 _x)
-        internal
-        view
-        returns (uint8 pos)
-    {
+    function findPositionInMaxExpArray(uint256 _x) internal view returns (uint8 pos) {
         uint8 lo = MIN_PRECISION;
         uint8 hi = MAX_PRECISION;
 
         while (lo + 1 < hi) {
             uint8 mid = (lo + hi) / 2;
-            if (maxExpArray[mid] >= _x) lo = mid;
-            else hi = mid;
+            if (maxExpArray[mid] >= _x) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
         }
 
-        if (maxExpArray[hi] >= _x) return pos = hi;
-        if (maxExpArray[lo] >= _x) return pos = lo;
+        if (maxExpArray[hi] >= _x) {
+            return pos = hi;
+        }
+        if (maxExpArray[lo] >= _x) {
+            return pos = lo;
+        }
 
         require(false);
     }
@@ -411,11 +395,7 @@ contract Power {
      * the global "maxExpArray" maps each "precision" to "((maximumExponent + 1) << (MAX_PRECISION - precision)) - 1".
      * the maximum permitted value for "x" is therefore given by "maxExpArray[precision] >> (MAX_PRECISION - precision)".
      */
-    function generalExp(uint256 _x, uint8 _precision)
-        internal
-        pure
-        returns (uint256)
-    {
+    function generalExp(uint256 _x, uint8 _precision) internal pure returns (uint256) {
         uint256 xi = _x;
         uint256 res = 0;
 
@@ -484,8 +464,7 @@ contract Power {
         xi = (xi * _x) >> _precision;
         res += xi * 0x0000000000000000000000000000001; // add x^33 * (33! / 33!)
 
-        return
-            res / 0x688589cc0e9505e2f2fee5580000000 + _x + (ONE << _precision); // divide by 33! and then add x^1 / 1! + x^0 / 0!
+        return res / 0x688589cc0e9505e2f2fee5580000000 + _x + (ONE << _precision); // divide by 33! and then add x^1 / 1! + x^0 / 0!
     }
 
     /**
@@ -541,37 +520,21 @@ contract Power {
 
         z = y = x - FIXED_1;
         w = (y * y) / FIXED_1;
-        res +=
-            (z * (0x100000000000000000000000000000000 - y)) /
-            0x100000000000000000000000000000000;
+        res += (z * (0x100000000000000000000000000000000 - y)) / 0x100000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^01 / 01 - y^02 / 02
-        res +=
-            (z * (0x0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa - y)) /
-            0x200000000000000000000000000000000;
+        res += (z * (0x0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa - y)) / 0x200000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^03 / 03 - y^04 / 04
-        res +=
-            (z * (0x099999999999999999999999999999999 - y)) /
-            0x300000000000000000000000000000000;
+        res += (z * (0x099999999999999999999999999999999 - y)) / 0x300000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^05 / 05 - y^06 / 06
-        res +=
-            (z * (0x092492492492492492492492492492492 - y)) /
-            0x400000000000000000000000000000000;
+        res += (z * (0x092492492492492492492492492492492 - y)) / 0x400000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^07 / 07 - y^08 / 08
-        res +=
-            (z * (0x08e38e38e38e38e38e38e38e38e38e38e - y)) /
-            0x500000000000000000000000000000000;
+        res += (z * (0x08e38e38e38e38e38e38e38e38e38e38e - y)) / 0x500000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^09 / 09 - y^10 / 10
-        res +=
-            (z * (0x08ba2e8ba2e8ba2e8ba2e8ba2e8ba2e8b - y)) /
-            0x600000000000000000000000000000000;
+        res += (z * (0x08ba2e8ba2e8ba2e8ba2e8ba2e8ba2e8b - y)) / 0x600000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^11 / 11 - y^12 / 12
-        res +=
-            (z * (0x089d89d89d89d89d89d89d89d89d89d89 - y)) /
-            0x700000000000000000000000000000000;
+        res += (z * (0x089d89d89d89d89d89d89d89d89d89d89 - y)) / 0x700000000000000000000000000000000;
         z = (z * w) / FIXED_1; // add y^13 / 13 - y^14 / 14
-        res +=
-            (z * (0x088888888888888888888888888888888 - y)) /
-            0x800000000000000000000000000000000; // add y^15 / 15 - y^16 / 16
+        res += (z * (0x088888888888888888888888888888888 - y)) / 0x800000000000000000000000000000000; // add y^15 / 15 - y^16 / 16
 
         return res;
     }
@@ -634,34 +597,27 @@ contract Power {
         res += z * 0x0000000000000001; // add y^20 * (20! / 20!)
         res = res / 0x21c3677c82b40000 + y + FIXED_1; // divide by 20! and then add y^1 / 1! + y^0 / 0!
 
-        if ((x & 0x010000000000000000000000000000000) != 0)
-            res =
-                (res * 0x1c3d6a24ed82218787d624d3e5eba95f9) /
-                0x18ebef9eac820ae8682b9793ac6d1e776; // multiply by e^2^(-3)
-        if ((x & 0x020000000000000000000000000000000) != 0)
-            res =
-                (res * 0x18ebef9eac820ae8682b9793ac6d1e778) /
-                0x1368b2fc6f9609fe7aceb46aa619baed4; // multiply by e^2^(-2)
-        if ((x & 0x040000000000000000000000000000000) != 0)
-            res =
-                (res * 0x1368b2fc6f9609fe7aceb46aa619baed5) /
-                0x0bc5ab1b16779be3575bd8f0520a9f21f; // multiply by e^2^(-1)
-        if ((x & 0x080000000000000000000000000000000) != 0)
-            res =
-                (res * 0x0bc5ab1b16779be3575bd8f0520a9f21e) /
-                0x0454aaa8efe072e7f6ddbab84b40a55c9; // multiply by e^2^(+0)
-        if ((x & 0x100000000000000000000000000000000) != 0)
-            res =
-                (res * 0x0454aaa8efe072e7f6ddbab84b40a55c5) /
-                0x00960aadc109e7a3bf4578099615711ea; // multiply by e^2^(+1)
-        if ((x & 0x200000000000000000000000000000000) != 0)
-            res =
-                (res * 0x00960aadc109e7a3bf4578099615711d7) /
-                0x0002bf84208204f5977f9a8cf01fdce3d; // multiply by e^2^(+2)
-        if ((x & 0x400000000000000000000000000000000) != 0)
-            res =
-                (res * 0x0002bf84208204f5977f9a8cf01fdc307) /
-                0x0000003c6ab775dd0b95b4cbee7e65d11; // multiply by e^2^(+3)
+        if ((x & 0x010000000000000000000000000000000) != 0) {
+            res = (res * 0x1c3d6a24ed82218787d624d3e5eba95f9) / 0x18ebef9eac820ae8682b9793ac6d1e776;
+        } // multiply by e^2^(-3)
+        if ((x & 0x020000000000000000000000000000000) != 0) {
+            res = (res * 0x18ebef9eac820ae8682b9793ac6d1e778) / 0x1368b2fc6f9609fe7aceb46aa619baed4;
+        } // multiply by e^2^(-2)
+        if ((x & 0x040000000000000000000000000000000) != 0) {
+            res = (res * 0x1368b2fc6f9609fe7aceb46aa619baed5) / 0x0bc5ab1b16779be3575bd8f0520a9f21f;
+        } // multiply by e^2^(-1)
+        if ((x & 0x080000000000000000000000000000000) != 0) {
+            res = (res * 0x0bc5ab1b16779be3575bd8f0520a9f21e) / 0x0454aaa8efe072e7f6ddbab84b40a55c9;
+        } // multiply by e^2^(+0)
+        if ((x & 0x100000000000000000000000000000000) != 0) {
+            res = (res * 0x0454aaa8efe072e7f6ddbab84b40a55c5) / 0x00960aadc109e7a3bf4578099615711ea;
+        } // multiply by e^2^(+1)
+        if ((x & 0x200000000000000000000000000000000) != 0) {
+            res = (res * 0x00960aadc109e7a3bf4578099615711d7) / 0x0002bf84208204f5977f9a8cf01fdce3d;
+        } // multiply by e^2^(+2)
+        if ((x & 0x400000000000000000000000000000000) != 0) {
+            res = (res * 0x0002bf84208204f5977f9a8cf01fdc307) / 0x0000003c6ab775dd0b95b4cbee7e65d11;
+        } // multiply by e^2^(+3)
 
         return res;
     }
@@ -883,14 +839,16 @@ contract Power {
     /**
      * @dev reduces "a" and "b" while maintaining their ratio.
      */
-    function safeFactors(uint256 _a, uint256 _b)
-        public
-        pure
-        returns (uint256, uint256)
-    {
-        if (_a <= FIXED_2 && _b <= FIXED_2) return (_a, _b);
-        if (_a < FIXED_2) return ((_a * FIXED_2) / _b, FIXED_2);
-        if (_b < FIXED_2) return (FIXED_2, (_b * FIXED_2) / _a);
+    function safeFactors(uint256 _a, uint256 _b) public pure returns (uint256, uint256) {
+        if (_a <= FIXED_2 && _b <= FIXED_2) {
+            return (_a, _b);
+        }
+        if (_a < FIXED_2) {
+            return ((_a * FIXED_2) / _b, FIXED_2);
+        }
+        if (_b < FIXED_2) {
+            return (FIXED_2, (_b * FIXED_2) / _a);
+        }
         uint256 c = _a > _b ? _a : _b;
         uint256 n = floorLog2(c / FIXED_1);
         return (_a >> n, _b >> n);
@@ -899,12 +857,10 @@ contract Power {
     /**
      * @dev computes "MAX_WEIGHT * a / (a + b)" and "MAX_WEIGHT * b / (a + b)".
      */
-    function normalizedWeights(uint256 _a, uint256 _b)
-        public
-        pure
-        returns (uint32, uint32)
-    {
-        if (_a <= _b) return accurateWeights(_a, _b);
+    function normalizedWeights(uint256 _a, uint256 _b) public pure returns (uint32, uint32) {
+        if (_a <= _b) {
+            return accurateWeights(_a, _b);
+        }
         (uint32 y, uint32 x) = accurateWeights(_b, _a);
         return (x, y);
     }
@@ -912,11 +868,7 @@ contract Power {
     /**
      * @dev computes "MAX_WEIGHT * a / (a + b)" and "MAX_WEIGHT * b / (a + b)", assuming that "a <= b".
      */
-    function accurateWeights(uint256 _a, uint256 _b)
-        public
-        pure
-        returns (uint32, uint32)
-    {
+    function accurateWeights(uint256 _a, uint256 _b) public pure returns (uint32, uint32) {
         if (_a > MAX_UNF_WEIGHT) {
             uint256 c = _a / (MAX_UNF_WEIGHT + 1) + 1;
             _a /= c;
