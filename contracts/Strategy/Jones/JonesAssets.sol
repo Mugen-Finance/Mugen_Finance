@@ -44,11 +44,7 @@ contract JonesAsset is ERC20, ERC20Burnable, AccessControl {
     /// @param _multisigAddr address of the multisig wallet
     /// @param _name the name of the token
     /// @param _symbol the symbol of the token
-    constructor(
-        address _multisigAddr,
-        string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol) {
+    constructor(address _multisigAddr, string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         require(_multisigAddr != address(0), "Invalid multisig address");
         _grantRole(DEFAULT_ADMIN_ROLE, _multisigAddr);
     }
@@ -63,19 +59,13 @@ contract JonesAsset is ERC20, ERC20Burnable, AccessControl {
     /// Allows address to mint new jAsset.
     /// @dev The address should be set to the JonesAssetVault contract.
     /// @param _minterContract The address that will be set as the minter.
-    function giveMinterRole(address _minterContract)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function giveMinterRole(address _minterContract) public onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(MINTER_ROLE, _minterContract);
     }
 
     /// @notice Revokes address's token minting rights.
     /// @param _minterContract The address that will no longer be able to mint jAsset.
-    function revokeMinterRole(address _minterContract)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function revokeMinterRole(address _minterContract) public onlyRole(DEFAULT_ADMIN_ROLE) {
         _revokeRole(MINTER_ROLE, _minterContract);
     }
 }

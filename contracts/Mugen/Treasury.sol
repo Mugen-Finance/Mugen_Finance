@@ -32,7 +32,7 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
     uint256 internal constant MIN_VALUE = 50 * 10**18;
     address public administrator;
     address public Communicator;
-    bool public adminRemoved;
+    bool public adminRemoved = false;
 
     error NotDepositable();
     error NotUpdated();
@@ -54,9 +54,15 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         administrator = _administrator;
     }
 
-    /**************************/
-    /***  Staker Functions ****/
-    /**************************/
+    /**
+     *
+     */
+    /**
+     * Staker Functions ***
+     */
+    /**
+     *
+     */
 
     /**
      * @dev allows for users to deposit whitelisted assets and calculates their USD value for the bonding curve
@@ -94,48 +100,64 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         override
         returns (uint256)
     {
-        if (msg.sender != Communicator) revert NotCommunicator();
+        if (msg.sender != Communicator) {
+            revert NotCommunicator();
+        }
         uint256 test = _continuousMint(_amount);
         s_totalSupply += test;
         return test;
     }
 
-    /**************************/
-    /****  Admin Functions ****/
-    /**************************/
+    /**
+     *
+     */
+    /**
+     * Admin Functions ***
+     */
+    /**
+     *
+     */
 
     function addTokenInfo(IERC20 _token, address _pricefeed) external {
-        if (msg.sender != owner() || msg.sender != administrator)
+        if (msg.sender != owner() || msg.sender != administrator) {
             revert NotOwner();
+        }
         priceFeeds[_token] = AggregatorPriceFeeds(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }
 
     function removeTokenInfo(IERC20 _token) external {
-        if (msg.sender != owner() || msg.sender != administrator)
+        if (msg.sender != owner() || msg.sender != administrator) {
             revert NotOwner();
+        }
         delete depositableTokens[_token];
         delete priceFeeds[_token];
         emit TokenRemoved(_token);
     }
 
     function setCommunicator(address _comms) external {
-        if (msg.sender != owner() || msg.sender != administrator)
+        if (msg.sender != owner() || msg.sender != administrator) {
             revert NotOwner();
+        }
         Communicator = _comms;
     }
 
     function setCap(uint256 _amount) external {
-        if (msg.sender != owner() || msg.sender != administrator)
+        if (msg.sender != owner() || msg.sender != administrator) {
             revert NotOwner();
+        }
         depositCap = _amount;
     }
 
     function setAdministrator(address newAdmin) external {
-        if (adminRemoved = true) revert AdminRemoved();
-        if (msg.sender != owner() || msg.sender != administrator)
-            revert NotOwner();
+        if (adminRemoved != false) {
+            revert AdminRemoved();
+        }
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "not the owner"
+        );
         administrator = newAdmin;
     }
 
@@ -144,15 +166,25 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         adminRemoved = true;
     }
 
-    /*************************/
-    /****  View Functions ****/
-    /*************************/
+    /**
+     *
+     */
+    /**
+     * View Functions ***
+     */
+    /**
+     *
+     */
 
     function getPrice(IERC20 _token) internal view returns (uint256) {
         (, int256 price, , uint256 updatedAt, ) = priceFeeds[_token]
             .latestRoundData();
-        if (block.timestamp - updatedAt > VALID_PERIOD) revert NotUpdated();
-        if (price <= 0) revert InvalidPrice();
+        if (block.timestamp - updatedAt > VALID_PERIOD) {
+            revert NotUpdated();
+        }
+        if (price <= 0) {
+            revert InvalidPrice();
+        }
         return uint256(price);
     }
 
@@ -160,23 +192,48 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         return s_totalSupply;
     }
 
-    /**************************/
-    /*** Modifier Functions ***/
-    /**************************/
+    function checkDepositable(IERC20 _token) external view returns (bool) {
+        return depositableTokens[_token];
+    }
+
+    function pricePerToken() external view returns (uint256) {
+        uint256 _price = (100 * 1e18) / calculateContinuousMintReturn(1e18);
+        return _price;
+    }
+
+    /**
+     *
+     */
+    /**
+     * Modifier Functions **
+     */
+    /**
+     *
+     */
 
     modifier depositable(IERC20 _token) {
-        if (depositableTokens[_token] != true) revert NotDepositable();
+        if (depositableTokens[_token] != true) {
+            revert NotDepositable();
+        }
         _;
     }
 
     modifier Capped() {
-        if (depositCap < valueDeposited) revert CapReached();
+        if (depositCap < valueDeposited) {
+            revert CapReached();
+        }
         _;
     }
 
-    /**************************/
-    /**** Bancor Functions ****/
-    /**************************/
+    /**
+     *
+     */
+    /**
+     * Bancor Functions ***
+     */
+    /**
+     *
+     */
 
     function calculateContinuousMintReturn(uint256 _amount)
         public

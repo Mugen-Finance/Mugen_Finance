@@ -2,6 +2,7 @@
 cache/
 out/
 .env
+.helpers
 manticore/
 src/SimplifiedStaking.sol
 # Ignores development broadcast logs

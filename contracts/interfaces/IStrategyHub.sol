@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.7;
+
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IStrategyHub {
@@ -8,16 +9,11 @@ interface IStrategyHub {
     event PercentageChanged(address indexed _strategy, uint16 _percentage);
     event StrategyRemoved(address indexed _strategy);
     event TransferableToken(address indexed _strategy, IERC20 _token);
-    event TransferToStrategy(
-        address indexed _strategy,
-        IERC20 _token,
-        uint256 amount
-    );
+    event TransferToStrategy(address indexed _strategy, IERC20 _token, uint256 amount);
 
     function transferToStrategy(IERC20 _token, address _strategy) external;
 
-    function updatePercentage(uint16 _percentage, address _destinationContract)
-        external;
+    function updatePercentage(uint16 _percentage, address _destinationContract) external;
 
     function addStrategies(address _strategy) external;
 

@@ -3296,10 +3296,10 @@ hardhat-contract-sizer@^2.6.1:
     chalk "^4.0.0"
     cli-table3 "^0.6.0"
 
-hardhat-deploy@^0.11.11:
-  version "0.11.11"
-  resolved "https://registry.npmjs.org/hardhat-deploy/-/hardhat-deploy-0.11.11.tgz"
-  integrity sha512-/37No1l6aFMMc4+t+a0/8gk6OwwD4tyW8bSQqV/0IZEiaHiNa7hOV4rTbC9B7277SDHVoFUrV/fwmk7IDiB8sQ==
+hardhat-deploy@^0.11.12:
+  version "0.11.12"
+  resolved "https://registry.yarnpkg.com/hardhat-deploy/-/hardhat-deploy-0.11.12.tgz#323e05ecd8e6c80a9193b9c6f6c8ecbb6abfbe47"
+  integrity sha512-Wv0BqzwW4mz78raxkfQtBbkhZwZTRWXwRbEwgkTUimD3MX/0Z9+D4O+s1zHJlG0zwZvJMbwxPOrOHQm4NZ3JAQ==
   dependencies:
     "@types/qs" "^6.9.7"
     axios "^0.21.1"
@@ -3331,10 +3331,10 @@ hardhat-tracer@^1.1.0-rc.6:
   dependencies:
     ethers "^5.6.1"
 
-hardhat@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.10.1.tgz#37fdc0c96d6a5d16b322269db2ad8f9f115c4046"
-  integrity sha512-0FN9TyCtn7Lt25SB2ei2G7nA2rZjP+RN6MvFOm+zYwherxLZNo6RbD8nDz88eCbhRapevmXqOiL2nM8INKsjmA==
+hardhat@^2.10.2:
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.10.2.tgz#ff94ee4cb144a9c114641581ff5e4d7bea5f93a9"
+  integrity sha512-L/KvDDT/MA6332uAtYTqdcHoSABljw4pPjHQe5SHdIJ+xKfaSc6vDKw03CmrQ5Xup0gHs8XnVSBpZo1AbbIW7g==
   dependencies:
     "@ethereumjs/block" "^3.6.2"
     "@ethereumjs/blockchain" "^5.5.2"

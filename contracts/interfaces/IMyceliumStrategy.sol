@@ -19,30 +19,19 @@ interface IMyceliumStrategy {
 
     function unstakeEsMyc(uint256 _amount) external;
 
-    function mintAndStakeMlp(
-        address _token,
-        uint256 _amount,
-        uint256 _minUsdg,
-        uint256 _minMlp
-    ) external returns (uint256);
-
-    function mintAndStakeMlpETH(uint256 _minUsdg, uint256 _minMlp)
+    function mintAndStakeMlp(address _token, uint256 _amount, uint256 _minUsdg, uint256 _minMlp)
         external
-        payable
         returns (uint256);
 
-    function unstakeAndRedeemMlp(
-        address _tokenOut,
-        uint256 _mlpAmount,
-        uint256 _minOut,
-        address _receiver
-    ) external returns (uint256);
+    function mintAndStakeMlpETH(uint256 _minUsdg, uint256 _minMlp) external payable returns (uint256);
 
-    function unstakeAndRedeemMlpETH(
-        uint256 _mlpAmount,
-        uint256 _minOut,
-        address payable _receiver
-    ) external returns (uint256);
+    function unstakeAndRedeemMlp(address _tokenOut, uint256 _mlpAmount, uint256 _minOut, address _receiver)
+        external
+        returns (uint256);
+
+    function unstakeAndRedeemMlpETH(uint256 _mlpAmount, uint256 _minOut, address payable _receiver)
+        external
+        returns (uint256);
 
     function claim() external;
 
@@ -61,7 +50,8 @@ interface IMyceliumStrategy {
         bool _shouldClaimWeth,
         bool _shouldConvertWethToEth,
         bool _shouldBuyMlpWithWeth
-    ) external;
+    )
+        external;
 
     function signalTransfer(address _receiver) external;
 
@@ -75,17 +65,7 @@ interface IMyceliumStrategy {
 
     function _compoundMlp(address _account) external;
 
-    function _stakeMyc(
-        address _fundingAccount,
-        address _account,
-        address _token,
-        uint256 _amount
-    ) external;
+    function _stakeMyc(address _fundingAccount, address _account, address _token, uint256 _amount) external;
 
-    function _unstakeMyc(
-        address _account,
-        address _token,
-        uint256 _amount,
-        bool _shouldReduceBnMyc
-    ) external;
+    function _unstakeMyc(address _account, address _token, uint256 _amount, bool _shouldReduceBnMyc) external;
 }

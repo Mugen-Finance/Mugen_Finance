@@ -29,10 +29,11 @@ contract TreasuryTest is Test {
         comms = new Communicator(address(Endpoint));
         treasury = new Treasury(address(mugen), alice, address(this));
         treasury.addTokenInfo(mock, address(feed));
-        treasury.addTokenInfo(usdc, address(feed));
+        comms.setTreasury(address(treasury));
         mock.approve(address(treasury), type(uint256).max);
         usdc.approve(address(treasury), type(uint256).max);
         mugen.setMinter(address(treasury));
+        treasury.setCommunicator(address(comms));
     }
 
     function testSetUp() public {
@@ -41,20 +42,25 @@ contract TreasuryTest is Test {
         assertEq(treasury.treasury(), alice);
     }
 
-    function testDeposit() public {
+    function testTreasuryDeposit() public {
         vm.expectRevert("Deposit must be more than 0");
         treasury.deposit(mock, 0);
         vm.expectRevert("less than min deposit");
-        treasury.deposit(mock, 99 * 1e18);
+        treasury.deposit(mock, 49 * 1e18);
+        vm.expectRevert(Treasury.NotDepositable.selector);
+        treasury.deposit(usdc, 1000 * 1e18);
+        treasury.addTokenInfo(usdc, address(feed));
         uint256 expected = treasury.calculateContinuousMintReturn(1000 * 1e18);
         treasury.deposit(mock, 1000 * 1e18);
         assertEq(mugen.totalSupply(), expected);
         assertEq(treasury.readSupply(), expected + 1e18);
         assertEq(mugen.balanceOf(address(this)), expected);
         assertEq(mock.balanceOf(alice), 1000 * 1e18);
+        assertEq(treasury.valueDeposited(), 1000 * 1e18);
     }
 
     function testDecimals() public {
+        treasury.addTokenInfo(usdc, address(feed));
         uint256 expected = treasury.calculateContinuousMintReturn(1000 * 1e18);
         treasury.deposit(usdc, 1000 * 1e6);
         assertEq(mugen.totalSupply(), expected);
@@ -64,32 +70,81 @@ contract TreasuryTest is Test {
         assertEq(treasury.valueDeposited(), 1000 * 1e18);
     }
 
-    function testAdmin() public {
-        vm.expectRevert(Treasury.NotOwner.selector);
-        vm.prank(alice);
-        treasury.addTokenInfo(mock, address(feed));
-        vm.expectRevert(Treasury.NotOwner.selector);
-        vm.prank(alice);
-        treasury.removeTokenInfo(mock);
-        vm.expectRevert(Treasury.NotOwner.selector);
-        vm.prank(alice);
-        treasury.setCommunicator(address(comms));
-        //
-        assertEq(treasury.depositableTokens(mock), true);
-        assertEq(treasury.depositableTokens(usdc), true);
-        treasury.removeTokenInfo(mock);
-        treasury.removeTokenInfo(usdc);
-        assertEq(treasury.depositableTokens(mock), false);
-        assertEq(treasury.depositableTokens(usdc), false);
-        //
-        treasury.setCommunicator(address(comms));
-        assertEq(treasury.Communicator(), address(comms));
+    function testReceiveMessage(uint256 amount) public {
+        vm.assume(amount > 0 && amount < 4851651944097902779691068306);
         vm.expectRevert(Treasury.NotCommunicator.selector);
+        vm.prank(alice);
         treasury.receiveMessage(100 * 1e18);
+        uint256 calculate = treasury.calculateContinuousMintReturn(amount);
+        uint256 expected = comms.sendMessage(amount);
+        assertEq(calculate, expected);
+        assertEq(treasury.readSupply(), calculate + 1e18);
     }
 
-    function testMinterSet() public {
-        vm.expectRevert(Mugen.MinterSet.selector);
-        mugen.setMinter(alice);
+    function testAddOrRemove() public {
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.addTokenInfo(usdc, address(feed));
+        treasury.addTokenInfo(usdc, address(feed));
+        assertEq(treasury.checkDepositable(usdc), true);
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.removeTokenInfo(usdc);
+        treasury.removeTokenInfo(usdc);
+        assertEq(treasury.checkDepositable(usdc), false);
+    }
+
+    function testSetComms() public {
+        vm.expectRevert(Treasury.NotOwner.selector);
+        vm.prank(alice);
+        treasury.setCommunicator(address(comms));
+    }
+
+    //Go through this one again
+    function testSetAndRemoveAdmin() public {
+        vm.expectRevert("not the owner");
+        vm.prank(alice);
+        treasury.setAdministrator(alice);
+        treasury.setAdministrator(alice);
+        assertEq(treasury.administrator(), alice);
+        vm.expectRevert("Ownable: caller is not the owner");
+        vm.prank(alice);
+        treasury.removeAdmin();
+        treasury.removeAdmin();
+        assertEq(treasury.administrator(), address(0));
+        assertEq(treasury.adminRemoved(), true);
+        vm.expectRevert(Treasury.AdminRemoved.selector);
+        treasury.setAdministrator(address(this));
+        vm.expectRevert(Treasury.AdminRemoved.selector);
+        treasury.setAdministrator(address(this));
+    }
+
+    function testCap() public {
+        treasury.setCap(50000 * 1e18);
+        treasury.deposit(mock, 50001 * 1e18);
+        vm.expectRevert(Treasury.CapReached.selector);
+        treasury.deposit(mock, 100 * 1e18);
+    }
+
+    function testAverage() public {
+        treasury.setCap(10000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        treasury.deposit(mock, 2000000000 * 1e18);
+        mugen.totalSupply();
+        treasury.pricePerToken();
+        //Total supply of 2511885.451604671543066581
+        //Price at 497.63
+        //Market cap of 1.25 billion so 250 million dollar difference at 1 billion deposits
+
+        //10 billion desposits
+        //Total Supply of 15848930.937290280390442002
+        //Pirce of 788.69
+        //Marketcap of 12.5 billion so again about a 25% difference
+
+        //If 75% are staked that puts it at around 11.886 million 25% apy on the treasury
+        //would be a 26% return based on staking numbers and current
     }
 }

@@ -16,13 +16,17 @@ contract GMXStrategy is Ownable {
     address public administrator;
     address public yieldDistributor;
     address public constant ES_GMX = 0xf42Ae1D54fd613C9bb14810b0588FaAa09a426cA;
+    address public constant glpManager =
+        0x321F653eED006AD1C29D174e17d96351BDe22649;
     address public immutable weth;
     uint256 public claimable;
     uint256 public compounded;
+    bool public adminRemoved = false;
 
     error NotOwner();
     error NotEnoughYield();
     error TooSoon();
+    error AdminRemoved();
 
     event YieldTransfered(address indexed _caller, uint256 _amount);
     event EsGMXStaked(address indexed _caller, uint256 _amount);
@@ -34,17 +38,17 @@ contract GMXStrategy is Ownable {
         uint256 _glpAmount
     );
 
-    constructor(
-        address _rewardRouterV2,
-        address _administrator,
-        address _weth
-    ) {
+    constructor(address _rewardRouterV2, address _weth) {
         rewardRouterV2 = IRewardRouterV2(_rewardRouterV2);
-        administrator = _administrator;
+        administrator = msg.sender;
         weth = _weth;
     }
 
     function stakeGMXRewards() external {
+        require(
+            ERC20(ES_GMX).balanceOf(address(this)) > 0,
+            "O balance of contract"
+        );
         uint256 amount = ERC20(ES_GMX).balanceOf(address(this));
         rewardRouterV2.stakeEsGmx(amount);
         emit EsGMXStaked(msg.sender, amount);
@@ -52,10 +56,11 @@ contract GMXStrategy is Ownable {
 
     function mintGLP(
         address _token,
-        uint256 _amount,
         uint256 _minUsdg,
         uint256 _minGlp
-    ) external {
+    ) external returns (uint256) {
+        uint256 _amount = IERC20(_token).balanceOf(address(this));
+        ERC20(_token).increaseAllowance(glpManager, _amount);
         uint256 glpAmount = rewardRouterV2.mintAndStakeGlp(
             _token,
             _amount,
@@ -63,7 +68,10 @@ contract GMXStrategy is Ownable {
             _minGlp
         );
         emit GlpMinted(msg.sender, _token, _amount, glpAmount);
+        return glpAmount;
     }
+
+    //280466801.751895406181584300
 
     function sellGlp(
         address _tokenOut,
@@ -84,7 +92,9 @@ contract GMXStrategy is Ownable {
     }
 
     function claimRewards() external {
-        if (claimable > block.timestamp) revert TooSoon();
+        if (claimable > block.timestamp) {
+            revert TooSoon();
+        }
         rewardRouterV2.claim();
         claimable = block.timestamp + 1 days;
     }
@@ -93,8 +103,17 @@ contract GMXStrategy is Ownable {
         administrator = address(0);
     }
 
+    function replaceAdmin(address newAdmin) external onlyOwners {
+        if (adminRemoved != false) {
+            revert AdminRemoved();
+        }
+        administrator = newAdmin;
+    }
+
     function compound() external {
-        if (compounded > block.timestamp) revert TooSoon();
+        if (compounded > block.timestamp) {
+            revert TooSoon();
+        }
         rewardRouterV2.compound();
         compounded = block.timestamp + 1 days;
     }
@@ -104,15 +123,18 @@ contract GMXStrategy is Ownable {
     }
 
     function transferYield() external {
-        if (IERC20(weth).balanceOf(address(this)) <= 0) revert NotEnoughYield();
+        if (IERC20(weth).balanceOf(address(this)) <= 0) {
+            revert NotEnoughYield();
+        }
         uint256 amount = IERC20(weth).balanceOf(address(this));
-        IERC20(weth).safeTransferFrom(address(this), yieldDistributor, amount);
+        IERC20(weth).safeTransfer(yieldDistributor, amount);
         emit YieldTransfered(msg.sender, amount);
     }
 
     modifier onlyOwners() {
-        if (msg.sender != administrator || msg.sender != owner())
+        if (msg.sender != administrator || msg.sender != owner()) {
             revert NotOwner();
+        }
         _;
     }
 }
