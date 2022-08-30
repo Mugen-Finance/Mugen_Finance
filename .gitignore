@@ -10,3 +10,5 @@ src/SimplifiedStaking.sol
 /broadcast/*
 /broadcast/*/31337/
 lib
+flattened/
+research/

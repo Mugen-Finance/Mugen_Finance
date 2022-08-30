@@ -13,6 +13,7 @@ import "../../contracts/mocks/NotMockAggregator.sol";
 contract TreasuryTest is Test {
     MockERC20 mock;
     MockERC20 usdc;
+    MockERC20 testMock;
     NotMockAggregator feed;
     Mugen mugen;
     LZEndpointMock Endpoint;
@@ -23,6 +24,7 @@ contract TreasuryTest is Test {
     function setUp() public {
         mock = new MockDAI(type(uint256).max);
         usdc = new MockUSDC(type(uint256).max);
+        testMock = new MockERC20("test", "tst", 24, type(uint256).max);
         feed = new NotMockAggregator(8, 1e8);
         Endpoint = new LZEndpointMock(1);
         mugen = new Mugen(address(Endpoint));
@@ -32,6 +34,7 @@ contract TreasuryTest is Test {
         comms.setTreasury(address(treasury));
         mock.approve(address(treasury), type(uint256).max);
         usdc.approve(address(treasury), type(uint256).max);
+        testMock.approve(address(treasury), type(uint256).max);
         mugen.setMinter(address(treasury));
         treasury.setCommunicator(address(comms));
     }
@@ -42,31 +45,44 @@ contract TreasuryTest is Test {
         assertEq(treasury.treasury(), alice);
     }
 
-    function testTreasuryDeposit() public {
+    function testTreasuryDeposit(uint256 x) public {
+        vm.assume(x > 100 * 1e18 && x < 4851651944097902779691068306);
         vm.expectRevert("Deposit must be more than 0");
         treasury.deposit(mock, 0);
         vm.expectRevert("less than min deposit");
         treasury.deposit(mock, 49 * 1e18);
         vm.expectRevert(Treasury.NotDepositable.selector);
-        treasury.deposit(usdc, 1000 * 1e18);
+        treasury.deposit(usdc, x);
         treasury.addTokenInfo(usdc, address(feed));
-        uint256 expected = treasury.calculateContinuousMintReturn(1000 * 1e18);
-        treasury.deposit(mock, 1000 * 1e18);
+        uint256 expected = treasury.calculateContinuousMintReturn(x);
+        treasury.deposit(mock, x);
         assertEq(mugen.totalSupply(), expected);
         assertEq(treasury.readSupply(), expected + 1e18);
         assertEq(mugen.balanceOf(address(this)), expected);
-        assertEq(mock.balanceOf(alice), 1000 * 1e18);
-        assertEq(treasury.valueDeposited(), 1000 * 1e18);
+        assertEq(mock.balanceOf(alice), x);
+        assertEq(treasury.valueDeposited(), x);
     }
 
     function testDecimals() public {
         treasury.addTokenInfo(usdc, address(feed));
+        treasury.pricePerToken();
         uint256 expected = treasury.calculateContinuousMintReturn(1000 * 1e18);
         treasury.deposit(usdc, 1000 * 1e6);
         assertEq(mugen.totalSupply(), expected);
         assertEq(treasury.readSupply(), expected + 1e18);
         assertEq(mugen.balanceOf(address(this)), expected);
         assertEq(usdc.balanceOf(alice), 1000 * 1e6);
+        assertEq(treasury.valueDeposited(), 1000 * 1e18);
+    }
+
+    function testDecimals2() public {
+        treasury.addTokenInfo(testMock, address(feed));
+        uint256 expected = treasury.calculateContinuousMintReturn(1000 * 1e18);
+        treasury.deposit(testMock, 1000 * 1e24);
+        assertEq(mugen.totalSupply(), expected);
+        assertEq(treasury.readSupply(), expected + 1e18);
+        assertEq(mugen.balanceOf(address(this)), expected);
+        assertEq(testMock.balanceOf(alice), 1000 * 1e24);
         assertEq(treasury.valueDeposited(), 1000 * 1e18);
     }
 

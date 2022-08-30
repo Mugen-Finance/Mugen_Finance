@@ -34,7 +34,10 @@ contract YieldDistributor is Ownable {
     }
 
     function transferRewards() external payable {
-        require(address(stakingContract) != address(0), "staking contract not set");
+        require(
+            address(stakingContract) != address(0),
+            "staking contract not set"
+        );
         if (IERC20(weth).balanceOf(address(this)) < 5 * 1e18) {
             revert RewardsToLow();
         }
@@ -50,9 +53,6 @@ contract YieldDistributor is Ownable {
         uint256 currentRewards = IERC20(weth).balanceOf(address(this));
         uint256 teamPercent = (currentRewards * 100) / 1000;
         uint256 rewards = (currentRewards * 900) / 1000;
-        if (teamPercent + rewards > IERC20(weth).balanceOf(address(this))) {
-            revert RewardsToHigh();
-        }
         return (teamPercent, rewards);
     }
 
@@ -73,7 +73,10 @@ contract YieldDistributor is Ownable {
     }
 
     modifier onlyOwners() {
-        require(msg.sender == owner() || msg.sender == administrator, "not the owner");
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "not the owner"
+        );
         _;
     }
 }

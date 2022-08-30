@@ -78,16 +78,15 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         Capped
     {
         uint256 amount = _amount;
-        if (IERC20Metadata(_token).decimals() < 18) {
-            uint256 dec = 18 - (IERC20Metadata(_token).decimals());
-            amount = _amount * 10**dec;
+        if (IERC20Metadata(_token).decimals() != 18) {
+            amount = (amount * 1e18) / 10**(IERC20Metadata(_token).decimals());
         }
         require(amount > 0, "Deposit must be more than 0");
         uint256 tokenPrice = getPrice(_token);
         uint256 value = (tokenPrice * amount) /
             10**(priceFeeds[_token].decimals());
         require(value >= MIN_VALUE, "less than min deposit");
-        uint256 calculated = _continuousMint(amount);
+        uint256 calculated = _continuousMint(value);
         s_totalSupply += calculated;
         valueDeposited += value;
         emit Deposit(msg.sender, _token, value);
