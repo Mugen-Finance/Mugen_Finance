@@ -3,11 +3,7 @@
 pragma solidity 0.8.7;
 
 /**
- * What will this strategy do?
- *
- * Mint and stake GLP, stake esGMX, claim rewards, unstake, send yield to where it needs to go.
- * Go through the mycelium strategy today and see how similar it is
- * Look into compounding
+ * @notice not complete
  */
 
 import "../../interfaces/IMyceliumStrategy.sol";
@@ -22,13 +18,32 @@ contract MyceliumStrategy {
         mycelium = IMyceliumStrategy(_mycelium);
     }
 
-    function deposit(address _token, uint256 _amount, uint256 _minUsdg, uint256 _minMlp) external {
-        uint256 amountRecieved = mycelium.mintAndStakeMlp(_token, _amount, _minUsdg, _minMlp);
+    function deposit(
+        address _token,
+        uint256 _amount,
+        uint256 _minUsdg,
+        uint256 _minMlp
+    ) external {
+        uint256 amountRecieved = mycelium.mintAndStakeMlp(
+            _token,
+            _amount,
+            _minUsdg,
+            _minMlp
+        );
         emit StakeMlp(msg.sender, amountRecieved);
     }
 
-    function withdraw(address _tokenOut, uint256 _mlpAmount, uint256 _minOut) external {
-        mycelium.unstakeAndRedeemMlp(_tokenOut, _mlpAmount, _minOut, address(this));
+    function withdraw(
+        address _tokenOut,
+        uint256 _mlpAmount,
+        uint256 _minOut
+    ) external {
+        mycelium.unstakeAndRedeemMlp(
+            _tokenOut,
+            _mlpAmount,
+            _minOut,
+            address(this)
+        );
     }
 
     function claimRewards() external {
