@@ -1,13 +1,5 @@
 //SPDX-License-Identifier: MIT
 
-//Finish this today.
-/**
- * What all does this need to do?
- * Receive funds and send them where they should go
- * Determine what percentage goes where
- * add and remove strategies
- */
-
 pragma solidity 0.8.7;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -50,13 +42,18 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
         }
         cooldown[_strategy] = block.timestamp + 2 days;
         uint16 percentage = percentages[_strategy];
-        uint256 amount = (IERC20(_token).balanceOf(address(this)) * percentage) / 1000;
+        uint256 amount = (IERC20(_token).balanceOf(address(this)) *
+            percentage) / 1000;
 
         IERC20(_token).safeTransfer(_strategy, amount);
         emit TransferToStrategy(_strategy, _token, amount);
     }
 
-    function updatePercentage(uint16 _percentage, address _destinationContract) external override onlyOwners {
+    function updatePercentage(uint16 _percentage, address _destinationContract)
+        external
+        override
+        onlyOwners
+    {
         require(_percentage > 0 && _percentage <= 1000, "Invalid Percentages");
         percentages[_destinationContract] = _percentage;
         emit PercentageChanged(_destinationContract, _percentage);
@@ -73,12 +70,18 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
         emit StrategyRemoved(_strategy);
     }
 
-    function addTransferableTokens(address _strategy, IERC20 _token) external onlyOwners {
+    function addTransferableTokens(address _strategy, IERC20 _token)
+        external
+        onlyOwners
+    {
         acceptableTokens[_strategy][_token] = true;
         emit TransferableToken(_strategy, _token);
     }
 
-    function removeTransferableTokens(address _strategy, IERC20 _token) external onlyOwners {
+    function removeTransferableTokens(address _strategy, IERC20 _token)
+        external
+        onlyOwners
+    {
         acceptableTokens[_strategy][_token] = false;
     }
 

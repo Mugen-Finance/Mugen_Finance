@@ -298,55 +298,6 @@
         }
       }
     },
-    "contracts/Mugen/Fundraising.sol": {
-      "lastModificationDate": 1661778253925,
-      "contentHash": "d1192be3f22e5da8b39491f422d4f193",
-      "sourceName": "contracts/Mugen/Fundraising.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "node_modules/@openzeppelin/contracts/security/Pausable.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
-        "node_modules/@openzeppelin/contracts/utils/Address.sol",
-        "node_modules/@openzeppelin/contracts/utils/Context.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
-      ],
-      "versionRequirement": "=0.8.7",
-      "artifacts": {
-        "Fundraiser": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Fundraising.sol/Fundraiser.json"
-        }
-      }
-    },
     "contracts/Mugen/LzApp.sol": {
       "lastModificationDate": 1661778253925,
       "contentHash": "b6872c91d2318fcb1ab745617a7c9171",
@@ -393,8 +344,8 @@
       }
     },
     "contracts/Mugen/Mugen.sol": {
-      "lastModificationDate": 1661778253925,
-      "contentHash": "7b124bcfb1c998db31261874e46b9114",
+      "lastModificationDate": 1661892847632,
+      "contentHash": "f5d7e3d2fc178127479f8d261de43877",
       "sourceName": "contracts/Mugen/Mugen.sol",
       "solcConfig": {
         "settings": {
@@ -433,10 +384,8 @@
         "contracts/interfaces/IMugen.sol",
         "contracts/interfaces/IOFTCore.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -446,9 +395,7 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol"
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
       ],
       "versionRequirement": "=0.8.7",
       "artifacts": {
@@ -613,8 +560,8 @@
       }
     },
     "contracts/Mugen/Treasury.sol": {
-      "lastModificationDate": 1661780260743,
-      "contentHash": "9085d158af6213fdc79084293a1ae090",
+      "lastModificationDate": 1661894642552,
+      "contentHash": "5003bd1740f2eadec7b86824c29ad221",
       "sourceName": "contracts/Mugen/Treasury.sol",
       "solcConfig": {
         "settings": {
@@ -670,8 +617,8 @@
       }
     },
     "contracts/Mugen/YieldDistributor.sol": {
-      "lastModificationDate": 1661779533522,
-      "contentHash": "6dd8396dc8091168f47d40ec5c43f3f8",
+      "lastModificationDate": 1661900418091,
+      "contentHash": "24c80158c215e0aebc63c0706ac57f5a",
       "sourceName": "contracts/Mugen/YieldDistributor.sol",
       "solcConfig": {
         "settings": {
@@ -719,8 +666,8 @@
       }
     },
     "contracts/Mugen/xMugen.sol": {
-      "lastModificationDate": 1661778253927,
-      "contentHash": "5339091277b20075e8c5ec7d64eaaad1",
+      "lastModificationDate": 1661898703483,
+      "contentHash": "7c0620fc066b50de2e7f99abdca1ca8b",
       "sourceName": "contracts/Mugen/xMugen.sol",
       "solcConfig": {
         "settings": {
@@ -857,8 +804,8 @@
       }
     },
     "contracts/Strategy/ArbitrumStrategies/MyceliumStrategy.sol": {
-      "lastModificationDate": 1661778253927,
-      "contentHash": "0f92b6f46b000a4669356170083c1c0d",
+      "lastModificationDate": 1661894892299,
+      "contentHash": "a381f690459399516382aa4d7ef8f015",
       "sourceName": "contracts/Strategy/ArbitrumStrategies/MyceliumStrategy.sol",
       "solcConfig": {
         "settings": {
@@ -1027,8 +974,8 @@
       }
     },
     "contracts/Strategy/StrategyHub.sol": {
-      "lastModificationDate": 1661778253928,
-      "contentHash": "736832eb1cc49a8bead9a3b8a53e671f",
+      "lastModificationDate": 1661900269108,
+      "contentHash": "8098bc738301b401219803181cf49502",
       "sourceName": "contracts/Strategy/StrategyHub.sol",
       "solcConfig": {
         "settings": {
@@ -1114,8 +1061,8 @@
       }
     },
     "contracts/interfaces/IERC4626.sol": {
-      "lastModificationDate": 1661778253928,
-      "contentHash": "505049166d9270845f3bebc5405b0204",
+      "lastModificationDate": 1661898209642,
+      "contentHash": "9b21e5fa029f8aa1d773686849b0ce01",
       "sourceName": "contracts/interfaces/IERC4626.sol",
       "solcConfig": {
         "settings": {
@@ -1520,8 +1467,8 @@
       }
     },
     "contracts/interfaces/ITreasury.sol": {
-      "lastModificationDate": 1661778253930,
-      "contentHash": "abd5f6e408ef445938efaf8df6c715e5",
+      "lastModificationDate": 1661893717136,
+      "contentHash": "2d67c61ea8a10533e42883952c10ff96",
       "sourceName": "contracts/interfaces/ITreasury.sol",
       "solcConfig": {
         "settings": {
@@ -2745,47 +2692,6 @@
         }
       }
     },
-    "node_modules/@openzeppelin/contracts/security/Pausable.sol": {
-      "lastModificationDate": 1657711080544,
-      "contentHash": "25c8108f36fdd472bc78d4c4af240c11",
-      "sourceName": "node_modules/@openzeppelin/contracts/security/Pausable.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "node_modules/@openzeppelin/contracts/utils/Context.sol"
-      ],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "Pausable": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Pausable.sol/Pausable.json"
-        }
-      }
-    },
     "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
       "lastModificationDate": 1657711080544,
       "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
@@ -2989,59 +2895,6 @@
       "artifacts": {
         "ERC20Burnable": {
           "0.8.16+commit.07a7930e.Darwin.appleclang": "ERC20Burnable.sol/ERC20Burnable.json"
-        }
-      }
-    },
-    "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol": {
-      "lastModificationDate": 1657711080544,
-      "contentHash": "d750921452f3bf2ab170f55cf4f5dc71",
-      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
-        "node_modules/@openzeppelin/contracts/utils/Context.sol",
-        "node_modules/@openzeppelin/contracts/utils/Counters.sol",
-        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
-        "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
-        "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol"
-      ],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "ERC20Votes": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "ERC20Votes.sol/ERC20Votes.json"
         }
       }
     },
@@ -3614,45 +3467,6 @@
         }
       }
     },
-    "node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
-      "lastModificationDate": 1657711080544,
-      "contentHash": "fb23b534599db16bb969dc6afcdc4261",
-      "sourceName": "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "Math": {
-          "0.8.7+commit.e28d00a7.Darwin.appleclang": "Math.sol/Math.json"
-        }
-      }
-    },
     "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
       "lastModificationDate": 1657711080544,
       "contentHash": "64e3f111253497ba40c2ad9bdf48a191",
@@ -3931,11 +3745,9 @@
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -3948,8 +3760,6 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionRequirement": "^0.8.0",
@@ -4024,11 +3834,9 @@
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -4041,8 +3849,6 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionRequirement": "^0.8.0",
@@ -4115,11 +3921,9 @@
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -4132,8 +3936,6 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionRequirement": "^0.8.0",
@@ -4204,11 +4006,9 @@
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -4221,8 +4021,6 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionRequirement": "^0.8.0",
@@ -4294,11 +4092,9 @@
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
         "node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -4311,8 +4107,6 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionRequirement": "^0.8.0",
@@ -4374,11 +4168,9 @@
         "lib/forge-std/src/console.sol",
         "lib/forge-std/src/console2.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
-        "node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol",
         "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
@@ -4390,9 +4182,7 @@
         "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
         "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
-        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol"
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
       ],
       "versionRequirement": "^0.8.0",
       "artifacts": {
