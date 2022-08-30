@@ -8,9 +8,19 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import "./OFTCore.sol";
 import {IMugen} from "../interfaces/IMugen.sol";
 
+/// @title Mugen
+/// @author Mugen Dev
+/// @notice ERC20 implementation ontop of Layer Zero
+/// @notice Ownable is inherited through OFTCore
+/// which needs to be maintained either with a governance system or
+/// multisig in order to update its Layer Zero configurations.
+
 contract Mugen is OFTCore, ERC20, IMugen {
     error NotOwner();
     error MinterSet();
+
+    /// @notice address who is available to mint tokens, set to the treasury
+    /// in order to implement the bonding curve.
 
     address public minter;
 
@@ -21,15 +31,6 @@ contract Mugen is OFTCore, ERC20, IMugen {
 
     function mint(address _to, uint256 _amount) external override onlyMinter {
         _mint(_to, _amount);
-    }
-
-    function setTrustedRemote(uint16 _srcChainId, bytes calldata _srcAddress)
-        external
-        override(LzApp)
-        onlyOwner
-    {
-        trustedRemoteLookup[_srcChainId] = _srcAddress;
-        emit SetTrustedRemote(_srcChainId, _srcAddress);
     }
 
     function supportsInterface(bytes4 interfaceId)

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@chainlink/contracts": "^0.4.1",
+    "@nomiclabs/hardhat-solhint": "^2.0.1",
     "@openzeppelin/contracts": "^4.7.0",
     "dotenv": "^16.0.1",
     "hardhat": "^2.10.2"
@@ -24,6 +25,7 @@
     "hardhat-tracer": "^1.1.0-rc.6",
     "prettier": "^2.7.1",
     "prettier-plugin-solidity": "^1.0.0-dev.22",
+    "solhint": "^3.3.7",
     "solidity-coverage": "^0.7.21",
     "typechain": "^8.1.0"
   }
