@@ -1,5 +1,6 @@
 # Compiler files
 cache/
+forge-cache/*
 out/
 .env
 .helpers
@@ -10,3 +11,7 @@ src/SimplifiedStaking.sol
 /broadcast/*
 /broadcast/*/31337/
 lib
+flattened/
+research/
+
+deploy/

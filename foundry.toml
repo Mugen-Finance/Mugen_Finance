@@ -4,7 +4,7 @@ out = 'out'
 libs = ['node_modules', 'lib']
 test = 'test/foundry'
 cache_path  = 'forge-cache'
-fuzz_runs = 2500
+fuzz_runs = 1000
 remappings = [
     'ds-test/=lib/forge-std/lib/ds-test/src/',
     'forge-std/=lib/forge-std/src/',
@@ -16,5 +16,8 @@ remappings = [
     'hardhat/=node_modules/hardhat/',
 ]
 gas_reports = ["*"]
+[rpc_endpoints]
+mainnet = "${MAINNET_RPC_URL}"
+arbitrum = "${ARBITRUM_RPC_URL}"
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

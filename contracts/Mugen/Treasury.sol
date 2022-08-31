@@ -12,27 +12,66 @@ import {BancorFormula} from "../Bancor/BancorFormula.sol";
 import {ITreasury} from "../interfaces/ITreasury.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
 
-contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
-    IMugen public immutable mugen;
-    address public immutable treasury;
+/**
+ * @title Mugen Treasury
+ * @author Mugen Dev
+ * @notice Minimal implementation of Bancors Power.sol
+ * to allow users to deposit and exchange whitelisted ERC20 at usd value for
+ * Mugen ERC20 tokens.
+ */
 
-    mapping(IERC20 => bool) public depositableTokens;
-    mapping(IERC20 => AggregatorPriceFeeds) public priceFeeds;
-
+contract Treasury is
+    BancorFormula,
+    ITreasury,
+    Ownable,
+    ReentrancyGuard,
+    Pausable
+{
     using SafeERC20 for IERC20;
 
+    /*///////////////////////////////////////////////////////////////
+                                 CONSTANTS
+    //////////////////////////////////////////////////////////////*/
+
     uint256 public constant SCALE = 10**18;
-    uint256 public reserveBalance = 10 * SCALE;
+    uint256 internal constant VALID_PERIOD = 1 days;
+    uint256 internal constant MIN_VALUE = 50 * 10**18;
     uint256 public constant RESERVE_RATIO = 800000;
+
+    /*///////////////////////////////////////////////////////////////
+                                IMMUTABLES
+    //////////////////////////////////////////////////////////////*/
+
+    address public immutable treasury;
+    IMugen public immutable mugen;
+
+    /*///////////////////////////////////////////////////////////////
+                                 State Variables
+    //////////////////////////////////////////////////////////////*/
+
+    uint256 public reserveBalance = 10 * SCALE;
     uint256 public valueDeposited;
     uint256 public s_totalSupply;
     uint256 public depositCap;
-    uint256 internal constant VALID_PERIOD = 1 days;
-    uint256 internal constant MIN_VALUE = 50 * 10**18;
     address public administrator;
     address public Communicator;
     bool public adminRemoved = false;
+
+    /*///////////////////////////////////////////////////////////////
+                                 Mappings
+    //////////////////////////////////////////////////////////////*/
+
+    ///@notice listed of whitelisted ERC20s that can be deposited
+    mapping(IERC20 => bool) public depositableTokens;
+
+    ///@notice token address point to their associated price feeds.
+    mapping(IERC20 => AggregatorPriceFeeds) public priceFeeds;
+
+    /*///////////////////////////////////////////////////////////////
+                                 Custom Errors
+    //////////////////////////////////////////////////////////////*/
 
     error NotDepositable();
     error NotUpdated();
@@ -43,6 +82,13 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
     error CapReached();
     error AdminRemoved();
 
+    /**
+     * @param _mugen Mugen ERC20 address
+     * @param _treasury The treasury address that controls deposited funds
+     * @param _administrator address with high level access controls
+     * @notice administrator is kept initially for efficency in the early stages
+     * but can be removed through governance at anytime.
+     */
     constructor(
         address _mugen,
         address _treasury,
@@ -54,21 +100,18 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         administrator = _administrator;
     }
 
-    /**
-     *
-     */
-    /**
-     * Staker Functions ***
-     */
-    /**
-     *
-     */
+    /*///////////////////////////////////////////////////////////////
+                                 User Functions
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev allows for users to deposit whitelisted assets and calculates their USD value for the bonding curve
      * given that the cap is not reached yet.
      * @param _token the token which is to be deposited
      * @param _amount the amount for this particular deposit
+     * @notice uses s_totalSupply rather than totalsupply() in order to prevent
+     * accounting issues once launched on multiple chains. As the treasury will serve as
+     * the global truth for pricing in the mint function.
      */
 
     function deposit(IERC20Metadata _token, uint256 _amount)
@@ -76,24 +119,34 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         nonReentrant
         depositable(_token)
         Capped
+        whenNotPaused
     {
         uint256 amount = _amount;
-        if (IERC20Metadata(_token).decimals() < 18) {
-            uint256 dec = 18 - (IERC20Metadata(_token).decimals());
-            amount = _amount * 10**dec;
+        if (IERC20Metadata(_token).decimals() != 18) {
+            amount = (amount * 1e18) / 10**(IERC20Metadata(_token).decimals());
         }
         require(amount > 0, "Deposit must be more than 0");
         uint256 tokenPrice = getPrice(_token);
         uint256 value = (tokenPrice * amount) /
             10**(priceFeeds[_token].decimals());
         require(value >= MIN_VALUE, "less than min deposit");
-        uint256 calculated = _continuousMint(amount);
+        uint256 calculated = _continuousMint(value);
         s_totalSupply += calculated;
         valueDeposited += value;
         emit Deposit(msg.sender, _token, value);
         IERC20(_token).safeTransferFrom(msg.sender, treasury, _amount);
         mugen.mint(msg.sender, calculated);
     }
+
+    /*///////////////////////////////////////////////////////////////
+                            Cross Chain Functions
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     * @notice receives information from the Communicator and
+     * relays it back to be sent to other chains.
+     * @param _amount value of the deposit on the specific chain
+     */
 
     function receiveMessage(uint256 _amount)
         external
@@ -108,73 +161,80 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         return test;
     }
 
+    /*///////////////////////////////////////////////////////////////
+                                 Admin Functions
+    //////////////////////////////////////////////////////////////*/
+
     /**
-     *
-     */
-    /**
-     * Admin Functions ***
-     */
-    /**
-     *
+     * @notice adds token to whitelisted assets with its associated oracle
+     * @param _token address of the token
+     * @param _pricefeed address for the pricefeed
+     * @dev onlyOwners allows for the administrator or the owner to call this function
      */
 
-    function addTokenInfo(IERC20 _token, address _pricefeed) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    function addTokenInfo(IERC20 _token, address _pricefeed)
+        external
+        onlyOwners
+    {
         priceFeeds[_token] = AggregatorPriceFeeds(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
     }
 
-    function removeTokenInfo(IERC20 _token) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    /**
+     * @notice Removes the token from the list of
+     * whitelisted assets and its associated oracle
+     * @param _token address of the token
+     */
+    function removeTokenInfo(IERC20 _token) external onlyOwners {
         delete depositableTokens[_token];
         delete priceFeeds[_token];
         emit TokenRemoved(_token);
     }
 
-    function setCommunicator(address _comms) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    ///@param _comms address of the communicator contract
+    function setCommunicator(address _comms) external onlyOwners {
         Communicator = _comms;
     }
 
-    function setCap(uint256 _amount) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    /**
+     * @notice setting the cap for inital deposits while code is fresh
+     * @param _amount what the Capp is set to
+     * @dev the cap will be evaluated in USD from the valueDeposited variable
+     * so 100 * 1e18 will set the cap to 100 USD
+     */
+    function setCap(uint256 _amount) external onlyOwners {
         depositCap = _amount;
     }
 
-    function setAdministrator(address newAdmin) external {
+    /**
+     * @notice removes the admin and set it to the zero address
+     * @dev once removed a new admin cannot be set
+     * @param newAdmin the address of the new Administrator
+     */
+    function setAdministrator(address newAdmin) external onlyOwners {
         if (adminRemoved != false) {
             revert AdminRemoved();
         }
-        require(
-            msg.sender == owner() || msg.sender == administrator,
-            "not the owner"
-        );
+
         administrator = newAdmin;
     }
 
+    ///@notice permenantly removes the administrator from being able
+    /// to preform functions and have access control
     function removeAdmin() external onlyOwner {
         administrator = address(0);
         adminRemoved = true;
     }
 
-    /**
-     *
-     */
-    /**
-     * View Functions ***
-     */
-    /**
-     *
-     */
+    ///@notice inherited from pausable, and pauses deposits
+    function pauseDeposits() external onlyOwners {
+        _pause();
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                            View Functions
+    //////////////////////////////////////////////////////////////*/
 
     function getPrice(IERC20 _token) internal view returns (uint256) {
         (, int256 price, , uint256 updatedAt, ) = priceFeeds[_token]
@@ -196,20 +256,15 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         return depositableTokens[_token];
     }
 
+    ///@notice returns the current USD price to mint 1 Mugen Token
     function pricePerToken() external view returns (uint256) {
         uint256 _price = (100 * 1e18) / calculateContinuousMintReturn(1e18);
         return _price;
     }
 
-    /**
-     *
-     */
-    /**
-     * Modifier Functions **
-     */
-    /**
-     *
-     */
+    /*///////////////////////////////////////////////////////////////
+                        Modifier Functions 
+    //////////////////////////////////////////////////////////////*/
 
     modifier depositable(IERC20 _token) {
         if (depositableTokens[_token] != true) {
@@ -225,15 +280,17 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         _;
     }
 
-    /**
-     *
-     */
-    /**
-     * Bancor Functions ***
-     */
-    /**
-     *
-     */
+    modifier onlyOwners() {
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "Not Owner"
+        );
+        _;
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                        Bonding Curve Logic
+    //////////////////////////////////////////////////////////////*/
 
     function calculateContinuousMintReturn(uint256 _amount)
         public

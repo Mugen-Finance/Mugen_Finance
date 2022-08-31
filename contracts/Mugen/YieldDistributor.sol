@@ -1,7 +1,5 @@
 //SPDX-License-Identifier:MIT
 
-//Need to make theIERC4626 interface
-
 pragma solidity 0.8.7;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -13,16 +11,31 @@ import {IERC4626} from "../interfaces/IERC4626.sol";
 contract YieldDistributor is Ownable {
     using SafeERC20 for IERC20;
 
-    address stakingContract;
+    /*///////////////////////////////////////////////////////////////
+                               Errors
+    //////////////////////////////////////////////////////////////*/
 
     error RewardsToHigh();
     error RewardsToLow();
     error AdminRemoved();
 
+    /*///////////////////////////////////////////////////////////////
+                        Immutable Variables
+    //////////////////////////////////////////////////////////////*/
+
     address public immutable weth;
     address public immutable teamfund;
+
+    /*///////////////////////////////////////////////////////////////
+                        State Variables
+    //////////////////////////////////////////////////////////////*/
     address public administrator;
     bool public adminRemoved = false;
+    address public stakingContract;
+
+    /*///////////////////////////////////////////////////////////////
+                        Events Variables
+    //////////////////////////////////////////////////////////////*/
 
     event RewardsDistributed(address indexed _caller, uint256 _rewards);
     event TeamPaid(address indexed _caller, uint256 _teamPercent);
@@ -33,8 +46,19 @@ contract YieldDistributor is Ownable {
         administrator = msg.sender;
     }
 
-    function transferRewards() external payable {
-        require(address(stakingContract) != address(0), "staking contract not set");
+    /*///////////////////////////////////////////////////////////////
+                           User Functions
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     * @notice sends rewards to the staking contract and team fund
+     */
+
+    function transferRewards() external {
+        require(
+            address(stakingContract) != address(0),
+            "staking contract not set"
+        );
         if (IERC20(weth).balanceOf(address(this)) < 5 * 1e18) {
             revert RewardsToLow();
         }
@@ -46,19 +70,30 @@ contract YieldDistributor is Ownable {
         emit TeamPaid(msg.sender, team);
     }
 
+    /*///////////////////////////////////////////////////////////////
+                        Internal Functions
+    //////////////////////////////////////////////////////////////*/
+
+    ///@notice calaculates rewards for the staking contract and team
+
     function calculateRewards() internal view returns (uint256, uint256) {
         uint256 currentRewards = IERC20(weth).balanceOf(address(this));
         uint256 teamPercent = (currentRewards * 100) / 1000;
         uint256 rewards = (currentRewards * 900) / 1000;
-        if (teamPercent + rewards > IERC20(weth).balanceOf(address(this))) {
-            revert RewardsToHigh();
-        }
         return (teamPercent, rewards);
     }
+
+    /*///////////////////////////////////////////////////////////////
+                        Admin Functions
+    //////////////////////////////////////////////////////////////*/
+
+    ///@notice sets the staking contract
 
     function setStaking(address _address) external onlyOwners {
         stakingContract = _address;
     }
+
+    ///@notice sets the administrator for high level access
 
     function setAdministrator(address newAdmin) external onlyOwners {
         if (adminRemoved != false) {
@@ -67,13 +102,22 @@ contract YieldDistributor is Ownable {
         administrator = newAdmin;
     }
 
+    ///@notice removes the admins control, once done can not be undone
+
     function removeAdmin() external onlyOwner {
         administrator = address(0);
         adminRemoved = true;
     }
 
+    /*///////////////////////////////////////////////////////////////
+                        Modifier Functions
+    //////////////////////////////////////////////////////////////*/
+
     modifier onlyOwners() {
-        require(msg.sender == owner() || msg.sender == administrator, "not the owner");
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "not the owner"
+        );
         _;
     }
 }

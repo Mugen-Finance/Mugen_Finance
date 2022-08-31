@@ -31,15 +31,15 @@ contract CommunicatorTest is Test {
         mugen.setMinter(address(treasury));
     }
 
-    function testMessage(uint200 amount) public {
-        vm.assume(amount > 0);
-        vm.assume(amount < 4851651944097902779691068306);
-        uint256 first = treasury.calculateContinuousMintReturn(amount);
-        treasury.setCommunicator(address(comms));
-        comms.setTreasury(address(treasury));
-        uint256 second = comms.sendMessage(amount);
-        assertEq(first, second);
-    }
+    // function testMessage(uint200 amount) public {
+    //     vm.assume(amount > 0);
+    //     vm.assume(amount < 4851651944097902779691068306);
+    //     uint256 first = treasury.calculateContinuousMintReturn(amount);
+    //     treasury.setCommunicator(address(comms));
+    //     comms.setTreasury(address(treasury));
+    //     uint256 second = comms.sendMessage(amount);
+    //     assertEq(first, second);
+    // }
 
     // function testDeposits(uint128 amount) public {
     //     vm.assume(amount > 100 * 1e18);
