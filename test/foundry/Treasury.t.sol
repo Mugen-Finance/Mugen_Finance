@@ -86,17 +86,6 @@ contract TreasuryTest is Test {
         assertEq(treasury.valueDeposited(), 1000 * 1e18);
     }
 
-    function testReceiveMessage(uint256 amount) public {
-        vm.assume(amount > 0 && amount < 4851651944097902779691068306);
-        vm.expectRevert(Treasury.NotCommunicator.selector);
-        vm.prank(alice);
-        treasury.receiveMessage(100 * 1e18);
-        uint256 calculate = treasury.calculateContinuousMintReturn(amount);
-        uint256 expected = comms.sendMessage(amount);
-        assertEq(calculate, expected);
-        assertEq(treasury.readSupply(), calculate + 1e18);
-    }
-
     function testAddOrRemove() public {
         vm.expectRevert(Treasury.NotOwner.selector);
         vm.prank(alice);
@@ -116,7 +105,6 @@ contract TreasuryTest is Test {
         treasury.setCommunicator(address(comms));
     }
 
-    //Go through this one again
     function testSetAndRemoveAdmin() public {
         vm.expectRevert("not the owner");
         vm.prank(alice);
@@ -151,16 +139,5 @@ contract TreasuryTest is Test {
         treasury.deposit(mock, 2000000000 * 1e18);
         mugen.totalSupply();
         treasury.pricePerToken();
-        //Total supply of 2511885.451604671543066581
-        //Price at 497.63
-        //Market cap of 1.25 billion so 250 million dollar difference at 1 billion deposits
-
-        //10 billion desposits
-        //Total Supply of 15848930.937290280390442002
-        //Pirce of 788.69
-        //Marketcap of 12.5 billion so again about a 25% difference
-
-        //If 75% are staked that puts it at around 11.886 million 25% apy on the treasury
-        //would be a 26% return based on staking numbers and current
     }
 }

@@ -12,6 +12,7 @@ import {BancorFormula} from "../Bancor/BancorFormula.sol";
 import {ITreasury} from "../interfaces/ITreasury.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
 
 /**
  * @title Mugen Treasury
@@ -21,7 +22,13 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.
  * Mugen ERC20 tokens.
  */
 
-contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
+contract Treasury is
+    BancorFormula,
+    ITreasury,
+    Ownable,
+    ReentrancyGuard,
+    Pausable
+{
     using SafeERC20 for IERC20;
 
     /*///////////////////////////////////////////////////////////////
@@ -112,6 +119,7 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         nonReentrant
         depositable(_token)
         Capped
+        whenNotPaused
     {
         uint256 amount = _amount;
         if (IERC20Metadata(_token).decimals() != 18) {
@@ -161,12 +169,13 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
      * @notice adds token to whitelisted assets with its associated oracle
      * @param _token address of the token
      * @param _pricefeed address for the pricefeed
+     * @dev onlyOwners allows for the administrator or the owner to call this function
      */
 
-    function addTokenInfo(IERC20 _token, address _pricefeed) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    function addTokenInfo(IERC20 _token, address _pricefeed)
+        external
+        onlyOwners
+    {
         priceFeeds[_token] = AggregatorPriceFeeds(_pricefeed);
         depositableTokens[_token] = true;
         emit DepositableToken(_token, _pricefeed);
@@ -177,20 +186,14 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
      * whitelisted assets and its associated oracle
      * @param _token address of the token
      */
-    function removeTokenInfo(IERC20 _token) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    function removeTokenInfo(IERC20 _token) external onlyOwners {
         delete depositableTokens[_token];
         delete priceFeeds[_token];
         emit TokenRemoved(_token);
     }
 
     ///@param _comms address of the communicator contract
-    function setCommunicator(address _comms) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    function setCommunicator(address _comms) external onlyOwners {
         Communicator = _comms;
     }
 
@@ -200,10 +203,7 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
      * @dev the cap will be evaluated in USD from the valueDeposited variable
      * so 100 * 1e18 will set the cap to 100 USD
      */
-    function setCap(uint256 _amount) external {
-        if (msg.sender != owner() || msg.sender != administrator) {
-            revert NotOwner();
-        }
+    function setCap(uint256 _amount) external onlyOwners {
         depositCap = _amount;
     }
 
@@ -212,14 +212,11 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
      * @dev once removed a new admin cannot be set
      * @param newAdmin the address of the new Administrator
      */
-    function setAdministrator(address newAdmin) external {
+    function setAdministrator(address newAdmin) external onlyOwners {
         if (adminRemoved != false) {
             revert AdminRemoved();
         }
-        require(
-            msg.sender == owner() || msg.sender == administrator,
-            "not the owner"
-        );
+
         administrator = newAdmin;
     }
 
@@ -228,6 +225,11 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
     function removeAdmin() external onlyOwner {
         administrator = address(0);
         adminRemoved = true;
+    }
+
+    ///@notice inherited from pausable, and pauses deposits
+    function pauseDeposits() external onlyOwners {
+        _pause();
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -275,6 +277,14 @@ contract Treasury is BancorFormula, ITreasury, Ownable, ReentrancyGuard {
         if (depositCap < valueDeposited) {
             revert CapReached();
         }
+        _;
+    }
+
+    modifier onlyOwners() {
+        require(
+            msg.sender == owner() || msg.sender == administrator,
+            "Not Owner"
+        );
         _;
     }
 

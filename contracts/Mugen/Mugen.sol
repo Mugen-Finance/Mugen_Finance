@@ -3,10 +3,9 @@
 pragma solidity 0.8.7;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import "./OFTCore.sol";
 import {IMugen} from "../interfaces/IMugen.sol";
+import "./OFTCore.sol";
 
 /// @title Mugen
 /// @author Mugen Dev

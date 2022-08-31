@@ -16,5 +16,8 @@ remappings = [
     'hardhat/=node_modules/hardhat/',
 ]
 gas_reports = ["*"]
+[rpc_endpoints]
+mainnet = "${MAINNET_RPC_URL}"
+arbitrum = "${ARBITRUM_RPC_URL}"
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
