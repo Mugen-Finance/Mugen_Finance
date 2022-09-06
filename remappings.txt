@@ -1,4 +1,4 @@
 ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
-@chainlink/=node_modules/@chainlink/
-@openzeppelin/=node_modules/@openzeppelin/
+chainlink/=lib/chainlink
+openzeppelin/=lib/openzeppelin-contracts
