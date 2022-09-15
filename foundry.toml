@@ -2,6 +2,7 @@
 src = 'src'
 out = 'out'
 libs = ['lib']
-fuzz_runs = 10000
+[fuzz]
+runs = 5000
 gas_reports = ["*"]
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

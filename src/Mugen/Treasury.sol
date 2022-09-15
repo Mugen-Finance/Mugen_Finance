@@ -50,13 +50,13 @@ contract Treasury is
                                  State Variables
     //////////////////////////////////////////////////////////////*/
 
+    address public administrator;
+    address public Communicator;
+    address public treasury;
     uint256 public reserveBalance = 10 * SCALE;
     uint256 public valueDeposited;
     uint256 public s_totalSupply;
     uint256 public depositCap;
-    address public administrator;
-    address public Communicator;
-    address public treasury;
     bool public adminRemoved = false;
 
     /*///////////////////////////////////////////////////////////////
@@ -124,7 +124,6 @@ contract Treasury is
         require(_amount > 0, "Deposit must be more than 0");
         uint8 decimals = IERC20Metadata(_token).decimals();
         (uint256 tokenPrice, AggregatorPriceFeeds tokenFeed) = getPrice(_token);
-
         uint256 value;
         if (decimals != 18) {
             value =
@@ -203,7 +202,7 @@ contract Treasury is
 
     /**
      * @notice setting the cap for inital deposits while code is fresh
-     * @param _amount what the Capp is set to
+     * @param _amount what the Cap is set to
      * @dev the cap will be evaluated in USD from the valueDeposited variable
      * so 100 * 1e18 will set the cap to 100 USD
      */
@@ -237,7 +236,12 @@ contract Treasury is
         _pause();
     }
 
-    function resetTreasury(address _treasury) external onlyOwnerOrAdmin {
+    ///@notice inherited from pausable, and unpauses deposits
+    function unpauseDeposits() external onlyOwnerOrAdmin {
+        _unpause();
+    }
+
+    function changeTreasury(address _treasury) external onlyOwnerOrAdmin {
         treasury = _treasury;
     }
 

@@ -77,9 +77,6 @@ contract Mugen is OFTCore, ERC20, IMugen {
     }
 
     function setMinter(address _minter) external onlyOwner {
-        if (minter != address(0)) {
-            revert MinterSet();
-        }
         minter = _minter;
     }
 

@@ -24,7 +24,7 @@ contract TestYieldDistributor is Test {
     function setUp() public {
         mugen = new Mugen(alice);
         mock = new MockDAI(10000 * 1e18);
-        xMGN = new xMugen(address(mugen), address(mock));
+        xMGN = new xMugen(address(mugen), address(mock), address(this));
         yield = new YieldDistributor(teamFund, address(mock));
         treasury = new Treasury(address(mugen), address(yield), address(this));
         mock.approve(address(treasury), 10000 * 1e18);
@@ -36,6 +36,7 @@ contract TestYieldDistributor is Test {
         mugen.approve(address(xMGN), 1e25);
         xMGN.setYield(address(yield));
         yield.setStaking(address(xMGN));
+        treasury.setCap(100 * 1e40);
     }
 
     function testTransferRewards() public {

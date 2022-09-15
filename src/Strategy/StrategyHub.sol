@@ -1,11 +1,5 @@
 //SPDX-License-Identifier: MIT
 
-/**
- * Percentages
- * View Functions(contracts in the array and percentage for each contract);
- * Removing and adding to arrays
- */
-
 pragma solidity 0.8.7;
 
 import {IERC20} from "openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -17,19 +11,14 @@ import {ReentrancyGuard} from "openzeppelin/contracts/security/ReentrancyGuard.s
 contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
+    /*///////////////////////////////////////////////////////////////
+                                 Events
+    //////////////////////////////////////////////////////////////*/
+
     event USDCTransfer(address indexed _caller, address _usdc, uint256 _amount);
     event WETHTransfer(address indexed _caller, address _weth, uint256 _amount);
     event DAITransfer(address indexed _caller, address _dai, uint256 _amount);
     event FRAXTransfer(address indexed _caller, address _frax, uint256 _amount);
-
-    /*///////////////////////////////////////////////////////////////
-                                 Errors
-    //////////////////////////////////////////////////////////////*/
-
-    error NotAStrategy();
-    error StrategyCooldown();
-    error NotOwner();
-    error AllowanceFailed();
 
     /*///////////////////////////////////////////////////////////////
                                  Mappings
@@ -39,9 +28,6 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     mapping(address => uint16) wethPercentages;
     mapping(address => uint16) fraxPercentages;
     mapping(address => uint16) daiPercentages;
-    mapping(address => uint256) cooldown;
-    mapping(address => bool) strategies;
-    mapping(address => mapping(IERC20 => bool)) acceptableTokens;
 
     /*///////////////////////////////////////////////////////////////
                                  Constants
@@ -60,6 +46,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     address[] public wethStrats;
     address[] public daiStrats;
     address[] public fraxStrats;
+    address[] public tokens;
 
     /*///////////////////////////////////////////////////////////////
                                  State Variables
@@ -72,6 +59,10 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     uint256 public wethStrategyCooldown;
     uint256 public daiStrategyCooldown;
 
+    /*///////////////////////////////////////////////////////////////
+                                 Constructor
+    //////////////////////////////////////////////////////////////*/
+
     constructor() {
         administrator = msg.sender;
     }
@@ -81,6 +72,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     //////////////////////////////////////////////////////////////*/
 
     function transferUSDCToStrategy() external nonReentrant {
+        require(usdcStrats.length > 0, "No Strategies");
         require(block.timestamp > usdcStrategyCooldown, "Cannot call yet");
         usdcStrategyCooldown = block.timestamp + 1 days;
         uint256 balance = IERC20(USDC).balanceOf(address(this));
@@ -99,6 +91,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     }
 
     function transferWETHToStrategy() external nonReentrant {
+        require(wethStrats.length > 0, "No Strategies");
         require(block.timestamp > wethStrategyCooldown, "Cannot call yet");
         wethStrategyCooldown = block.timestamp + 1 days;
         uint256 balance = IERC20(WETH).balanceOf(address(this));
@@ -117,6 +110,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     }
 
     function transferDAIToStrategy() external nonReentrant {
+        require(daiStrats.length > 0, "No Strategies");
         require(block.timestamp > daiStrategyCooldown, "Cannot call yet");
         daiStrategyCooldown = block.timestamp + 1 days;
         uint256 balance = IERC20(DAI).balanceOf(address(this));
@@ -135,6 +129,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     }
 
     function transferFRAXToStrategy() external nonReentrant {
+        require(fraxStrats.length > 0, "No Strategies");
         require(block.timestamp > fraxStrategyCooldown, "Cannot call yet");
         fraxStrategyCooldown = block.timestamp + 1 days;
         uint256 balance = IERC20(FRAX).balanceOf(address(this));
@@ -147,7 +142,7 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
                 IERC20(FRAX).transfer(_to, assetBalance);
             }
             totalPercentage += fraxPercentages[_to];
-            emit DAITransfer(msg.sender, FRAX, assetBalance);
+            emit FRAXTransfer(msg.sender, FRAX, assetBalance);
         }
         require(totalPercentage == 1000, "Incorrect Accounting");
     }
@@ -220,14 +215,28 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
         fraxPercentages[_strategy] = _percentage;
     }
 
-    /**
-     * @notice removes the strategy and percentage associated with it
-     * @param _strategy address of the strategy being removed
-     */
-    function removeStrategy(address _strategy) external onlyOwnerOrAdmin {
-        delete strategies[_strategy];
-        //delete percentages[_strategy];
-        emit StrategyRemoved(_strategy);
+    /*///////////////////////////////////////////////////////////////
+                        Remove Array Functions 
+    //////////////////////////////////////////////////////////////*/
+
+    function removeFromUSDCArray(uint256 _index) external onlyOwnerOrAdmin {
+        usdcStrats[_index] = usdcStrats[usdcStrats.length - 1];
+        usdcStrats.pop();
+    }
+
+    function removeFromWETHArray(uint256 _index) external onlyOwnerOrAdmin {
+        wethStrats[_index] = wethStrats[wethStrats.length - 1];
+        wethStrats.pop();
+    }
+
+    function removeFromDAIArray(uint256 _index) external onlyOwnerOrAdmin {
+        daiStrats[_index] = daiStrats[daiStrats.length - 1];
+        daiStrats.pop();
+    }
+
+    function removeFromFRAXArray(uint256 _index) external onlyOwnerOrAdmin {
+        fraxStrats[_index] = fraxStrats[fraxStrats.length - 1];
+        fraxStrats.pop();
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -248,14 +257,25 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
         adminRemoved = true;
     }
 
+    ///@notice adds to the tokens array for migration
+    function addToTokens(address _token) external onlyOwnerOrAdmin {
+        tokens.push(_token);
+    }
+
+    ///@notice migrates to a new contract if necessary
+    function migrate(address _to) external onlyOwnerOrAdmin {
+        for (uint256 i = 0; i < tokens.length; i++) {
+            IERC20 token = IERC20(tokens[i]);
+            uint256 assetBalance = token.balanceOf(address(this));
+            if (assetBalance > 0) {
+                token.transfer(_to, assetBalance);
+            }
+        }
+    }
+
     /*///////////////////////////////////////////////////////////////
                                  View Functions 
     //////////////////////////////////////////////////////////////*/
-
-    function checkCooldown(address _strategy) external view returns (uint256) {
-        uint256 time = cooldown[_strategy];
-        return time;
-    }
 
     function viewWETHPercentages(address _strategy)
         external
@@ -308,13 +328,6 @@ contract StrategyHub is IStrategyHub, Ownable, ReentrancyGuard {
     /*///////////////////////////////////////////////////////////////
                                  Modifier Functions 
     //////////////////////////////////////////////////////////////*/
-
-    modifier acceptableTransfer(address _strategy, IERC20 _token) {
-        if (acceptableTokens[_strategy][_token] != true) {
-            revert NotAStrategy();
-        }
-        _;
-    }
 
     modifier onlyOwnerOrAdmin() {
         require(

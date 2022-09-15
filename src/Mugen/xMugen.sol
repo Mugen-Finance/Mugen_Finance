@@ -2,12 +2,15 @@
 
 pragma solidity ^0.8.7;
 
+//Incorrect Accounting
+
 import {ReentrancyGuard} from "openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {ERC20} from "openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC4626} from "../interfaces/IERC4626.sol";
 import {Ownable} from "openzeppelin/contracts/access/Ownable.sol";
 import {SafeERC20} from "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {ISwapRouter} from "uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 /**
  * @title xMugen Vault
@@ -35,7 +38,9 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
     uint256 public rewardsDuration = 30 days;
+    uint24 public poolFee;
     address public yieldDistributor;
+    ISwapRouter public swapRouter;
 
     /*///////////////////////////////////////////////////////////////
                             Errors
@@ -44,6 +49,19 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     error NotOwner();
     error NotYield();
     error TRANSFER_FAILED();
+    error ZeroRewards();
+    error FeeNotSet();
+
+    /*///////////////////////////////////////////////////////////////
+                              Events
+    //////////////////////////////////////////////////////////////*/
+
+    event Compounded(
+        address indexed _caller,
+        uint256 _wethClaimed,
+        uint256 _mgnCompounded
+    );
+    event FeeSet(address indexed _caller, uint24 _fee);
 
     /*///////////////////////////////////////////////////////////////
                             Mappings
@@ -52,11 +70,14 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
-    constructor(address _stakingToken, address _rewardsToken)
-        ERC20("xMugen", "xMGN")
-    {
+    constructor(
+        address _stakingToken,
+        address _rewardsToken,
+        address _swapRouter
+    ) ERC20("xMugen", "xMGN") {
         rewardsToken = ERC20(_rewardsToken);
         stakingToken = ERC20(_stakingToken);
+        swapRouter = ISwapRouter(_swapRouter);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -70,6 +91,12 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
 
     function setYield(address _yield) external onlyOwner {
         yieldDistributor = _yield;
+    }
+
+    ///@notice sets the fee of the uniswap pool for compounding
+    function setFee(uint24 _fee) external onlyOwner {
+        poolFee = _fee;
+        emit FeeSet(msg.sender, _fee);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -149,7 +176,7 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
      * @param receiver_ | Who is receiving xMugen
      */
     function deposit(uint256 assets_, address receiver_)
-        external
+        public
         virtual
         override
         updateReward(receiver_)
@@ -212,14 +239,44 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         address receiver_,
         address owner_
     )
-        external
+        public
         virtual
         override
         updateReward(owner_)
         nonReentrant
-        returns (uint256 shares_)
+        returns (uint256 claimed)
     {
-        burn(shares_ = assets_, assets_, receiver_, owner_, msg.sender);
+        uint256 claimed = burn(assets_, assets_, receiver_, owner_, msg.sender);
+        return claimed;
+    }
+
+    ///@notice claims fees, swaps them for Mugen, and stakes that Mugen
+    ///@param amountOutMin the minimum mugen back you want to get for your rewards.
+    function compound(uint256 amountOutMin) external updateReward(msg.sender) {
+        if (poolFee == 0) revert FeeNotSet();
+        uint256 amount = balanceOf(msg.sender);
+        uint256 claimed = redeem(amount, address(this), msg.sender);
+        IERC20(rewardsToken).safeIncreaseAllowance(
+            address(swapRouter),
+            claimed
+        );
+        // ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
+        //     .ExactInputSingleParams({
+        //         tokenIn: address(rewardsToken),
+        //         tokenOut: address(stakingToken),
+        //         fee: poolFee,
+        //         recipient: address(this),
+        //         deadline: block.timestamp,
+        //         amountIn: claimed,
+        //         amountOutMinimum: amountOutMin,
+        //         sqrtPriceLimitX96: 0
+        //     });
+
+        //uint256 amountOut = ISwapRouter(swapRouter).exactInputSingle(params);
+        uint256 total = amount + claimed;
+        uint256 amountCompounded = deposit(total, msg.sender);
+        emit Compounded(msg.sender, claimed, amountCompounded);
+        //buys Mugen, and stakes it for them.
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -257,14 +314,14 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         address receiver_,
         address owner_,
         address caller_
-    ) internal {
+    ) internal returns (uint256) {
         require(receiver_ != address(0), "xMGN:B:ZERO_RECEIVER");
         require(shares_ != uint256(0), "xMGN:B:ZERO_SHARES");
         if (caller_ != owner_) {
             _spendAllowance(owner_, caller_, shares_);
         }
 
-        claimReward(shares_, owner_);
+        uint256 rewards = claimReward(shares_, owner_);
         _burn(owner_, shares_);
         emit Withdraw(caller_, receiver_, owner_, assets_, shares_);
 
@@ -273,13 +330,17 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         if (!success) {
             revert TRANSFER_FAILED();
         }
+        return rewards;
     }
 
     /**
      * @notice calculates the percentage of their balance they are unstake them pays that percentage of their rewards
      * @param amount | how many tokens they are unstaking
      */
-    function claimReward(uint256 amount, address account) internal {
+    function claimReward(uint256 amount, address account)
+        internal
+        returns (uint256)
+    {
         uint256 reward = (rewards[account] * amount) / balanceOf(account);
         rewards[account] -= reward;
         emit RewardsClaimed(account, reward);
@@ -287,6 +348,22 @@ contract xMugen is IERC4626, ERC20, ReentrancyGuard, Ownable {
         if (!success) {
             revert TRANSFER_FAILED();
         }
+        return reward;
+    }
+
+    function compoundClaim(address account)
+        internal
+        nonReentrant
+        returns (uint256)
+    {
+        uint256 reward = rewards[account];
+        if (reward > 0) {
+            rewards[account] = 0;
+            bool success = rewardsToken.transfer(address(this), reward);
+            if (!success) revert TRANSFER_FAILED();
+            emit RewardsClaimed(account, reward);
+        }
+        return reward;
     }
 
     /*///////////////////////////////////////////////////////////////

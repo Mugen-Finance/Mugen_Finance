@@ -4,6 +4,7 @@ forge-cache/*
 out/
 .env
 .helpers
+.layerzeroHelpers
 manticore/
 src/SimplifiedStaking.sol
 # Ignores development broadcast logs

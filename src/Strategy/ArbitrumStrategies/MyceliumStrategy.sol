@@ -2,22 +2,22 @@
 
 pragma solidity 0.8.7;
 
-import {IRewardRouterV2} from "../../interfaces/IRewardRouterV2.sol";
+import {IMyceliumStrategy} from "../../interfaces/IMyceliumStrategy.sol";
 import {ERC20} from "openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Ownable} from "openzeppelin/contracts/access/Ownable.sol";
 
-contract GMXStrategy is Ownable {
+contract MyceliumStrategy is Ownable {
     using SafeERC20 for IERC20;
 
     /*///////////////////////////////////////////////////////////////
                                  Constants  
     //////////////////////////////////////////////////////////////*/
 
-    address public constant ES_GMX = 0xf42Ae1D54fd613C9bb14810b0588FaAa09a426cA;
-    address public constant glpManager =
-        0x321F653eED006AD1C29D174e17d96351BDe22649;
+    address public constant ES_MYC = 0x7CEC785fba5ee648B48FBffc378d74C8671BB3cb;
+    address public constant mycManager =
+        0x2DE28AB4827112Cd3F89E5353Ca5A8D80dB7018f;
 
     /*///////////////////////////////////////////////////////////////
                                  Immutables 
@@ -32,7 +32,7 @@ contract GMXStrategy is Ownable {
     address[] public tokens;
     address public yieldDistributor;
     address public strategyHub;
-    IRewardRouterV2 public rewardRouterV2;
+    IMyceliumStrategy public myceliumStrategy;
     uint256 public claimable;
     uint256 public compounded;
     bool public adminRemoved = false;
@@ -52,20 +52,21 @@ contract GMXStrategy is Ownable {
     //////////////////////////////////////////////////////////////*/
 
     event YieldTransfered(address indexed _caller, uint256 _amount);
-    event EsGMXStaked(address indexed _caller, uint256 _amount);
+    event EsMycStaked(address indexed _caller, uint256 _amount);
     event Unstaked(address indexed _caller, uint256 _amount);
-    event GlpMinted(
+    event MlpMinted(
         address indexed _caller,
         address indexed _token,
         uint256 _amount
     );
+    event HubSet(address indexed _caller, address indexed _newStrategyHub);
 
     constructor(
-        address _rewardRouterV2,
+        address _myceliumStrategy,
         address _weth,
         address _strategyHub
     ) {
-        rewardRouterV2 = IRewardRouterV2(_rewardRouterV2);
+        myceliumStrategy = IMyceliumStrategy(_myceliumStrategy);
         weth = _weth;
         strategyHub = _strategyHub;
     }
@@ -74,14 +75,14 @@ contract GMXStrategy is Ownable {
                                  User Functions  
     //////////////////////////////////////////////////////////////*/
 
-    function stakeGMXRewards() external {
+    function stakeMycRewards() external {
         require(
-            ERC20(ES_GMX).balanceOf(address(this)) > 0,
+            ERC20(ES_MYC).balanceOf(address(this)) > 0,
             "O balance of contract"
         );
-        uint256 amount = ERC20(ES_GMX).balanceOf(address(this));
-        rewardRouterV2.stakeEsGmx(amount);
-        emit EsGMXStaked(msg.sender, amount);
+        uint256 amount = ERC20(ES_MYC).balanceOf(address(this));
+        myceliumStrategy.stakeEsMyc(amount);
+        emit EsMycStaked(msg.sender, amount);
     }
 
     ///@notice transfers yield to the staking contract
@@ -95,28 +96,28 @@ contract GMXStrategy is Ownable {
         emit YieldTransfered(msg.sender, amount);
     }
 
-    function mintGLP(
+    function mintMlp(
         address _token,
         uint256 _minUsdg,
-        uint256 _minGlp
+        uint256 _minMlp
     ) external {
-        require(_minUsdg > 0 && _minGlp > 0, "Inputs Must Be > 0");
+        require(_minUsdg > 0 && _minMlp > 0, "Inputs Must Be > 0");
         uint256 _amount = IERC20(_token).balanceOf(address(this));
-        ERC20(_token).increaseAllowance(glpManager, _amount);
-        IRewardRouterV2(rewardRouterV2).mintAndStakeGlp(
+        ERC20(_token).increaseAllowance(mycManager, _amount);
+        IMyceliumStrategy(myceliumStrategy).mintAndStakeMlp(
             _token,
             _amount,
             _minUsdg,
-            _minGlp
+            _minMlp
         );
-        emit GlpMinted(msg.sender, _token, _amount);
+        emit MlpMinted(msg.sender, _token, _amount);
     }
 
     function claimRewards() external {
         if (claimable > block.timestamp) {
             revert TooSoon();
         }
-        IRewardRouterV2(rewardRouterV2).claim();
+        IMyceliumStrategy(myceliumStrategy).claim();
         claimable = block.timestamp + 1 days;
     }
 
@@ -124,7 +125,7 @@ contract GMXStrategy is Ownable {
         if (compounded + 1 days > block.timestamp) {
             revert TooSoon();
         }
-        IRewardRouterV2(rewardRouterV2).compound();
+        IMyceliumStrategy(myceliumStrategy).compound();
         compounded = block.timestamp;
     }
 
@@ -132,21 +133,21 @@ contract GMXStrategy is Ownable {
                                  Admin Functions  
     //////////////////////////////////////////////////////////////*/
 
-    function sellGlp(
+    function sellMlp(
         address _tokenOut,
-        uint256 _glpAmount,
+        uint256 _MlpAmount,
         uint256 _minOut
     ) external onlyOwnerOrAdmin {
-        IRewardRouterV2(rewardRouterV2).unstakeAndRedeemGlp(
+        IMyceliumStrategy(myceliumStrategy).unstakeAndRedeemMlp(
             _tokenOut,
-            _glpAmount,
+            _MlpAmount,
             _minOut,
             address(this)
         );
     }
 
     function unstake(uint256 _amount) external onlyOwnerOrAdmin {
-        IRewardRouterV2(rewardRouterV2).unstakeEsGmx(_amount);
+        IMyceliumStrategy(myceliumStrategy).unstakeEsMyc(_amount);
         emit Unstaked(msg.sender, _amount);
     }
 
@@ -168,6 +169,7 @@ contract GMXStrategy is Ownable {
 
     function setStrategyHub(address _hub) external onlyOwnerOrAdmin {
         strategyHub = _hub;
+        emit HubSet(msg.sender, _hub);
     }
 
     function migrate() external onlyOwnerOrAdmin {

@@ -11,7 +11,7 @@ import "../src/mocks/MockERC20.sol";
 import "../src/mocks/NotMockAggregator.sol";
 import "../src/Strategy/StrategyHub.sol";
 
-contract TreasuryTest is Test {
+contract StrategyHubTest is Test {
     StrategyHub hub;
     MockERC20 mock;
     MockERC20 usdc;
@@ -96,8 +96,32 @@ contract TreasuryTest is Test {
             ),
             0
         );
-        vm.expectRevert("Balance must be more than zero");
+        vm.expectRevert("Cannot call yet");
         hub.transferUSDCToStrategy();
         hub.viewUSDCStrategies();
+    }
+
+    function testStrategyCall() public {
+        vm.expectRevert("No Strategies");
+        hub.transferWETHToStrategy();
+    }
+
+    function testHubMigration() public {
+        hub.addToTokens(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
+        hub.migrate(alice);
+        assertEq(
+            IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8).balanceOf(
+                address(hub)
+            ),
+            0
+        );
+        assertEq(hub.tokens(0), 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
+    }
+
+    function testPop() public {
+        hub.addUSDCStrategies(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8, 500);
+        hub.addUSDCStrategies(alice, 500);
+        hub.removeFromUSDCArray(0);
+        assertEq(hub.usdcStrats(0), alice);
     }
 }
